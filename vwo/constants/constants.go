@@ -53,5 +53,6 @@ const(
 	CampaignTypesVisualAB = "VISUAL_AB"
 	CampaignTypesFeatureTest = "FEATURE_TEST"
 	CampaignTypesFeatureRollout = "FEATURE_ROLLOUT"
+	
 )
 
