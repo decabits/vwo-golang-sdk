@@ -10,8 +10,8 @@ import (
 	"github.com/decabits/vwo-golang-sdk/lib/utils"
 )
 
-// ActivateWithOptions function
-func ActivateWithOptions(config schema.Config, vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options) string {
+//GetVariationName ...
+func GetVariationName(config schema.Config, vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options) string {
 	if options.CustomVariables == nil || options.VariationTargetingVariables == nil {
 		return ""
 	}
@@ -34,17 +34,11 @@ func ActivateWithOptions(config schema.Config, vwoInstance schema.VwoInstance, c
 		return ""
 	}
 
-	variation, err := core.GetVariation(config, userID, campaign, options)
+	variation, err := core.GetVariation(userID, campaign, options)
 	if err != nil {
 		log.Println("No Variation Found")
 		return ""
-	}// Segmentation issue in VarDecider 
+	} // Segmentation issue in VarDecider
 
-	impression := utils.CreateImpression(vwoInstance.SettingsFile, campaign.ID, variation.ID, userID) //TO BE COMPLETED
-	if event.Dispatch(impression) {
-		return variation.Name
-	} // Gsearch Url with params 
-
-	log.Println("ain't Keys For Impression")
-	return ""
+	return variation.Name
 }

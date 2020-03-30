@@ -1,20 +1,26 @@
 package constants
 
-//constants
+//Constants
 const (
 	MaxTrafficValue = 10000
 	StatusRunning   = "RUNNING"
 	SDKVersion      = "1.0.0" //check its defination in constants.py
 	SDKName         = "vwo-golang-sdk"
 	Platform        = "server"
+	SeedValue       = 1
 
 	CampaignTypeVisualAB       = "VISUAL_AB"
 	CampaignTypeFeatureTest    = "FEATURE_TEST"
 	CampaignTypeFeatureRollout = "FEATURE_ROLLOUT"
 
-	OperatorTypeAnd = "and"
-	OperatorTypeOr  = "or"
-	OperatorTypeNot = "not"
+	GoalTypeRevenue = "REVENUE_TRACKING"
+	GoalTypeCustom  = "CUSTOM_GOAL"
+
+	PushAPITagValueLength = 255
+	PushAPITagKeyLength   = 255
+	OperatorTypeAnd       = "and"
+	OperatorTypeOr        = "or"
+	OperatorTypeNot       = "not"
 
 	OperandTypesCustomVariable = "custom_variable"
 	OperandTypesUser           = "user"

@@ -8,28 +8,21 @@ import (
 )
 
 //Dispatch ...
-func Dispatch(impression schema.Impression) bool{
-	isDevelopmentMode := false
+func Dispatch(impression schema.Impression) bool {
 	URL := impression.URL
 	var result bool
-	if (isDevelopmentMode){
-		result := true
-	} else{
-		response := utils.Get(URL) //impression to be passed 
-		if (response.StatusCode == 200){
-			result := true
-		} else{
-			result := false
-		}
+	response := utils.Get(URL) //impression to be passed with header
+	if response.StatusCode == 200 {
+		result = true
+	} else {
+		result = false
 	}
 
-	if (result == true) {
+	if result == true {
 		log.Println("Impression Success")
 		return true
 	}
-	
+
 	log.Println("Impression Failed")
 	return false
-
-
 }

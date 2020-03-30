@@ -2,64 +2,68 @@ package utils
 
 import (
 	"log"
+	"math/rand"
+	"time"
 
-	"github.com/decabits/vwo-golang-sdk/lib/schema"
 	"github.com/decabits/vwo-golang-sdk/lib/constants"
+	"github.com/decabits/vwo-golang-sdk/lib/schema"
 )
 
-func CreateImpressionExtended(settingsFile schema.SettingsFile, variationID, userID string, campaignID, goalID, revenueGoal int) schema.Impression{		
+//CreateImpressionExtended ...
+func CreateImpressionExtended(settingsFile schema.SettingsFile, variationID, userID string, campaignID, goalID, revenueGoal int) schema.Impression {
 	impression := GetCommonProperties(userID, settingsFile)
 
 	impression.ExperimentID = campaignID
 	impression.Combination = variationID
 
-    URL := constants.HTTPSProtocol + constants.EndPointsBaseURL
+	URL := constants.HTTPSProtocol + constants.EndPointsBaseURL
 
-    
-    impression.URL = URL + constants.EndPointsTrackGoal
+	impression.URL = URL + constants.EndPointsTrackGoal
 	impression.GoalID = goalID
-	if (revenueGoal >0){
-        impression.R = revenueGoal
-			log.Println("Imression For Track User")
+	if revenueGoal > 0 {
+		impression.R = revenueGoal
+		log.Println("Imression For Track User")
 	}
-	
+
 	return impression
-		
+
 }
 
-func CreateImpression(settingsFile schema.SettingsFile, campaignID int, variationID string, userID string) schema.Impression{
-    impression := GetCommonProperties(userID, settingsFile)
+//CreateImpression ...
+func CreateImpression(settingsFile schema.SettingsFile, campaignID int, variationID string, userID string) schema.Impression {
+	impression := GetCommonProperties(userID, settingsFile)
 
 	impression.ExperimentID = campaignID
 	impression.Combination = variationID
 
-    URL := constants.HTTPSProtocol + constants.EndPointsBaseURL
+	URL := constants.HTTPSProtocol + constants.EndPointsBaseURL
 
 	// impression.ED=json.dumps({'p': constants.PLATFORM}))
 	impression.URL = URL + constants.EndPointsTrackUser
 	log.Println("Imression For Track User")
-    
-    return impression
+
+	return impression
 
 }
 
-func GetCommonProperties(userID string, settingsFile schema.SettingsFile) schema.Impression{
+//GetCommonProperties ...
+func GetCommonProperties(userID string, settingsFile schema.SettingsFile) schema.Impression {
 	accountID := settingsFile.AccountID
 
 	var properties schema.Impression
-	properties.Random = GetRandomNumber()
+	properties.Random = rand.Float32()
 	properties.Sdk = constants.SDKName
 	properties.SdkV = constants.SDKVersion
 	properties.Ap = constants.Platform
-	properties.SID = GetCurrentUnixTimestamp()
+	properties.SID = string(time.Now().Unix())
 	properties.U = GenerateFor(userID, accountID)
 	properties.AccountID = settingsFile.AccountID
 	properties.UID = userID
 	properties.URL = ""
 	properties.GoalID = 0
-	properties.ExperimentID = ""
+	properties.ExperimentID = 0
 	properties.Combination = ""
-	properties.R = 0 
+	properties.R = 0
 
 	return properties
 }

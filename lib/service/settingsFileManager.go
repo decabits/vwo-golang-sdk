@@ -9,11 +9,11 @@ import (
 	"github.com/decabits/vwo-golang-sdk/lib/utils"
 )
 
-// SettingsFileM interface 
+// SettingsFileM interface
 type SettingsFileM interface {
 	ProcessSettingsFile(settingsFileLocation string)
 	GetSettingsFile() schema.SettingsFile
-} 
+}
 
 // SettingsFileManager struct to implement SettingsFileM
 type SettingsFileManager struct {

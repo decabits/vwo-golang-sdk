@@ -1,13 +1,17 @@
 package schema
 
-// "github.com/Piyushhbhutoria/vwo-go-sdk/lib/utils"
-
 // VwoInstance struct utils
 type VwoInstance struct {
 	// Logger       *utils.Logger
 	SettingsFile SettingsFile
+	Config []UserData
+	IsDevelopmentMode bool
 }
 
+// Config struct{
+type Config struct{
+	UserDatas []UserData
+}
 // SettingsFile struct
 type SettingsFile struct {
 	Campaigns []Campaign `json:"campaign"`
@@ -55,8 +59,8 @@ type Options struct {
 	RevenueGoal                 int
 }
 
-//UserStorageData struct
-type UserStorageData struct {
+// UserData  struct
+type UserData struct {
 	UserID        string
 	CampaignKey   string
 	VariationName string
@@ -68,26 +72,34 @@ type VariationAllocationRange struct {
 	EndRange   int
 }
 
-//Impression struct
+// Impression struct
 type Impression struct {
 	Random       float32
 	Sdk          string
 	SdkV         string
 	Ap           string
-	SID          int
+	SID          string
 	U            string
 	AccountID    string
 	UID          string
 	URL          string
 	GoalID       int
-	ExperimentID string
+	ExperimentID int
 	Combination  string
 	R            int
 	//Ed
+	//Tags
 }
 
-//Response struct
+// Response struct
 type Response struct {
 	Text       string
 	StatusCode int
+}
+
+// VariationResponse struct
+type VariationResponse struct {
+	Variation     Variation
+	VariationID   string
+	VariationName string
 }

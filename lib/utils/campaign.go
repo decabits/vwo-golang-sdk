@@ -51,7 +51,7 @@ func GetVariationAllocationRanges(variations []schema.Variation) []schema.Variat
 	return variationAllocationRanges
 }
 
-//SetVariationAllocationFromRanges
+//SetVariationAllocationFromRanges ...
 func SetVariationAllocationFromRanges(variations []schema.Variation, variationAllocationRanges []schema.VariationAllocationRange) {
 	for i, variation := range variations {
 		variation.StartVariationAllocation = variationAllocationRanges[i].StartRange
@@ -90,14 +90,11 @@ func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.C
 			return campaign, nil
 		}
 	}
-	return nil, errors.New("Campaign not found")
+	return schema.Campaign{}, errors.New("Campaign not found")
 }
 
-/* ScaleVariations function
-It extracts the weights from all the variations inside the campaign
-and scales them so that the total sum of eligible variations' weights become 100%
-*/
-func ScaleVariations(variations []schema.Variation) {
+// ScaleVariations function It extracts the weights from all the variations inside the campaign and scales them so that the total sum of eligible variations' weights become 100%
+func ScaleVariations(variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
 			variations(list): list of variations(dict object) having weight as a property
@@ -107,7 +104,7 @@ func ScaleVariations(variations []schema.Variation) {
 		weightSum += variation.Weight
 	}
 	if weightSum == 0 {
-		normalizedWeight = 100 / len(variations)
+		normalizedWeight := 100 / len(variations)
 		for _, variation := range variations {
 			variation.Weight = normalizedWeight
 		}
@@ -116,10 +113,11 @@ func ScaleVariations(variations []schema.Variation) {
 			variation.Weight = (variation.Weight / weightSum) * 100
 		}
 	}
+	return variations
 }
 
 //GetCampaignGoal returns goal from given campaign and Goal_identifier.
-func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) schema.Goal {
+func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) (schema.Goal, error) {
 	/*
 		 Args:
 			campaign (dict): The running campaign
@@ -127,17 +125,13 @@ func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) schema.Goa
 		Returns:
 			schema.Goal: Goal corresponding to goal_identifer in respective campaign
 	*/
-	if campaign == nil {
-		log.Println("Invalid Campaign")
-		return nil
-	}
 	goals := campaign.Goals
 	for _, goal := range goals {
 		if goal.Identifier == goalIdentifier {
-			return goal
+			return goal, nil
 		}
 	}
-	return nil
+	return schema.Goal{}, errors.New("Goal NOt Found")
 }
 
 // GetCampaignVariation returns variation from given campaign and variation_name.
@@ -150,14 +144,14 @@ func GetCampaignVariation(campaign schema.Campaign, variationName string) (schem
 			schema.Variation: Variation corresponding to variation_name in respective campaign
 	*/
 	if len(campaign.Variations) == 0 {
-		return nil, errors.New("Invalid Campaign")
+		return schema.Variation{}, errors.New("Invalid Campaign")
 	}
 	for _, variation := range campaign.Variations {
 		if variation.ID == variationName {
 			return variation, nil
 		}
 	}
-	return nil, errors.New("CampaignVariation not found")
+	return schema.Variation{}, errors.New("CampaignVariation not found")
 }
 
 //GetControlVariation Returns control variation from a given campaign
@@ -171,25 +165,25 @@ func GetControlVariation(campaign schema.Campaign) schema.Variation {
 
 	variations := campaign.Variations
 	for _, variation := range variations {
-		if variation.ID == 1 {
+		if variation.ID == "1" {
 			return variation
 		}
 	}
-	return nil
+	return schema.Variation{}
 }
 
-//GetSegments Returns segments from the campaign
-func GetSegments(campaign schema.Campaign) schema.Segment {
-	/*
-		Args:
-			campaign(schema.Campaign): Running campaign
-		Returns:
-			segments(schema.Segment): a dsl of segments
-	*/
+// //GetSegments Returns segments from the campaign
+// func GetSegments(campaign schema.Campaign) schema.Segment {
+// 	/*
+// 		Args:
+// 			campaign(schema.Campaign): Running campaign
+// 		Returns:
+// 			segments(schema.Segment): a dsl of segments
+// 	*/
 
-	segments := campaign.Segments
-	return segments
-}
+// 	segments := campaign.Segments
+// 	return segments
+// }
 
 // Min function
 func Min(a, b int) int {

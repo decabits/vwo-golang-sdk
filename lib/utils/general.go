@@ -1,21 +1,10 @@
-package utils
+package utils	
 
 import (
-	"math/rand"
-	"time"
+	"github.com/decabits/vwo-golang-sdk/lib/schema"
 )
-// GetKeyValue function
-func GetKeyValue(segment {}interface) (string, string) {
+//GetKeyValue ...
+func GetKeyValue(segments []schema.Segment) (string, []schema.Segment) {
 	 // To be done
-	return "",""	
-}
-
-//GetRandomNumber function
-func GetRandomNumber() float32{
-	return rand.Float32()
-}
-
-//GetCurrentUnixTimestamp function
-func GetCurrentUnixTimestamp() string{
-	return string(time.Now().Unix())
+	return "",[]schema.Segment{}
 }

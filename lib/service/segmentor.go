@@ -3,10 +3,11 @@ package service
 import (
 	"github.com/decabits/vwo-golang-sdk/lib/constants"
 	"github.com/decabits/vwo-golang-sdk/lib/schema"
+	"github.com/decabits/vwo-golang-sdk/lib/utils"
 )
 
 // Evaluate function
-func Evaluate(segments []schema.Segment, customVariables schema.Options) bool {
+func Evaluate(segments []schema.Segment, customVariables []int) bool {
 	operator, subSegments := utils.GetKeyValue(segments)
 	if operator == constants.OperatorTypeNot {
 		value := Evaluate(subSegments, customVariables)
@@ -28,17 +29,27 @@ func Evaluate(segments []schema.Segment, customVariables schema.Options) bool {
 		}
 		return false
 	} else if operator == constants.OperandTypesCustomVariable {
-
+		for _, v := range subSegments {
+			value := evaluateCustomVariable(operand, customVariables)
+			if value == true {
+				return true
+			}
+		}
+		return false
 	} else if operator == constants.OperandTypesUser {
-
+		for _, v := range subSegments {
+			value := evaluateCustomVariable(operand, customVariables)
+			if value == true {
+				return true
+			}
+		}
+		return false
 	}
 }
 
-/*
-func evaluateCustomVariable(operand, customVariables schema.Options) bool {
-	//TO BE COMPLETED
+func evaluateCustomVariable(operand []schema.Segment, customVariables []int) bool {
 	operandKey, operand := utils.GetKeyValue(operand)
-	customVariables[operandKey] = utils.process_custom_variables_value(customVariables[operandKey])
-	operandType, operandValue := utils.process_operand_value(operand)
+	//customVariableValue :=
+	//customVariables[operandKey] = utils.ProcessCustomVariablesValue(customVariables[operandKey])
+	//operandType, operandValue := utils.ProcessOperandValue(operand)
 }
-*/
