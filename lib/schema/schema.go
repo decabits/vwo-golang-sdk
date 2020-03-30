@@ -3,15 +3,16 @@ package schema
 // VwoInstance struct utils
 type VwoInstance struct {
 	// Logger       *utils.Logger
-	SettingsFile SettingsFile
-	Config []UserData
+	SettingsFile      SettingsFile
+	Config            Config
 	IsDevelopmentMode bool
 }
 
 // Config struct{
-type Config struct{
+type Config struct {
 	UserDatas []UserData
 }
+
 // SettingsFile struct
 type SettingsFile struct {
 	Campaigns []Campaign `json:"campaign"`
