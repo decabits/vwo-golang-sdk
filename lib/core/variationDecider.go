@@ -80,7 +80,6 @@ func GetVariation(config schema.Config, userID string, campaign schema.Campaign)
 	if err != nil {
 		return schema.Variation{}, err
 	}
-
 	return variation, nil
 }
 
@@ -96,7 +95,6 @@ func GetVariationOfCampiagnForUser(userID string, campaign schema.Campaign) (sch
 	Response.VariationName = variation.Name
 	Response.VariationID = variation.ID
 	return Response, nil
-
 }
 
 //FindTargetedVariation ...
@@ -138,7 +136,6 @@ func GetVariationFromUserStorage(config schema.Config, userID string, campaign s
 			return variation, nil
 		}
 	}
-
 	return schema.Variation{}, errors.New("No Stored Variation")
 }
 
@@ -157,7 +154,6 @@ func EvaluatePreSegmentation(userID string, campaign schema.Campaign, customVari
 	// segment := campaign.Segments
 	//TO BE COMPLETED
 	return true
-
 }
 
 //GetUserData ...
