@@ -26,7 +26,6 @@ func CreateImpressionExtended(settingsFile schema.SettingsFile, variationID, use
 	}
 
 	return impression
-
 }
 
 //CreateImpression ...
@@ -43,7 +42,6 @@ func CreateImpression(settingsFile schema.SettingsFile, campaignID int, variatio
 	log.Println("Imression For Track User")
 
 	return impression
-
 }
 
 //GetCommonProperties ...

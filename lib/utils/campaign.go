@@ -147,7 +147,7 @@ func GetCampaignVariation(campaign schema.Campaign, variationName string) (schem
 		return schema.Variation{}, errors.New("Invalid Campaign")
 	}
 	for _, variation := range campaign.Variations {
-		if variation.ID == variationName {
+		if variation.Name == variationName {
 			return variation, nil
 		}
 	}

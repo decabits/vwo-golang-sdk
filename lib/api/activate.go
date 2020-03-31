@@ -45,6 +45,6 @@ func ActivateWithOptions(config schema.Config, vwoInstance schema.VwoInstance, c
 		return variation.Name
 	} // Gsearch Url with params 
 
-	log.Println("ain't Keys For Impression")
+	//log.Println("ain't Keys For Impression")
 	return ""
 }

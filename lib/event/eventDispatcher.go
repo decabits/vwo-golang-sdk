@@ -2,7 +2,7 @@ package event
 
 import (
 	"log"
-	
+
 	"github.com/decabits/vwo-golang-sdk/lib/schema"
 	"github.com/decabits/vwo-golang-sdk/lib/utils"
 )
