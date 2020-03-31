@@ -6,6 +6,12 @@ import (
 	"github.com/decabits/vwo-golang-sdk/lib/utils"
 )
 
+type segmentFunc interface {
+}
+
+type segmentData struct {
+}
+
 // Evaluate function
 func Evaluate(segments []schema.Segment, customVariables []int) bool {
 	operator, subSegments := utils.GetKeyValue(segments)
@@ -36,7 +42,7 @@ func Evaluate(segments []schema.Segment, customVariables []int) bool {
 			}
 		}
 		return false
-	} else if operator == constants.OperandTypesUser {
+	} else {
 		for _, v := range subSegments {
 			value := evaluateCustomVariable(operand, customVariables)
 			if value == true {
@@ -49,7 +55,7 @@ func Evaluate(segments []schema.Segment, customVariables []int) bool {
 
 func evaluateCustomVariable(operand []schema.Segment, customVariables []int) bool {
 	operandKey, operand := utils.GetKeyValue(operand)
-	//customVariableValue :=
-	//customVariables[operandKey] = utils.ProcessCustomVariablesValue(customVariables[operandKey])
+	//customVariables[operandKey] := utils.ProcessCustomVariablesValue(customVariables[operandKey])
 	//operandType, operandValue := utils.ProcessOperandValue(operand)
+	return true
 }

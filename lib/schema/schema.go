@@ -18,6 +18,7 @@ type SettingsFile struct {
 	Campaigns []Campaign `json:"campaign"`
 	AccountID string     `json:"accountId"`
 	Version   int        `json:"version"`
+	SDKKey    string     `json:"sdkKey"`
 }
 
 // Campaign struct
@@ -51,6 +52,7 @@ type Variation struct {
 	Weight                   int    `json:"weight"`
 	StartVariationAllocation int
 	EndVariationAllocation   int
+	IsFeatureEnabled         bool
 }
 
 // Options struct

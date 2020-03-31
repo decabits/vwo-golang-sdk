@@ -11,7 +11,11 @@ import (
 func Dispatch(impression schema.Impression) bool {
 	URL := impression.URL
 	var result bool
-	response := utils.Get(URL) //impression to be passed with header
+	response, err := utils.Get(URL) //impression to be passed with header
+	if err != nil {
+		log.Println("Impression Failed")
+		return false
+	}
 	if response.StatusCode == 200 {
 		result = true
 	} else {
@@ -22,7 +26,6 @@ func Dispatch(impression schema.Impression) bool {
 		log.Println("Impression Success")
 		return true
 	}
-
 	log.Println("Impression Failed")
 	return false
 }

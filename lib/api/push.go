@@ -12,6 +12,9 @@ import (
 
 //Push ...
 func Push(vwoInstance schema.VwoInstance, tagKey, tagValue, userID string) bool{
+	config := vwoInstance.Config
+	settingsFileManager := service.SettingsFileManager{}
+	vwoInstance.SettingsFile = settingsFileManager.GetSettingsFile()
 
 	if	(len(tagKey)>constants.PushAPITagKeyLength){
 		log.Println("Tag Key length exceeded")

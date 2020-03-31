@@ -12,12 +12,13 @@ import (
 
 //Track ...
 func Track(config schema.Config, vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options, goalIdentifier string) bool {
+	config := vwoInstance.Config
+	settingsFileManager := service.SettingsFileManager{}
+	vwoInstance.SettingsFile = settingsFileManager.GetSettingsFile()
+
 	if options.CustomVariables == nil || options.VariationTargetingVariables == nil {
 		return false
 	}
-
-	settingsFileManager := service.SettingsFileManager{}
-	vwoInstance.SettingsFile = settingsFileManager.GetSettingsFile()
 
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {
