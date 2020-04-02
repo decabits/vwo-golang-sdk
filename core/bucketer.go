@@ -6,8 +6,8 @@ import (
 
 	log "github.com/golang/glog"
 
-	"github.com/decabits/vwo-go-sdk/constants"
-	"github.com/decabits/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-golang-sdk/constants"
+	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/spaolacci/murmur3"
 )
 

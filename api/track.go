@@ -3,11 +3,11 @@ package api
 import (
 	log "github.com/golang/glog"
 
-	"github.com/decabits/vwo-go-sdk/constants"
-	"github.com/decabits/vwo-go-sdk/core"
-	"github.com/decabits/vwo-go-sdk/event"
-	"github.com/decabits/vwo-go-sdk/schema"
-	"github.com/decabits/vwo-go-sdk/utils"
+	"github.com/decabits/vwo-golang-sdk/constants"
+	"github.com/decabits/vwo-golang-sdk/core"
+	"github.com/decabits/vwo-golang-sdk/event"
+	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
 // Track function

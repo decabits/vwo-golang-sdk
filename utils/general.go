@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/decabits/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-golang-sdk/schema"
 )
 
 // GetKeyValue function
