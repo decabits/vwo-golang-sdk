@@ -139,10 +139,7 @@ func GetWhiteListedVariationsList(userID string, campaign schema.Campaign, optio
 func EvaluateSegmentation(segments map[string]interface{}, options schema.Options) bool {
 	//TO BE COMPLETED
 	v := rand.Intn(1)
-	if v == 1 {
-		return true
-	}
-	return false
+	return v == 1 
 }
 
 // // SetUserData ...

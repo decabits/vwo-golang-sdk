@@ -13,11 +13,11 @@ import (
 // Track function
 func Track(vwoInstance schema.VwoInstance, campaignKey, userID string, goalIdentifier string) bool {
 	options := schema.Options{}
-	return TrackWithOptions(vwoInstance, campaignKey, userID, options, goalIdentifier)
+	return TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
 }
 
 // TrackWithOptions function
-func TrackWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options, goalIdentifier string) bool {
+func TrackWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string, goalIdentifier string, options schema.Options) bool {
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {
 		log.Error("Error geting campaign: ", err)
