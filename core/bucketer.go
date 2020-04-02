@@ -2,11 +2,12 @@ package core
 
 import (
 	"errors"
-	log "github.com/golang/glog"
 	"math"
 
-	"github.com/Piyushhbhutoria/vwo-go-sdk/constants"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
+	log "github.com/golang/glog"
+
+	"github.com/decabits/vwo-go-sdk/constants"
+	"github.com/decabits/vwo-go-sdk/schema"
 	"github.com/spaolacci/murmur3"
 )
 

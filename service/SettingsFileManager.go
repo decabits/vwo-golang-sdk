@@ -3,14 +3,14 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"strconv"
-	"fmt"
 
-	"github.com/Piyushhbhutoria/vwo-go-sdk/constants"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/utils"
+	"github.com/decabits/vwo-go-sdk/constants"
+	"github.com/decabits/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-go-sdk/utils"
 )
 
 // SettingsFileM interface

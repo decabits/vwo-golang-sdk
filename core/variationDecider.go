@@ -3,11 +3,12 @@ package core
 //TO BE COMPLETED
 import (
 	"errors"
+
 	log "github.com/golang/glog"
 
-	"github.com/Piyushhbhutoria/vwo-go-sdk/constants"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/utils"
+	"github.com/decabits/vwo-go-sdk/constants"
+	"github.com/decabits/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-go-sdk/utils"
 )
 
 // VariationDecider struct
@@ -44,8 +45,8 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 	customVariables = options.CustomVariables
 	variationTargetingVariables = options.VariationTargetingVariables
 
-	targettedVariation := FindTargetedVariation(userID,campaign,variationTargetingVariables)
-	if (targettedVariation != nil){
+	targettedVariation := FindTargetedVariation(userID, campaign, variationTargetingVariables)
+	if targettedVariation != nil {
 		log.Info("Got Variation For User")
 		return targettedVariation
 	}

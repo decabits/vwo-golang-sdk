@@ -3,10 +3,10 @@ package api
 import (
 	log "github.com/golang/glog"
 
-	"github.com/Piyushhbhutoria/vwo-go-sdk/constants"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/event"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/utils"
+	"github.com/decabits/vwo-go-sdk/constants"
+	"github.com/decabits/vwo-go-sdk/event"
+	"github.com/decabits/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-go-sdk/utils"
 )
 
 // Push ...

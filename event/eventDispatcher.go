@@ -6,8 +6,8 @@ import (
 
 	log "github.com/golang/glog"
 
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/utils"
+	"github.com/decabits/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-go-sdk/utils"
 )
 
 // Dispatch ...

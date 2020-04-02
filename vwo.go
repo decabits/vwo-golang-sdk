@@ -5,8 +5,8 @@ import (
 
 	"fmt"
 
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/service"
+	"github.com/decabits/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-go-sdk/service"
 )
 
 // VWO struct

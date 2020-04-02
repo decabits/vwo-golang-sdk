@@ -4,8 +4,8 @@ import (
 	"errors"
 	"math"
 
-	"github.com/Piyushhbhutoria/vwo-go-sdk/constants"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-go-sdk/constants"
+	"github.com/decabits/vwo-go-sdk/schema"
 )
 
 // // SetVariationAllocation Sets variation allocation range in the provided campaign.
@@ -169,16 +169,16 @@ func GetControlVariation(campaign schema.Campaign) schema.Variation {
 	return schema.Variation{}
 }
 
-
 //GetVariable ...
-func GetVariable(variables []schema.Variable, variableKey string) (schema.Variable, error){
+func GetVariable(variables []schema.Variable, variableKey string) (schema.Variable, error) {
 	for _, variable := range variables {
-		if variable.Key == variableKey{
-			return variable,nil
+		if variable.Key == variableKey {
+			return variable, nil
 		}
 	}
-	return schema.Variable{},nil
+	return schema.Variable{}, nil
 }
+
 // Min function
 func Min(a, b int) int {
 	if a < b {

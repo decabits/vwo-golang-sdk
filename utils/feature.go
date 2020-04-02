@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"github.com/Piyushhbhutoria/vwo-go-sdk/constants"
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
+	"github.com/decabits/vwo-go-sdk/constants"
+	"github.com/decabits/vwo-go-sdk/schema"
 )
 
 // GetVariableForFeature function
