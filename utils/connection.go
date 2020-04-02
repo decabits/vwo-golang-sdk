@@ -6,7 +6,8 @@ import (
 	"net/http"
 )
 
-func Get(url string) (string, error) {
+// GetRequest function to do a get call
+func GetRequest(url string) (string, error) {
 	response, err := http.Get(url)
 	if err != nil {
 		return "", errors.New("URL not Found" + err.Error())

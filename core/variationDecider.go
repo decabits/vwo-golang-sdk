@@ -3,6 +3,8 @@ package core
 //TO BE COMPLETED
 import (
 	"errors"
+	"math/rand"
+	"strconv"
 
 	log "github.com/golang/glog"
 
@@ -28,7 +30,7 @@ type VariationDecider struct {
     5. If user becomes part of campaign assign a variation.
 	6. Store the variation found in the user_storage
 */
-func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) (schema.Variation, error) {
+func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
 	/*
 		Args:
 			userId (string): the unique ID assigned to User
@@ -42,13 +44,12 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 			assigned else None
 			error(error): Error message
 	*/
-	customVariables = options.CustomVariables
-	variationTargetingVariables = options.VariationTargetingVariables
-
-	targettedVariation := FindTargetedVariation(userID, campaign, variationTargetingVariables)
-	if targettedVariation != nil {
-		log.Info("Got Variation For User")
-		return targettedVariation
+	targettedVariation, err := FindTargetedVariation(userID, campaign, options)
+	if err != nil {
+		log.Error(err.Error())
+	} else {
+		log.Info("INFO_MESSAGES.GOT_VARIATION_FOR_USER")
+		return targettedVariation, nil
 	}
 
 	variationName, err := GetVariationFromUserStorage(vwoInstance.UserStorage, userID, campaign)
@@ -75,30 +76,31 @@ func GetVariationOfCampiagnForUser(userID string, campaign schema.Campaign) (sch
 
 }
 
-//FindTargetedVariation ...
-func FindTargetedVariation(userID string, campaign schema.Campaign, variationTargetingVariables []int) (schema.Variation, error) {
+// FindTargetedVariation function
+func FindTargetedVariation(userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
 	if campaign.IsForcedVariation == false {
 		return schema.Variation{}, errors.New("DEBUG_MESSAGES.WHITELISTING_SKIPPED")
 	}
-	whiteListedVariationsList := GetWhiteListedVariationsList(userID, campaign, variationTargetingVariables)
+	whiteListedVariationsList := GetWhiteListedVariationsList(userID, campaign, options)
 	whiteListedVariationsLength := len(whiteListedVariationsList)
 	var targettedVariation schema.Variation
 	if whiteListedVariationsLength == 0 {
 		return schema.Variation{}, errors.New("No White listed variation")
 	} else if whiteListedVariationsLength == 1 {
 		targettedVariation = whiteListedVariationsList[0]
-	}
-	whiteListedVariationsList = utils.ScaleVariations(whiteListedVariationsList)
-	variationAllocation := utils.GetVariationAllocationRanges(whiteListedVariationsList)
-	for i, variation := range whiteListedVariationsList {
-		variation.StartVariationAllocation = variationAllocation[i].StartVariationAllocation
-		variation.EndVariationAllocation = variationAllocation[i].EndVariationAllocation
-	}
-	// utils.SetVariationAllocationFromRanges(whiteListedVariationsList, variationAllocation)
-	bucketValue := GetBucketValueForUser(userID, constants.MaxTrafficValue)
-	targettedVariation, err := GetBucketerVariation(whiteListedVariationsList, bucketValue)
-	if err != nil {
-		return schema.Variation{}, errors.New("No targetted variation")
+	} else {
+		whiteListedVariationsList = utils.ScaleVariations(whiteListedVariationsList)
+		variationAllocation := utils.GetVariationAllocationRanges(whiteListedVariationsList)
+		for i, variation := range whiteListedVariationsList {
+			variation.StartVariationAllocation = variationAllocation[i].StartVariationAllocation
+			variation.EndVariationAllocation = variationAllocation[i].EndVariationAllocation
+		}
+		bucketValue := GetBucketValueForUser(userID, constants.MaxTrafficValue)
+		var err error
+		targettedVariation, err = GetBucketerVariation(whiteListedVariationsList, bucketValue)
+		if err != nil {
+			return schema.Variation{}, errors.New("No targetted variation")
+		}
 	}
 	return targettedVariation, nil
 }
@@ -117,22 +119,30 @@ func GetVariationFromUserStorage(UserStorage schema.UserStorage, userID string, 
 }
 
 //GetWhiteListedVariationsList ...
-func GetWhiteListedVariationsList(userID string, campaign schema.Campaign, variationTargetingVariables []int) []schema.Variation {
+func GetWhiteListedVariationsList(userID string, campaign schema.Campaign, options schema.Options) []schema.Variation {
 	// check Validity of
 	var whiteListedVariationsList []schema.Variation
 	for _, variation := range campaign.Variations {
-		if variation.Segments != nil {
-
+		if len(variation.Segments) == 0 {
+			log.Warning("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
 		}
+		status := EvaluateSegmentation(variation.Segments, options)
+		if status {
+			whiteListedVariationsList = append(whiteListedVariationsList, variation)
+		}
+		log.Info("DEBUG_MESSAGES.SEGMENTATION_STATUS" + strconv.FormatBool(status))
 	}
 	return whiteListedVariationsList
 }
 
-//EvaluatePreSegmentation ...
-func EvaluatePreSegmentation(userID string, campaign schema.Campaign, customVariables []int) bool {
-	// segment := campaign.Segments
+// EvaluateSegmentation function
+func EvaluateSegmentation(segments map[string]interface{}, options schema.Options) bool {
 	//TO BE COMPLETED
-	return true
+	v := rand.Intn(1)
+	if v == 1 {
+		return true
+	}
+	return false
 }
 
 // // SetUserData ...

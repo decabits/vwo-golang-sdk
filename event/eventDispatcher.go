@@ -27,7 +27,7 @@ func Dispatch(impression schema.Impression) bool {
 		"&r=" + strconv.Itoa(impression.R) +
 		"&ed=" + string(impression.ED)
 
-	response, err := utils.Get(URL)
+	response, err := utils.GetRequest(URL)
 	if err != nil {
 		log.Error("ERROR_MESSAGES.IMPRESSION_FAILED")
 		return false

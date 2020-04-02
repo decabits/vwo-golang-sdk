@@ -35,7 +35,7 @@ func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string
 		return false
 	}
 
-	variation, err := core.GetVariation(vwoInstance, userID, campaign)
+	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
 		log.Error("No Variation Found")
 		return false

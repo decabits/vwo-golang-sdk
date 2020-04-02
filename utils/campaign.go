@@ -8,20 +8,6 @@ import (
 	"github.com/decabits/vwo-golang-sdk/schema"
 )
 
-// // SetVariationAllocation Sets variation allocation range in the provided campaign.
-// func SetVariationAllocation(campaigns schema.Campaign) {
-// 	/*
-// 		Args:
-// 			campaign (schema.Campaign struct): Campaign object
-// 	*/
-
-// 	campaigns.Variations = GetVariationAllocationRanges(campaigns.Variations)
-// 	for _, variation := range campaigns.Variations {
-// 		//logger
-// 		log.Info(variation)
-// 	}
-// }
-
 // GetVariationAllocationRanges Returns a list of variation allocation ranges.
 func GetVariationAllocationRanges(variations []schema.Variation) []schema.Variation {
 	/*
@@ -71,7 +57,7 @@ func getVariationBucketingRange(weight float64) int {
 		return 0
 	}
 	startRange := int(math.Ceil(weight * 100))
-	return Min(startRange, constants.MaxTrafficValue)
+	return min(startRange, constants.MaxTrafficValue)
 }
 
 // GetCampaign function finds and returns campaign from given campaign_key.
@@ -179,16 +165,14 @@ func GetVariable(variables []schema.Variable, variableKey string) (schema.Variab
 	return schema.Variable{}, nil
 }
 
-// Min function
-func Min(a, b int) int {
+func min(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-// Max function
-func Max(a, b int) int {
+func max(a, b int) int {
 	if a > b {
 		return a
 	}

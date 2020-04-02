@@ -26,7 +26,7 @@ func GetFeatureVariableValue(vwoInstance schema.VwoInstance, campaignKey, variab
 		return schema.Variable{}
 	}
 
-	variation, err := core.GetVariation(vwoInstance, userID, campaign)
+	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
 		log.Error("No Variation Found")
 		return schema.Variable{}

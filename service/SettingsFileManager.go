@@ -42,7 +42,7 @@ func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) erro
 		"&sdk-v=" + constants.SDKVersion +
 		"&api-version=1"
 
-	resp, err := utils.Get(protocol + hostname + path)
+	resp, err := utils.GetRequest(protocol + hostname + path)
 	if err != nil {
 		return errors.New("Error fetching Settings File: " + err.Error())
 	}

@@ -3,6 +3,7 @@ package core
 import (
 	"errors"
 	"math"
+	"strconv"
 
 	log "github.com/golang/glog"
 
@@ -33,7 +34,7 @@ func GetBucketerVariation(variations []schema.Variation, bucketValue int) (schem
 	return schema.Variation{}, errors.New("Variation Not Found")
 }
 
-//GetBucketValueForUser function returns Bucket Value of the user by hashing the userId with murmur hash and scaling it down.
+// GetBucketValueForUser function returns Bucket Value of the user by hashing the userId with murmur hash and scaling it down.
 func GetBucketValueForUser(userID string, maxValue int) int {
 	/*
 		Args:
@@ -49,7 +50,7 @@ func GetBucketValueForUser(userID string, maxValue int) int {
 	ratio := float64(hashValue) / math.Pow(2, 32)
 	multipliedValue := float64(maxValue)*ratio + 1
 	bucketValue := int(multipliedValue)
-	log.Info("User Hash Bucket Value")
+	log.Info("DEBUG_MESSAGES.USER_HASH_BUCKET_VALUE " + strconv.Itoa(bucketValue))
 	return bucketValue
 }
 

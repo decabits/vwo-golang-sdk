@@ -17,16 +17,16 @@ type SettingsFile struct {
 
 // Campaign struct
 type Campaign struct {
-	ID                int         `json:"id"`
-	Segments          interface{} `json:"segments"`
-	Status            string      `json:"status"`
-	PercentTraffic    int         `json:"percentTraffic"`
-	Goals             []Goal      `json:"goals"`
-	Variations        []Variation `json:"variations"`
-	Variables         []Variable  `json:"variables"`
-	IsForcedVariation bool        `json:"isForcedVariationEnabled"`
-	Key               string      `json:"key"`
-	Type              string      `json:"type"`
+	ID                int                    `json:"id"`
+	Segments          map[string]interface{} `json:"segments"`
+	Status            string                 `json:"status"`
+	PercentTraffic    int                    `json:"percentTraffic"`
+	Goals             []Goal                 `json:"goals"`
+	Variations        []Variation            `json:"variations"`
+	Variables         []Variable             `json:"variables"`
+	IsForcedVariation bool                   `json:"isForcedVariationEnabled"`
+	Key               string                 `json:"key"`
+	Type              string                 `json:"type"`
 }
 
 // Goal struct
@@ -38,14 +38,14 @@ type Goal struct {
 
 // Variation struct
 type Variation struct {
-	ID                       string      `json:"id"`
-	Name                     string      `json:"name"`
-	Changes                  interface{} `json:"changes"`
-	Weight                   float64         `json:"weight"`
+	ID      string      `json:"id"`
+	Name    string      `json:"name"`
+	Changes interface{} `json:"changes"`
+	Weight  float64     `json:"weight"`
 
-	Segments                 interface{} `json:"segments"`
-	Variables                []Variable  `json:"variables"`
-	IsFeatureEnabled         bool        `json:"isFeatureEnabled"`
+	Segments         map[string]interface{} `json:"segments"`
+	Variables        []Variable             `json:"variables"`
+	IsFeatureEnabled bool                   `json:"isFeatureEnabled"`
 
 	StartVariationAllocation int
 	EndVariationAllocation   int
@@ -111,12 +111,9 @@ type VariationResponse struct {
 	VariationName string
 }
 
-// Segment struct
-type Segment struct{}
-
 // UserStorage struct
 type UserStorage interface {
-	Get(userID, campaignKey string) (UserData,error)
+	Get(userID, campaignKey string) (UserData, error)
 	Set(userStorageData interface{}) bool
 	Exist() bool
 }

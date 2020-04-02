@@ -5,9 +5,9 @@ import (
 )
 
 // GetKeyValue function
-func GetKeyValue(segments []schema.Segment) (string, []schema.Segment) {
+func GetKeyValue(segments map[string]interface{}) (string, map[string]interface{}) {
 	// To be done
-	return "", []schema.Segment{}
+	return "", make(map[string]interface{})
 }
 
 // CheckCampaignType matched campaign type
