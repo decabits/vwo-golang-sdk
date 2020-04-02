@@ -6,7 +6,6 @@ import (
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/schema"
-	"github.com/decabits/vwo-golang-sdk/service"
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
