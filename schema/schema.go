@@ -95,7 +95,6 @@ type Impression struct {
 	Combination  string
 	R            int
 	ED           []byte
-	//Tags
 }
 
 // Response struct

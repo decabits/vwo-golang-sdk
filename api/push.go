@@ -20,7 +20,7 @@ func Push(vwoInstance schema.VwoInstance, tagKey, tagValue, userID string) bool 
 		return false
 	}
 
-	impression := utils.GetURLParams(vwoInstance.SettingsFile, tagKey, tagValue, userID)
+	impression := utils.CreateImpressionForPush(vwoInstance.SettingsFile, tagKey, tagValue, userID)
 	if event.Dispatch(impression) {
 		return true
 	}

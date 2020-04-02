@@ -2,6 +2,7 @@ package utils
 
 import (
 	"math/rand"
+	"net/url"
 	"time"
 
 	log "github.com/golang/glog"
@@ -9,6 +10,16 @@ import (
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 )
+
+// CreateImpressionForPush function
+func CreateImpressionForPush(settingsFile schema.SettingsFile, tagKey, tagValue, userID string) schema.Impression {
+	impression := GetCommonProperties(userID, settingsFile)
+	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsPush
+	parameters := url.Values{}
+	parameters.Add(tagKey, tagValue)
+	impression.U = parameters.Encode()
+	return impression
+}
 
 // CreateImpressionExtended ...
 func CreateImpressionExtended(settingsFile schema.SettingsFile, variationID, userID string, campaignID, goalID, revenueGoal int) schema.Impression {

@@ -11,11 +11,13 @@ import (
 )
 
 // Track function
-func Track(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options, goalIdentifier string) bool {
-	if options.CustomVariables == nil || options.VariationTargetingVariables == nil {
-		return false
-	}
+func Track(vwoInstance schema.VwoInstance, campaignKey, userID string, goalIdentifier string) bool {
+	options := schema.Options{}
+	return TrackWithOptions(vwoInstance, campaignKey, userID, options, goalIdentifier)
+}
 
+// TrackWithOptions function
+func TrackWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options, goalIdentifier string) bool {
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {
 		log.Error("Error geting campaign: ", err)
@@ -26,17 +28,16 @@ func Track(vwoInstance schema.VwoInstance, campaignKey, userID string, options s
 		log.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
 		return false
 	}
-	if campaign.Type != constants.CampaignTypeFeatureRollout {
+	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
 		log.Error("ERROR_MESSAGES.INVALID_API")
 		return false
 	}
 
 	goal, err := utils.GetCampaignGoal(campaign, goalIdentifier)
 	if err != nil {
+		log.Error(err.Error())
 		return false
-	}
-
-	if goal.Type == constants.GoalTypeRevenue && options.RevenueGoal > 0 {
+	} else if goal.Type == constants.GoalTypeRevenue && options.RevenueGoal == 0 {
 		log.Error("ERROR_MESSAGES.TRACK_API_REVENUE_NOT_PASSED_FOR_REVENUE_GOAL")
 		return false
 	}
