@@ -12,13 +12,6 @@ import (
 
 //GetVariationName ...
 func GetVariationName(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options) string {
-	settingsFileManager := service.SettingsFileManager{}
-	vwoInstance.SettingsFile = settingsFileManager.GetSettingsFile()
-
-	if options.CustomVariables == nil || options.VariationTargetingVariables == nil {
-		return ""
-	}
-
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {
 		log.Error("Error geting campaign: ", err)
@@ -29,7 +22,7 @@ func GetVariationName(vwoInstance schema.VwoInstance, campaignKey, userID string
 		log.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
 		return ""
 	}
-	if campaign.Type != constants.CampaignTypeVisualAB {
+	if !utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
 		log.Error("ERROR_MESSAGES.INVALID_API")
 		return ""
 	}
