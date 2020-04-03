@@ -3,7 +3,7 @@ package core
 //TO BE COMPLETED
 import (
 	"errors"
-	"math/rand"
+	// "math/rand"
 	"strconv"
 
 	log "github.com/golang/glog"
@@ -61,21 +61,6 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 	return utils.GetCampaignVariation(campaign, variationName)
 }
 
-//GetVariationOfCampiagnForUser ...
-func GetVariationOfCampiagnForUser(userID string, campaign schema.Campaign) (schema.VariationResponse, error) {
-	variation, err := BucketUserToVariation(userID, campaign)
-
-	if err != nil {
-		return schema.VariationResponse{}, errors.New("Variation Not Found")
-	}
-	var Response schema.VariationResponse
-	Response.Variation = variation
-	Response.VariationName = variation.Name
-	Response.VariationID = variation.ID
-	return Response, nil
-
-}
-
 // FindTargetedVariation function
 func FindTargetedVariation(userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
 	if campaign.IsForcedVariation == false {
@@ -99,7 +84,7 @@ func FindTargetedVariation(userID string, campaign schema.Campaign, options sche
 		var err error
 		targettedVariation, err = GetBucketerVariation(whiteListedVariationsList, bucketValue)
 		if err != nil {
-			return schema.Variation{}, errors.New("No targetted variation")
+			return schema.Variation{}, errors.New("No targetted variation: "+ err.Error())
 		}
 	}
 	return targettedVariation, nil
@@ -138,8 +123,8 @@ func GetWhiteListedVariationsList(userID string, campaign schema.Campaign, optio
 // EvaluateSegmentation function
 func EvaluateSegmentation(segments map[string]interface{}, options schema.Options) bool {
 	//TO BE COMPLETED
-	v := rand.Intn(1)
-	return v == 1 
+	// v := rand.Intn(1)
+	return true
 }
 
 // // SetUserData ...

@@ -3,7 +3,6 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"strconv"
@@ -46,8 +45,6 @@ func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) erro
 	if err != nil {
 		return errors.New("Error fetching Settings File: " + err.Error())
 	}
-
-	fmt.Println(resp)
 
 	if err = json.Unmarshal([]byte(resp), &sfm.SettingsFile); err != nil {
 		return errors.New("Error: " + err.Error())

@@ -103,13 +103,6 @@ type Response struct {
 	StatusCode int
 }
 
-// VariationResponse struct
-type VariationResponse struct {
-	Variation     Variation
-	VariationID   string
-	VariationName string
-}
-
 // UserStorage struct
 type UserStorage interface {
 	Get(userID, campaignKey string) (UserData, error)
