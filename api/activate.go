@@ -14,6 +14,7 @@ func Activate(vwoInstance schema.VwoInstance, campaignKey, userID string) string
 	return ActivateWithOptions(vwoInstance, campaignKey, userID, options)
 }
 
+// ActivateWithOptions ...
 func ActivateWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options) string {
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {
