@@ -1,8 +1,6 @@
 package api
 
 import (
-	"log"
-
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/event"
@@ -34,15 +32,12 @@ func ActivateWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID str
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Error("No Variation Found")
+		vwoInstance.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
 		return ""
 	}
 
 	impression := utils.CreateImpressionTrackingUser(vwoInstance, campaign.ID, variation.ID, userID)
-	if event.Dispatch(vwoInstance, impression) {
-		return variation.Name
-	}
-
-	log.Println("Main Keys For Impression")
-	return ""
+	event.Dispatch(vwoInstance, impression)
+	
+	return variation.Name
 }

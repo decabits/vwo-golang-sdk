@@ -26,7 +26,7 @@ func GetFeatureVariableValue(vwoInstance schema.VwoInstance, campaignKey, variab
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Error("No Variation Found")
+		vwoInstance.Logger.Error("INFO_MESSAGES.FEATURE_NOT_ENABLED_FOR_USER ", err)
 		return schema.Variable{}
 	}
 

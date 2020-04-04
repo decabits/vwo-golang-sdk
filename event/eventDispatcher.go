@@ -8,7 +8,7 @@ import (
 )
 
 // Dispatch ...
-func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) bool {
+func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 	URL := impression.URL + "?" +
 		"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 32) +
 		"&sdk=" + impression.Sdk +
@@ -25,13 +25,11 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) bool
 	_, err := utils.GetRequest(URL)
 	if err != nil {
 		vwoInstance.Logger.Error("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
-		return false
 	}
-	return true
 }
 
 // DispatchTrackingGoal function
-func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impression) bool {
+func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impression) {
 	URL := impression.URL + "?" +
 		"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 32) +
 		"&sdk=" + impression.Sdk +
@@ -49,7 +47,5 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 	_, err := utils.GetRequest(URL)
 	if err != nil {
 		vwoInstance.Logger.Error("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
-		return false
 	}
-	return true
 }

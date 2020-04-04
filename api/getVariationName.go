@@ -26,8 +26,7 @@ func GetVariationName(vwoInstance schema.VwoInstance, campaignKey, userID string
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Error("No Variation Found")
-		return ""
+		vwoInstance.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
 	}
 
 	return variation.Name

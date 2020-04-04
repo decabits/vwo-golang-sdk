@@ -33,9 +33,10 @@ func TrackWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string
 
 	goal, err := utils.GetCampaignGoal(campaign, goalIdentifier)
 	if err != nil {
-		vwoInstance.Logger.Errorf("Error GetCampaignGoal: %+v\n", err)
+		vwoInstance.Logger.Errorf("ERROR_MESSAGES.TRACK_API_GOAL_NOT_FOUND: %+v\n", err)
 		return false
 	}
+
 	if goal.Type == constants.GoalTypeRevenue && options.RevenueGoal == 0 {
 		vwoInstance.Logger.Error("ERROR_MESSAGES.TRACK_API_REVENUE_NOT_PASSED_FOR_REVENUE_GOAL")
 		return false
@@ -43,15 +44,13 @@ func TrackWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Errorf("No Variation Found %+v\n", err)
+		vwoInstance.Logger.Errorf("INFO_MESSAGES.INVALID_VARIATION_KEY %+v\n", err)
 		return false
 	}
 
 	impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, campaign.ID, goal.ID, 5) // revenueValue = 5
-	if event.DispatchTrackingGoal(vwoInstance, impression) {
-		return true
-	}
+	event.DispatchTrackingGoal(vwoInstance, impression) 
 
 	vwoInstance.Logger.Error("Ain't Keys For Impression")
-	return false
+	return true
 }

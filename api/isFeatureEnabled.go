@@ -5,19 +5,11 @@ import (
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/event"
 	"github.com/decabits/vwo-golang-sdk/schema"
-	"github.com/decabits/vwo-golang-sdk/service"
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
 //IsFeatureEnabled ...
 func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options) bool {
-	settingsFileManager := service.SettingsFileManager{}
-	vwoInstance.SettingsFile = settingsFileManager.GetSettingsFile()
-
-	if options.CustomVariables == nil || options.VariationTargetingVariables == nil {
-		return false
-	}
-
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {
 		vwoInstance.Logger.Error("Error geting campaign: ", err)
@@ -28,29 +20,31 @@ func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string
 		vwoInstance.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
 		return false
 	}
-	if campaign.Type == constants.CampaignTypeVisualAB {
+	if utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
 		vwoInstance.Logger.Error("ERROR_MESSAGES.INVALID_API")
 		return false
 	}
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Error("No Variation Found")
+		vwoInstance.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
 		return false
 	}
 
-	if campaign.Type == constants.CampaignTypeFeatureTest {
+	isFeatureEnabled := false
+	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureTest) {
+		isFeatureEnabled = variation.isFeatureEnabled
 		impression := utils.CreateImpressionTrackingUser(vwoInstance, campaign.ID, variation.ID, userID)
-		if !event.Dispatch(vwoInstance, impression) {
-			return false
-		}
-		result := variation.IsFeatureEnabled
-		if result {
-			vwoInstance.Logger.Info("Feature Enabled For User")
-		} else {
-			vwoInstance.Logger.Info("Feature Not Enabled For User")
-		}
-		return result
+		event.Dispatch(vwoInstance, impression)
+	} else if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
+		isFeatureEnabled = true
 	}
-	return false
+
+	if isFeatureEnabled {
+		vwoInstance.Logger.Info("INFO_MESSAGES.FEATURE_ENABLED_FOR_USER")
+	} else {
+		vwoInstance.Logger.Info("INFO_MESSAGES.FEATURE_NOT_ENABLED_FOR_USER")
+	}
+	
+	return isFeatureEnabled
 }
