@@ -4,7 +4,7 @@ package core
 import (
 	"errors"
 
-	// "math/rand"
+	"math/rand"
 	"strconv"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
@@ -90,10 +90,8 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 	if !vwoInstance.UserStorage.Exist() {
 		return "", errors.New("DEBUG_MESSAGES.NO_USER_STORAGE_SERVICE_GET")
 	}
-	userStorageFetch, err := vwoInstance.UserStorage.Get(userID, campaign.Key)
-	if err != nil {
-		return "", errors.New("ERROR_MESSAGES.GET_USER_STORAGE_SERVICE_FAILED")
-	}
+	userStorageFetch := vwoInstance.UserStorage.Get(userID, campaign.Key)
+
 	vwoInstance.Logger.Info("INFO_MESSAGES.GETTING_DATA_USER_STORAGE_SERVICE")
 	return userStorageFetch.VariationName, nil
 }
@@ -118,6 +116,6 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 // EvaluateSegmentation function
 func EvaluateSegmentation(segments map[string]interface{}, options schema.Options) bool {
 	//TO BE COMPLETED
-	// v := rand.Intn(1)
-	return true
+	v := rand.Intn(1)
+	return v==0
 }

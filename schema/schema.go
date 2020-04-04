@@ -1,7 +1,6 @@
 package schema
 
 import (
-	"github.com/Piyushhbhutoria/vwo-go-sdk/schema"
 	"github.com/google/logger"
 )
 
@@ -110,7 +109,7 @@ type Response struct {
 
 // UserStorage struct
 type UserStorage interface {
-	Get(userID, campaignKey string) schema.UserData
-	Set(userData schema.UserData)
+	Get(userID, campaignKey string) UserData
+	Set(userData UserData)
 	Exist() bool
 }
