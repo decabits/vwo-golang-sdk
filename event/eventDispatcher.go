@@ -1,17 +1,14 @@
 package event
 
 import (
-	"fmt"
 	"strconv"
-
-	log "github.com/golang/glog"
 
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
 // Dispatch ...
-func Dispatch(impression schema.Impression) bool {
+func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) bool {
 	URL := impression.URL + "?" +
 		"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 32) +
 		"&sdk=" + impression.Sdk +
@@ -20,18 +17,39 @@ func Dispatch(impression schema.Impression) bool {
 		"&sId=" + impression.SID +
 		"&u=" + impression.U +
 		"&account_id=" + strconv.Itoa(impression.AccountID) +
-		"&uId=" + impression.UID +
-		"&goal_id=" + strconv.Itoa(impression.GoalID) +
+		"&uId=" + string(impression.UID) +
 		"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
-		"&combination=" + impression.Combination +
-		"&r=" + strconv.Itoa(impression.R) +
+		"&combination=" + strconv.Itoa(impression.Combination) +
 		"&ed=" + string(impression.ED)
 
-	response, err := utils.GetRequest(URL)
+	_, err := utils.GetRequest(URL)
 	if err != nil {
-		log.Error("ERROR_MESSAGES.IMPRESSION_FAILED")
+		vwoInstance.Logger.Error("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
 		return false
 	}
-	fmt.Println(response)
+	return true
+}
+
+// DispatchTrackingGoal function
+func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impression) bool {
+	URL := impression.URL + "?" +
+		"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 32) +
+		"&sdk=" + impression.Sdk +
+		"&sdk-v=" + impression.SdkV +
+		"&ap=" + impression.Ap +
+		"&sId=" + impression.SID +
+		"&u=" + impression.U +
+		"&account_id=" + strconv.Itoa(impression.AccountID) +
+		"&uId=" + string(impression.UID) +
+		"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
+		"&combination=" + strconv.Itoa(impression.Combination) +
+		"&goal_id=" + strconv.Itoa(impression.GoalID) +
+		"&r=" + strconv.Itoa(impression.R)
+
+	_, err := utils.GetRequest(URL)
+	if err != nil {
+		vwoInstance.Logger.Error("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
+		return false
+	}
 	return true
 }

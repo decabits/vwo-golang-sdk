@@ -1,8 +1,6 @@
 package api
 
 import (
-	log "github.com/golang/glog"
-
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/event"
@@ -22,35 +20,35 @@ func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string
 
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {
-		log.Error("Error geting campaign: ", err)
+		vwoInstance.Logger.Error("Error geting campaign: ", err)
 		return false
 	}
 
 	if campaign.Status != constants.StatusRunning {
-		log.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
+		vwoInstance.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
 		return false
 	}
 	if campaign.Type == constants.CampaignTypeVisualAB {
-		log.Error("ERROR_MESSAGES.INVALID_API")
+		vwoInstance.Logger.Error("ERROR_MESSAGES.INVALID_API")
 		return false
 	}
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		log.Error("No Variation Found")
+		vwoInstance.Logger.Error("No Variation Found")
 		return false
 	}
 
 	if campaign.Type == constants.CampaignTypeFeatureTest {
-		impression := utils.CreateImpression(vwoInstance.SettingsFile, campaign.ID, variation.ID, userID)
-		if !event.Dispatch(impression) {
+		impression := utils.CreateImpressionTrackingUser(vwoInstance, campaign.ID, variation.ID, userID)
+		if !event.Dispatch(vwoInstance, impression) {
 			return false
 		}
 		result := variation.IsFeatureEnabled
 		if result {
-			log.Info("Feature Enabled For User")
+			vwoInstance.Logger.Info("Feature Enabled For User")
 		} else {
-			log.Info("Feature Not Enabled For User")
+			vwoInstance.Logger.Info("Feature Not Enabled For User")
 		}
 		return result
 	}

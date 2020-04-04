@@ -1,10 +1,12 @@
 package schema
 
+import "github.com/google/logger"
+
 // VwoInstance struct utils
 type VwoInstance struct {
-	// Logger    tils.Logger
 	SettingsFile      SettingsFile
 	UserStorage       UserStorage
+	Logger            *logger.Logger
 	IsDevelopmentMode bool
 }
 
@@ -38,14 +40,14 @@ type Goal struct {
 
 // Variation struct
 type Variation struct {
-	ID      string      `json:"id"`
-	Name    string      `json:"name"`
-	Changes interface{} `json:"changes"`
-	Weight  float64     `json:"weight"`
+	ID       int                    `json:"id"`
+	Name     string                 `json:"name"`
+	Changes  interface{}            `json:"changes"`
+	Weight   float64                `json:"weight"`
+	Segments map[string]interface{} `json:"segments"`
 
-	Segments         map[string]interface{} `json:"segments"`
-	Variables        []Variable             `json:"variables"`
-	IsFeatureEnabled bool                   `json:"isFeatureEnabled"`
+	Variables        []Variable `json:"variables"`
+	IsFeatureEnabled bool       `json:"isFeatureEnabled"`
 
 	StartVariationAllocation int
 	EndVariationAllocation   int
@@ -81,20 +83,20 @@ type VariationAllocationRange struct {
 
 // Impression struct
 type Impression struct {
-	Random       float32
-	Sdk          string
-	SdkV         string
-	Ap           string
-	SID          string
-	U            string
-	AccountID    int
-	UID          string
-	URL          string
-	GoalID       int
-	ExperimentID int
-	Combination  string
-	R            int
-	ED           []byte
+	AccountID    int     `json:"account_id"`
+	UID          []byte  `json:"uId"`
+	Random       float32 `json:"random"`
+	SID          string  `json:"sId"`
+	U            string  `json:"u"`
+	Sdk          string  `json:"sdk"`
+	SdkV         string  `json:"sdk-v"`
+	Ap           string  `json:"ap"`
+	URL          string  `json:"url"`
+	ExperimentID int     `json:"experiment_id"`
+	Combination  int     `json:"combination"`
+	ED           []byte  `json:"ed"`
+	GoalID       int     `json:"goal_id"`
+	R            int     `json:"r"`
 }
 
 // Response struct

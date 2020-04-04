@@ -3,27 +3,27 @@ package utils
 import (
 	"math/rand"
 	"net/url"
+	"strconv"
 	"time"
-
-	log "github.com/golang/glog"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 )
 
 // CreateImpressionForPush function
-func CreateImpressionForPush(settingsFile schema.SettingsFile, tagKey, tagValue, userID string) schema.Impression {
-	impression := GetCommonProperties(userID, settingsFile)
+func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, userID string) schema.Impression {
+	impression := getCommonProperties(vwoInstance, userID)
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsPush
 	parameters := url.Values{}
 	parameters.Add(tagKey, tagValue)
 	impression.U = parameters.Encode()
+	vwoInstance.Logger.Info("DEBUG_MESSAGES.IMPRESSION_FOR_PUSH ", impression)
 	return impression
 }
 
-// CreateImpressionExtended ...
-func CreateImpressionExtended(settingsFile schema.SettingsFile, variationID, userID string, campaignID, goalID, revenueGoal int) schema.Impression {
-	impression := GetCommonProperties(userID, settingsFile)
+// CreateImpressionTrackingGoal ...
+func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID string, campaignID, goalID, revenueGoal int) schema.Impression {
+	impression := getCommonProperties(vwoInstance, userID)
 
 	impression.ExperimentID = campaignID
 	impression.Combination = variationID
@@ -32,41 +32,35 @@ func CreateImpressionExtended(settingsFile schema.SettingsFile, variationID, use
 	impression.GoalID = goalID
 	if revenueGoal > 0 {
 		impression.R = revenueGoal
-		log.Info("DEBUG_MESSAGES.IMPRESSION_FOR_TRACK_USER")
 	}
 
+	vwoInstance.Logger.Info("DEBUG_MESSAGES.IMPRESSION_FOR_GOAL_TRACK ", impression)
 	return impression
 }
 
-//CreateImpression ...
-func CreateImpression(settingsFile schema.SettingsFile, campaignID int, variationID, userID string) schema.Impression {
-	impression := GetCommonProperties(userID, settingsFile)
+// CreateImpressionTrackingUser function to track user
+func CreateImpressionTrackingUser(vwoInstance schema.VwoInstance, campaignID int, variationID int, userID string) schema.Impression {
+	impression := getCommonProperties(vwoInstance, userID)
 
 	impression.ExperimentID = campaignID
 	impression.Combination = variationID
 
-	impression.ED = []byte(`{'p': constants.Platform}`)
+	impression.ED = []byte(`{\"p\":\"` + constants.Platform + `\"}`)
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackUser
 
-	log.Info("DEBUG_MESSAGES.IMPRESSION_FOR_TRACK_USER")
+	vwoInstance.Logger.Info("DEBUG_MESSAGES.IMPRESSION_FOR_TRACK_USER ", impression)
 	return impression
 }
 
-// GetCommonProperties function
-func GetCommonProperties(userID string, settingsFile schema.SettingsFile) schema.Impression {
+func getCommonProperties(vwoInstance schema.VwoInstance, userID string) schema.Impression {
 	return schema.Impression{
-		Random:       rand.Float32(),
-		Sdk:          constants.SDKName,
-		SdkV:         constants.SDKVersion,
-		Ap:           constants.Platform,
-		SID:          string(time.Now().Unix()),
-		U:            GenerateFor(userID, settingsFile.AccountID),
-		AccountID:    settingsFile.AccountID,
-		UID:          userID,
-		URL:          "",
-		GoalID:       0,
-		ExperimentID: 0,
-		Combination:  "",
-		R:            0,
+		Random:    rand.Float32(),
+		Sdk:       constants.SDKName,
+		SdkV:      constants.SDKVersion,
+		Ap:        constants.Platform,
+		SID:       strconv.FormatInt(time.Now().Unix(), 10),
+		U:         generateFor(vwoInstance, userID, vwoInstance.SettingsFile.AccountID),
+		AccountID: vwoInstance.SettingsFile.AccountID,
+		UID:       []byte(userID),
 	}
 }

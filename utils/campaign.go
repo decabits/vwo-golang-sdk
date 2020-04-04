@@ -9,7 +9,7 @@ import (
 )
 
 // GetVariationAllocationRanges Returns a list of variation allocation ranges.
-func GetVariationAllocationRanges(variations []schema.Variation) []schema.Variation {
+func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
 			variations (list of variations i.e schema.Variation struct)
@@ -31,18 +31,11 @@ func GetVariationAllocationRanges(variations []schema.Variation) []schema.Variat
 			variation.StartVariationAllocation = -1
 			variation.EndVariationAllocation = -1
 		}
+		vwoInstance.Logger.Infof("Variation: %+v with weight: %+v got range as: ( %+v - %+v ))", variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
 		variationAllocationRanges = append(variationAllocationRanges, variation)
 	}
 	return variationAllocationRanges
 }
-
-// //SetVariationAllocationFromRanges ...
-// func SetVariationAllocationFromRanges(variations []schema.Variation, variationAllocationRanges []schema.VariationAllocationRange) {
-// 	for i, variation := range variations {
-// 		variation.StartVariationAllocation = variationAllocationRanges[i].StartRange
-// 		variation.EndVariationAllocation = variationAllocationRanges[i].EndRange
-// 	}
-// }
 
 // Returns the bucket size of variation.
 func getVariationBucketingRange(weight float64) int {
@@ -148,7 +141,7 @@ func GetControlVariation(campaign schema.Campaign) schema.Variation {
 	*/
 
 	for _, variation := range campaign.Variations {
-		if variation.ID == "1" {
+		if variation.ID == 1 {
 			return variation
 		}
 	}

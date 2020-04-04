@@ -3,10 +3,9 @@ package core
 //TO BE COMPLETED
 import (
 	"errors"
+
 	// "math/rand"
 	"strconv"
-
-	log "github.com/golang/glog"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
@@ -44,29 +43,29 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 			assigned else None
 			error(error): Error message
 	*/
-	targettedVariation, err := FindTargetedVariation(userID, campaign, options)
+	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		log.Error(err.Error())
+		vwoInstance.Logger.Error(err.Error())
 	} else {
-		log.Info("INFO_MESSAGES.GOT_VARIATION_FOR_USER")
+		vwoInstance.Logger.Info("INFO_MESSAGES.GOT_VARIATION_FOR_USER")
 		return targettedVariation, nil
 	}
 
-	variationName, err := GetVariationFromUserStorage(vwoInstance.UserStorage, userID, campaign)
+	variationName, err := GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	if err != nil {
 		return schema.Variation{}, err
 	}
 
-	log.Info("DEBUG_MESSAGES.GETTING_STORED_VARIATION")
+	vwoInstance.Logger.Info("DEBUG_MESSAGES.GETTING_STORED_VARIATION")
 	return utils.GetCampaignVariation(campaign, variationName)
 }
 
 // FindTargetedVariation function
-func FindTargetedVariation(userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
+func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
 	if campaign.IsForcedVariation == false {
 		return schema.Variation{}, errors.New("DEBUG_MESSAGES.WHITELISTING_SKIPPED")
 	}
-	whiteListedVariationsList := GetWhiteListedVariationsList(userID, campaign, options)
+	whiteListedVariationsList := GetWhiteListedVariationsList(vwoInstance, userID, campaign, options)
 	whiteListedVariationsLength := len(whiteListedVariationsList)
 	var targettedVariation schema.Variation
 	if whiteListedVariationsLength == 0 {
@@ -75,47 +74,43 @@ func FindTargetedVariation(userID string, campaign schema.Campaign, options sche
 		targettedVariation = whiteListedVariationsList[0]
 	} else {
 		whiteListedVariationsList = utils.ScaleVariations(whiteListedVariationsList)
-		variationAllocation := utils.GetVariationAllocationRanges(whiteListedVariationsList)
-		for i, variation := range whiteListedVariationsList {
-			variation.StartVariationAllocation = variationAllocation[i].StartVariationAllocation
-			variation.EndVariationAllocation = variationAllocation[i].EndVariationAllocation
-		}
-		bucketValue := GetBucketValueForUser(userID, constants.MaxTrafficValue)
+		whiteListedVariationsList = utils.GetVariationAllocationRanges(vwoInstance, whiteListedVariationsList)
+		bucketValue := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue)
 		var err error
 		targettedVariation, err = GetBucketerVariation(whiteListedVariationsList, bucketValue)
 		if err != nil {
-			return schema.Variation{}, errors.New("No targetted variation: "+ err.Error())
+			return schema.Variation{}, errors.New("No targetted variation: " + err.Error())
 		}
 	}
 	return targettedVariation, nil
 }
 
-//GetVariationFromUserStorage ...
-func GetVariationFromUserStorage(UserStorage schema.UserStorage, userID string, campaign schema.Campaign) (string, error) {
-	if !UserStorage.Exist() {
+// GetVariationFromUserStorage ...
+func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) (string, error) {
+	if !vwoInstance.UserStorage.Exist() {
 		return "", errors.New("DEBUG_MESSAGES.NO_USER_STORAGE_SERVICE_GET")
 	}
-	userStorageFetch, err := UserStorage.Get(userID, campaign.Key)
+	userStorageFetch, err := vwoInstance.UserStorage.Get(userID, campaign.Key)
 	if err != nil {
 		return "", errors.New("ERROR_MESSAGES.GET_USER_STORAGE_SERVICE_FAILED")
 	}
-	log.Info("INFO_MESSAGES.GETTING_DATA_USER_STORAGE_SERVICE")
+	vwoInstance.Logger.Info("INFO_MESSAGES.GETTING_DATA_USER_STORAGE_SERVICE")
 	return userStorageFetch.VariationName, nil
 }
 
 //GetWhiteListedVariationsList ...
-func GetWhiteListedVariationsList(userID string, campaign schema.Campaign, options schema.Options) []schema.Variation {
+func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) []schema.Variation {
 	// check Validity of
 	var whiteListedVariationsList []schema.Variation
 	for _, variation := range campaign.Variations {
 		if len(variation.Segments) == 0 {
-			log.Warning("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
+			vwoInstance.Logger.Info("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
 		}
 		status := EvaluateSegmentation(variation.Segments, options)
 		if status {
 			whiteListedVariationsList = append(whiteListedVariationsList, variation)
 		}
-		log.Info("DEBUG_MESSAGES.SEGMENTATION_STATUS" + strconv.FormatBool(status))
+		vwoInstance.Logger.Info("DEBUG_MESSAGES.SEGMENTATION_STATUS " + strconv.FormatBool(status))
 	}
 	return whiteListedVariationsList
 }
@@ -126,18 +121,3 @@ func EvaluateSegmentation(segments map[string]interface{}, options schema.Option
 	// v := rand.Intn(1)
 	return true
 }
-
-// // SetUserData ...
-// func SetUserData(config schema.Config, campaign schema.Campaign, variationName, userID string) bool {
-// 	UserServiceData := config.UserDatas
-// 	if len(UserServiceData) == 0 {
-// 		return false
-// 	}
-// 	for _, userData := range UserServiceData {
-// 		if userData.UserID == userID && userData.CampaignKey == campaign.Key {
-// 			userData.VariationName = variationName
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }

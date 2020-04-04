@@ -64,9 +64,6 @@ func (sfm *SettingsFileManager) ProcessSettingsFile(settingsFileLocation string)
 		return errors.New("Error: " + err.Error())
 	}
 
-	// for _, campaign := range sfm.SettingsFile.Campaigns {
-	// 	utils.SetVariationAllocation(campaign)
-	// }
 	return nil
 }
 

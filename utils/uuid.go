@@ -1,21 +1,20 @@
 package utils
 
 import (
-	log "github.com/golang/glog"
-	"strings"
 	"strconv"
+	"strings"
 
+	"github.com/decabits/vwo-golang-sdk/schema"
 	uuid "github.com/satori/go.uuid"
 )
 
-//GenerateFor ...
-func GenerateFor(userID string, accountID int) string {
+func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) string {
 	NameSpaceURL := parse("6ba7b811-9dad-11d1-80b4-00c04fd430c8")
 	VWONamespace := uuid.NewV5(NameSpaceURL, "https://vwo.com")
 	userIDNamespace := Generate(VWONamespace, strconv.Itoa(accountID))
 	uuidForAccountUserID := Generate(userIDNamespace, userID)
 	desiredUUID := strings.ToUpper(strings.Replace(uuidForAccountUserID.String(), "-", "", -1)) //To be confirmed
-	log.Info("Log For User")
+	vwoInstance.Logger.Info("DEBUG_MESSAGES.UUID_FOR_USER " + desiredUUID)
 	return desiredUUID
 }
 
