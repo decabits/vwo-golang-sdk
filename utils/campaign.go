@@ -148,16 +148,6 @@ func GetControlVariation(campaign schema.Campaign) schema.Variation {
 	return schema.Variation{}
 }
 
-//GetVariable ...
-func GetVariable(variables []schema.Variable, variableKey string) (schema.Variable, error) {
-	for _, variable := range variables {
-		if variable.Key == variableKey {
-			return variable, nil
-		}
-	}
-	return schema.Variable{}, nil
-}
-
 func min(a, b int) int {
 	if a < b {
 		return a
