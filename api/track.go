@@ -51,6 +51,5 @@ func TrackWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string
 	impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, campaign.ID, goal.ID, 5) // revenueValue = 5
 	event.DispatchTrackingGoal(vwoInstance, impression) 
 
-	vwoInstance.Logger.Error("Ain't Keys For Impression")
 	return true
 }

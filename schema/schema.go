@@ -65,9 +65,10 @@ type Variable struct {
 
 // Options struct
 type Options struct {
-	CustomVariables             []int
-	VariationTargetingVariables []int
+	CustomVariables             map[string]interface{}
+	VariationTargetingVariables map[string]interface{}
 	RevenueGoal                 int
+	VWOUserID string
 }
 
 // UserData  struct
@@ -86,7 +87,7 @@ type VariationAllocationRange struct {
 // Impression struct
 type Impression struct {
 	AccountID    int     `json:"account_id"`
-	UID          []byte  `json:"uId"`
+	UID          string  `json:"uId"`
 	Random       float32 `json:"random"`
 	SID          string  `json:"sId"`
 	U            string  `json:"u"`
@@ -96,7 +97,7 @@ type Impression struct {
 	URL          string  `json:"url"`
 	ExperimentID int     `json:"experiment_id"`
 	Combination  int     `json:"combination"`
-	ED           []byte  `json:"ed"`
+	ED           string  `json:"ed"`
 	GoalID       int     `json:"goal_id"`
 	R            int     `json:"r"`
 }
@@ -110,6 +111,6 @@ type Response struct {
 // UserStorage struct
 type UserStorage interface {
 	Get(userID, campaignKey string) UserData
-	Set(userData UserData)
+	Set(string, string, string)
 	Exist() bool
 }

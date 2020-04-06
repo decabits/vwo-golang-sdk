@@ -19,7 +19,7 @@ type VWO struct {
 func New(settingsFileLocation string, storage schema.UserStorage) schema.VwoInstance {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.ProcessSettingsFile(settingsFileLocation); err != nil {
-		log.Println("Error Processing Settings File: " + err.Error())
+		log.Println("Error Processing Settings File: ", err)
 	}
 	settingsFile := settingsFileManager.GetSettingsFile()
 
@@ -39,7 +39,7 @@ func New(settingsFileLocation string, storage schema.UserStorage) schema.VwoInst
 func Default(accountID, SDKKey string, storage schema.UserStorage) schema.VwoInstance {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {
-		log.Println("Error Processing Settings File: " + err.Error())
+		log.Println("Error Processing Settings File: ", err)
 	}
 	settingsFile := settingsFileManager.GetSettingsFile()
 
