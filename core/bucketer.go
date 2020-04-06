@@ -3,7 +3,6 @@ package core
 import (
 	"errors"
 	"math"
-	"strconv"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
@@ -30,8 +29,8 @@ func GetBucketerVariation(variations []schema.Variation, bucketValue int) (schem
 	return schema.Variation{}, errors.New("variation not found")
 }
 
-// GetBucketValueForUser function returns Bucket Value of the user by hashing the userId with murmur hash and scaling it down.
-func GetBucketValueForUser(vwoInstance schema.VwoInstance, userID string, maxValue int) int {
+// GetBucketValueForUser returns Bucket Value of the user by hashing the userId with murmur hash and scaling it down.
+func GetBucketValueForUser(vwoinstance schema.VwoInstance, userID string, maxValue, multiplier float64) int {
 	/*
 		Args:
 			user_id (string): the unique ID assigned to User
@@ -42,31 +41,12 @@ func GetBucketValueForUser(vwoInstance schema.VwoInstance, userID string, maxVal
 			(between 1 to MAX_TRAFFIC_PERCENT)
 	*/
 
-	hashValue := int(hash(userID) & umax32Bit)
+	hashValue := hash(userID) & umax32Bit
 	ratio := float64(hashValue) / math.Pow(2, 32)
-	multipliedValue := float64(maxValue)*ratio + 1
-	bucketValue := int(multipliedValue)
-	vwoInstance.Logger.Info("DEBUG_MESSAGES.USER_HASH_BUCKET_VALUE " + strconv.Itoa(bucketValue))
-	return bucketValue
-}
-
-// GetBucketValueForUserMultiplier returns Bucket Value of the user by hashing the userId with murmur hash and scaling it down.
-func GetBucketValueForUserMultiplier(vwoinstance schema.VwoInstance, userID string, maxValue, multiplier float64) int {
-	/*
-		Args:
-			user_id (string): the unique ID assigned to User
-			max_value(int): maximum value that can be alloted to the bucket value
-			multiplier(int): value for distributing ranges slightly
-		Returns:
-			int: the bucket value allotted to User
-			(between 1 to MAX_TRAFFIC_PERCENT)
-	*/
-
-	hashValue := float64(hash(userID) & umax32Bit)
-	ratio := hashValue / math.Pow(2, 32)
-	multipliedValue := (float64(maxValue)*ratio + 1) * multiplier
-	bucketValue := int(multipliedValue)
-	vwoinstance.Logger.Info("User Hash Bucket Value")
+	multipliedValue := (maxValue*ratio + 1) * multiplier
+	bucketValue := int(math.Floor(multipliedValue))
+	vwoinstance.Logger.Info("DEBUG_MESSAGES.VARIATION_HASH_VALUE: ", hashValue)
+	vwoinstance.Logger.Info("DEBUG_MESSAGES.VARIATION_BUCKET_VALUE: ", bucketValue)
 	return bucketValue
 }
 
@@ -84,13 +64,10 @@ func IsUserPartOfCampaign(vwoinstance schema.VwoInstance, userID string, campaig
 	if len(campaign.Variations) == 0 {
 		return false
 	}
-	valueAssignedToUser := GetBucketValueForUser(vwoinstance, userID, constants.MaxTrafficValue)
-	if valueAssignedToUser > 0 && valueAssignedToUser <= campaign.PercentTraffic {
-		vwoinstance.Logger.Info("INFO_MESSAGES.USER_ELIGIBILITY_FOR_CAMPAIGN")
-		return true
-	}
-	vwoinstance.Logger.Info("INFO_MESSAGES.USER_NOT_ELIGIBLE_FOR_CAMPAIGN")
-	return false
+	valueAssignedToUser := GetBucketValueForUser(vwoinstance, userID, constants.MaxTrafficPercent, 1)
+	isUserPart := valueAssignedToUser != 0 && valueAssignedToUser <= campaign.PercentTraffic
+	vwoinstance.Logger.Info("INFO_MESSAGES.USER_ELIGIBILITY_FOR_CAMPAIGN: ", isUserPart)
+	return isUserPart
 }
 
 // BucketUserToVariation validates the User ID and returns Variation into which the User is bucketed in.
@@ -105,11 +82,10 @@ func BucketUserToVariation(vwoinstance schema.VwoInstance, userID string, campai
 	*/
 
 	if len(campaign.Variations) == 0 {
-		return schema.Variation{}, errors.New("Invalid Campaign")
+		return schema.Variation{}, errors.New("No valid Campaign")
 	}
-	normalize := float64(constants.MaxTrafficValue / campaign.PercentTraffic)
-	multiplier := normalize / 100
-	bucketValue := GetBucketValueForUserMultiplier(vwoinstance, userID, constants.MaxTrafficValue, multiplier)
+	multiplier := (float64(constants.MaxTrafficValue) / float64(campaign.PercentTraffic)) / 100
+	bucketValue := GetBucketValueForUser(vwoinstance, userID, constants.MaxTrafficValue, multiplier)
 	return GetBucketerVariation(campaign.Variations, bucketValue)
 }
 

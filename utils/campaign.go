@@ -6,10 +6,11 @@ import (
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/google/logger"
 )
 
 // GetVariationAllocationRanges Returns a list of variation allocation ranges.
-func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []schema.Variation) []schema.Variation {
+func GetVariationAllocationRanges(variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
 			variations (list of variations i.e schema.Variation struct)
@@ -31,7 +32,7 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 			variation.StartVariationAllocation = -1
 			variation.EndVariationAllocation = -1
 		}
-		vwoInstance.Logger.Infof("Variation: %+v with weight: %+v got range as: ( %+v - %+v ))", variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
+		logger.Infof("Variation: %+v with weight: %+v got range as: ( %+v - %+v ))", variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
 		variationAllocationRanges = append(variationAllocationRanges, variation)
 	}
 	return variationAllocationRanges
