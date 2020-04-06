@@ -7,7 +7,7 @@ const (
 	SDKName         = "vwo-golang-sdk"
 	Platform        = "server"
 	SeedValue       = 1
-
+	// CampaignType
 	CampaignTypeVisualAB       = "VISUAL_AB"
 	CampaignTypeFeatureTest    = "FEATURE_TEST"
 	CampaignTypeFeatureRollout = "FEATURE_ROLLOUT"
@@ -17,9 +17,10 @@ const (
 
 	PushAPITagValueLength = 255
 	PushAPITagKeyLength   = 255
-	OperatorTypeAnd       = "and"
-	OperatorTypeOr        = "or"
-	OperatorTypeNot       = "not"
+
+	OperatorTypeAnd = "and"
+	OperatorTypeOr  = "or"
+	OperatorTypeNot = "not"
 
 	OperandTypesCustomVariable = "custom_variable"
 	OperandTypesUser           = "user"
@@ -41,4 +42,20 @@ const (
 	Double  = "double"
 	Integer = "integer"
 	String  = "string"
+
+	Lower         = `^lower`
+	LowerMatch    = `^lower\((.*)\)`
+	Wildcard      = `^wildcard`
+	WildcardMatch = `^wildcard\((.*)\)`
+	Regex         = `^regex`
+	RegexMatch    = `^regex\((.*)\)`
+	StartingStar  = `^\*`
+	EndingStar    = `\*$`
+
+	LowerValue              = 1
+	StartingEndingStarValue = 2
+	StartingStarValue       = 3
+	EndingStarValue         = 4
+	RegexValue              = 5
+	EqualValue              = 6
 )

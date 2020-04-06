@@ -11,15 +11,14 @@ import (
 func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) string {
 	NameSpaceURL := parse("6ba7b811-9dad-11d1-80b4-00c04fd430c8")
 	VWONamespace := uuid.NewV5(NameSpaceURL, "https://vwo.com")
-	userIDNamespace := Generate(VWONamespace, strconv.Itoa(accountID))
-	uuidForAccountUserID := Generate(userIDNamespace, userID)
+	userIDNamespace := generate(VWONamespace, strconv.Itoa(accountID))
+	uuidForAccountUserID := generate(userIDNamespace, userID)
 	desiredUUID := strings.ToUpper(strings.Replace(uuidForAccountUserID.String(), "-", "", -1)) //To be confirmed
 	vwoInstance.Logger.Info("DEBUG_MESSAGES.UUID_FOR_USER " + desiredUUID)
 	return desiredUUID
 }
 
-//Generate ...
-func Generate(namespace uuid.UUID, name string) uuid.UUID {
+func generate(namespace uuid.UUID, name string) uuid.UUID {
 	return uuid.NewV5(namespace, name)
 }
 

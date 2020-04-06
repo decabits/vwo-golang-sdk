@@ -45,7 +45,7 @@ func CreateImpressionTrackingUser(vwoInstance schema.VwoInstance, campaignID int
 	impression.ExperimentID = campaignID
 	impression.Combination = variationID
 
-	impression.ED = []byte(`{\"p\":\"` + constants.Platform + `\"}`)
+	impression.ED = `{\"p\":\"` + constants.Platform + `\"}`
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackUser
 
 	vwoInstance.Logger.Info("DEBUG_MESSAGES.IMPRESSION_FOR_TRACK_USER ", impression)
@@ -61,6 +61,6 @@ func getCommonProperties(vwoInstance schema.VwoInstance, userID string) schema.I
 		SID:       strconv.FormatInt(time.Now().Unix(), 10),
 		U:         generateFor(vwoInstance, userID, vwoInstance.SettingsFile.AccountID),
 		AccountID: vwoInstance.SettingsFile.AccountID,
-		UID:       []byte(userID),
+		UID:       userID,
 	}
 }

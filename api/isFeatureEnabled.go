@@ -33,7 +33,7 @@ func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string
 
 	isFeatureEnabled := false
 	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureTest) {
-		isFeatureEnabled = variation.isFeatureEnabled
+		isFeatureEnabled = variation.IsFeatureEnabled
 		impression := utils.CreateImpressionTrackingUser(vwoInstance, campaign.ID, variation.ID, userID)
 		event.Dispatch(vwoInstance, impression)
 	} else if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
@@ -45,6 +45,6 @@ func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string
 	} else {
 		vwoInstance.Logger.Info("INFO_MESSAGES.FEATURE_NOT_ENABLED_FOR_USER")
 	}
-	
+
 	return isFeatureEnabled
 }

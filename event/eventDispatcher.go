@@ -17,10 +17,10 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 		"&sId=" + impression.SID +
 		"&u=" + impression.U +
 		"&account_id=" + strconv.Itoa(impression.AccountID) +
-		"&uId=" + string(impression.UID) +
+		"&uId=" + impression.UID +
 		"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
 		"&combination=" + strconv.Itoa(impression.Combination) +
-		"&ed=" + string(impression.ED)
+		"&ed=" + impression.ED
 
 	_, err := utils.GetRequest(URL)
 	if err != nil {
@@ -38,7 +38,7 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 		"&sId=" + impression.SID +
 		"&u=" + impression.U +
 		"&account_id=" + strconv.Itoa(impression.AccountID) +
-		"&uId=" + string(impression.UID) +
+		"&uId=" + impression.UID +
 		"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
 		"&combination=" + strconv.Itoa(impression.Combination) +
 		"&goal_id=" + strconv.Itoa(impression.GoalID) +

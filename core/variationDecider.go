@@ -1,14 +1,13 @@
 package core
 
-//TO BE COMPLETED
 import (
 	"errors"
 
-	"math/rand"
 	"strconv"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/decabits/vwo-golang-sdk/service"
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
@@ -43,9 +42,11 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 			assigned else None
 			error(error): Error message
 	*/
+	options.VWOUserID = userID
+
 	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Error(err.Error())
+		vwoInstance.Logger.Error(err)
 	} else {
 		vwoInstance.Logger.Info("INFO_MESSAGES.GOT_VARIATION_FOR_USER")
 		return targettedVariation, nil
@@ -53,11 +54,27 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 
 	variationName, err := GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	if err != nil {
-		return schema.Variation{}, err
+		vwoInstance.Logger.Error(err)
+	}
+	if variationName != "" {
+		vwoInstance.Logger.Info("DEBUG_MESSAGES.GETTING_STORED_VARIATION")
+		return utils.GetCampaignVariation(campaign, variationName)
 	}
 
-	vwoInstance.Logger.Info("DEBUG_MESSAGES.GETTING_STORED_VARIATION")
-	return utils.GetCampaignVariation(campaign, variationName)
+	if EvaluateSegment(vwoInstance, campaign.Segments, options) && IsUserPartOfCampaign(vwoInstance, userID, campaign) {
+		variation, err := BucketUserToVariation(vwoInstance, userID, campaign)
+		if err != nil {
+			vwoInstance.Logger.Info("DEBUG_MESSAGES.VARIATION_NOT_FOUND")
+			return schema.Variation{}, nil
+		}
+		if vwoInstance.UserStorage.Exist() {
+			vwoInstance.UserStorage.Set(userID, campaign.Key, variationName)
+			vwoInstance.Logger.Info("INFO_MESSAGES.GOT_VARIATION_FOR_USER")
+		}
+		return variation, nil
+	}
+
+	return schema.Variation{}, nil
 }
 
 // FindTargetedVariation function
@@ -104,7 +121,7 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 		if len(variation.Segments) == 0 {
 			vwoInstance.Logger.Info("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
 		}
-		status := EvaluateSegmentation(variation.Segments, options)
+		status := EvaluateSegment(vwoInstance, variation.Segments, options)
 		if status {
 			whiteListedVariationsList = append(whiteListedVariationsList, variation)
 		}
@@ -113,9 +130,11 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 	return whiteListedVariationsList
 }
 
-// EvaluateSegmentation function
-func EvaluateSegmentation(segments map[string]interface{}, options schema.Options) bool {
-	//TO BE COMPLETED
-	v := rand.Intn(1)
-	return v==0
+// EvaluateSegment function
+func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interface{}, options schema.Options) bool {
+	if len(segments) == 0 {
+		vwoInstance.Logger.Info("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
+		return true
+	}
+	return service.SegmentEvaluator(segments, options)
 }
