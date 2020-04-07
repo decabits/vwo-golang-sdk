@@ -120,7 +120,7 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 		if len(variation.Segments) == 0 {
 			vwoInstance.Logger.Info("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
 		}
-		status := EvaluateSegment(vwoInstance, variation.Segments, options)
+		status := PreEvaluateSegment(vwoInstance, variation.Segments, options)
 		if status {
 			whiteListedVariationsList = append(whiteListedVariationsList, variation)
 		}
@@ -131,6 +131,14 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 
 // EvaluateSegment function
 func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interface{}, options schema.Options) bool {
+	if len(segments) == 0 {
+		vwoInstance.Logger.Info("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
+		return true
+	}
+	return SegmentEvaluator(segments, options)
+}
+
+func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interface{}, options schema.Options) bool {
 	if len(segments) == 0 {
 		vwoInstance.Logger.Info("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
 		return false
