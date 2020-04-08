@@ -67,7 +67,17 @@ func (sfm *SettingsFileManager) ProcessSettingsFile(settingsFileLocation string)
 	return nil
 }
 
+func (sfm *SettingsFileManager) Process() {
+	for i, campaign := range sfm.SettingsFile.Campaigns {
+		sfm.SettingsFile.Campaigns[i].Variations = utils.GetVariationAllocationRanges(campaign.Variations)
+	}
+}
+
 // GetSettingsFile ...
 func (sfm *SettingsFileManager) GetSettingsFile() schema.SettingsFile {
+	// for i, campaign := range sfm.SettingsFile.Campaigns {
+	// 	sfm.SettingsFile.Campaigns[i].Variations = utils.GetVariationAllocationRanges(campaign.Variations)
+	// }
+	// fmt.Println(sfm.SettingsFile.Campaigns)
 	return sfm.SettingsFile
 }

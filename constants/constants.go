@@ -1,12 +1,13 @@
 package constants
 
 const (
-	MaxTrafficValue = 10000
-	StatusRunning   = "RUNNING"
-	SDKVersion      = "1.0.0" //check its defination in constants.py
-	SDKName         = "vwo-golang-sdk"
-	Platform        = "server"
-	SeedValue       = 1
+	MaxTrafficPercent = 100
+	MaxTrafficValue   = 10000
+	StatusRunning     = "RUNNING"
+	SDKVersion        = "1.0.0" //check its defination in constants.py
+	SDKName           = "vwo-golang-sdk"
+	Platform          = "server"
+	SeedValue         = 1
 	// CampaignType
 	CampaignTypeVisualAB       = "VISUAL_AB"
 	CampaignTypeFeatureTest    = "FEATURE_TEST"

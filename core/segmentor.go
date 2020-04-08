@@ -1,4 +1,4 @@
-package service
+package core
 
 import (
 	"strings"
@@ -96,7 +96,7 @@ func extractResult(operandType int, operandValue, tagValue string) bool {
 func operandUserParser(operand string, options schema.Options) bool {
 	users := strings.Split(operand, ",")
 	for _, user := range users {
-		if strings.Trim(user, "") == options.VWOUserID {
+		if strings.Trim(user, " ") == options.VWOUserID {
 			return true
 		}
 	}

@@ -21,6 +21,7 @@ func New(settingsFileLocation string, storage schema.UserStorage) schema.VwoInst
 	if err := settingsFileManager.ProcessSettingsFile(settingsFileLocation); err != nil {
 		log.Println("Error Processing Settings File: ", err)
 	}
+	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 
 	logger := logger.Init(constants.SDKName, true, false, ioutil.Discard)
@@ -41,6 +42,7 @@ func Default(accountID, SDKKey string, storage schema.UserStorage) schema.VwoIns
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {
 		log.Println("Error Processing Settings File: ", err)
 	}
+	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 
 	logger := logger.Init(constants.SDKName, true, false, ioutil.Discard)

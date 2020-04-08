@@ -26,26 +26,21 @@ func GetFeatureVariableValue(vwoInstance schema.VwoInstance, campaignKey, variab
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Error("INFO_MESSAGES.FEATURE_NOT_ENABLED_FOR_USER ", err)
+		vwoInstance.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY ", err)
 		return nil
 	}
 
 	var variable schema.Variable
 	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
-		variable = utils.GetVariableForFeature(campaign, variableKey)
+		variable = utils.GetVariableForFeature(campaign.Variables, variableKey)
 	} else if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureTest) {
-		variable = utils.GetVariableValueForVariation(campaign, variation, variableKey)
-		if variable.Key != "" {
-			if variation.IsFeatureEnabled {
-				vwoInstance.Logger.Info("INFO_MESSAGES.USER_RECEIVED_VARIABLE_VALUE")
-			} else {
-				vwoInstance.Logger.Info("INFO_MESSAGES.VARIABLE_NOT_USED_RETURN_DEFAULT_VARIABLE_VALUE")
-			}
-		}
+		variable = utils.GetVariableValueForVariation(vwoInstance, campaign, variation, variableKey)
 	}
 
-	if variable.Key == "" {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.VARIABLE_NOT_FOUND")
+	if variable.Key != "" {
+		vwoInstance.Logger.Info("INFO_MESSAGES.VARIABLE_NOT_FOUND")
+	} else {
+		vwoInstance.Logger.Info("INFO_MESSAGES.VARIABLE_FOUND", variable)
 	}
 
 	return variable.Value
