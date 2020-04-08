@@ -8,6 +8,14 @@ import (
 
 // GetRequest function to do a get call
 func GetRequest(url string) (string, error) {
+	/*
+		Args:
+			url: URL needed
+
+		Return:
+			string: stringified content recieved
+			error: error encountered while Get rewuest, nil if no error
+	*/
 	response, err := http.Get(url)
 	if err != nil {
 		return "", errors.New("URL not Found" + err.Error())

@@ -8,7 +8,16 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// generateFor generates desired UUID
 func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) string {
+	/*
+		Args:
+		    userID : User identifier
+		    accountID : Account identifier
+
+		Returns:
+			string : Desired Uuid
+	*/
 	NameSpaceURL := parse("6ba7b811-9dad-11d1-80b4-00c04fd430c8")
 	VWONamespace := uuid.NewV5(NameSpaceURL, "https://vwo.com")
 	userIDNamespace := generate(VWONamespace, strconv.Itoa(accountID))
@@ -18,11 +27,28 @@ func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) s
 	return desiredUUID
 }
 
+// generate generates uuid from namespace and name, uses uuid5
 func generate(namespace uuid.UUID, name string) uuid.UUID {
+	/*
+		 Args:
+		    namespace : Namespace
+		    name : Name
+
+		Returns:
+		    uuid.UUID: Uuid generated using imported NewV5 function
+	*/
 	return uuid.NewV5(namespace, name)
 }
 
 func parse(s string) uuid.UUID {
+	/*
+		Args:
+			s : the string that is to be converted to type UUID
+
+		Returns:
+		uuid.UUD: the converted string to UUID type
+	*/
+
 	var uuid uuid.UUID
 	switch len(s) {
 	// xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx

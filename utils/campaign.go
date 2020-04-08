@@ -2,19 +2,20 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"math"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 )
 
-// GetVariationAllocationRanges Returns a list of variation allocation ranges.
+// GetVariationAllocationRanges returns a list of variation with set allocation ranges.
 func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
-			variations (list of variations i.e schema.Variation struct)
+			variations: list of variations(schema.Variation)
 		Returns:
-			list(list of variations i.e schema.Variation struct):
+			variations: list of variations(schema.Variation)
 	*/
 
 	var (
@@ -22,10 +23,10 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 		variationAllocationRanges []schema.Variation
 	)
 	for _, variation := range variations {
-		stepFactor := getVariationBucketingRange(variation.Weight)
+		stepFactor := GetVariationBucketingRange(variation.Weight)
 		if stepFactor != 0 {
 			variation.StartVariationAllocation = currentAllocation + 1
-			variation.EndVariationAllocation = currentAllocation + stepFactor
+			variation.EndVariationAllocation = min(currentAllocation+stepFactor, 10000)
 			currentAllocation += stepFactor
 		} else {
 			variation.StartVariationAllocation = -1
@@ -37,11 +38,11 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 	return variationAllocationRanges
 }
 
-// Returns the bucket size of variation.
-func getVariationBucketingRange(weight float64) int {
+// GetVariationBucketingRange Returns the bucket size of variation.
+func GetVariationBucketingRange(weight float64) int {
 	/*
 		Args:
-			weight (int): weight of variation
+			weight: weight of variation
 		Returns:
 			int: Bucket start range of Variation
 	*/
@@ -57,8 +58,8 @@ func getVariationBucketingRange(weight float64) int {
 func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.Campaign, error) {
 	/*
 		Args:
-			settingsFile (dict): Settings file for the project
-			campaignKey (string): Campaign identifier key
+			settingsFile  : Settings file for the project
+			campaignKey: Campaign identifier key
 		Returns:
 			schema.Campaign: Campaign object
 	*/
@@ -74,16 +75,20 @@ func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.C
 func ScaleVariations(variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
-			variations(list): list of variations(dict object) having weight as a property
+			variations: list of variations(schema.Variartion) having weight as a property
+
+		Return:
+			variations: list of variations(schema.Variartion)
 	*/
 	weightSum := 0.0
 	for _, variation := range variations {
 		weightSum += variation.Weight
 	}
-	if weightSum == 0 {
-		normalizedWeight := float64(100 / len(variations))
-		for _, variation := range variations {
-			variation.Weight = normalizedWeight
+	if weightSum == 0.0 {
+		normalizedWeight := float64(100.0) / float64(len(variations))
+		fmt.Println(normalizedWeight)
+		for i := range variations {
+			variations[i].Weight = normalizedWeight
 		}
 	} else {
 		for _, variation := range variations {
@@ -97,8 +102,8 @@ func ScaleVariations(variations []schema.Variation) []schema.Variation {
 func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) (schema.Goal, error) {
 	/*
 		 Args:
-			campaign (dict): The running campaign
-			goalIdentifier (string): Goal identifier
+			campaign: The running campaign
+			goalIdentifier: Goal identifier
 		Returns:
 			schema.Goal: Goal corresponding to goal_identifer in respective campaign
 	*/
@@ -135,9 +140,9 @@ func GetCampaignVariation(campaign schema.Campaign, variationName string) (schem
 func GetControlVariation(campaign schema.Campaign) schema.Variation {
 	/*
 		Args:
-			campaign (schema.Campaign): Running campaign
+			campaign: Running campaign
 		Returns:
-			variation (dischema.Variation): Control variation from the campaign, ie having id = 1
+			schema.Variation: Control variation from the campaign, ie having id = 1
 	*/
 
 	for _, variation := range campaign.Variations {
