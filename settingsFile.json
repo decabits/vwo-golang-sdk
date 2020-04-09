@@ -214,10 +214,10 @@
     "segments": {},
     "status": "RUNNING",
     "percentTraffic": 100,
-    "goals": [{}],
+    "goals": {},
     "isForcedVariationEnabled": false,
     "key": "phpab3",
-    "variations": [{}],
+    "variations": {},
     "type": "VISUAL_AB"
   }]
 }

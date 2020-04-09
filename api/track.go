@@ -18,7 +18,7 @@ func Track(vwoInstance schema.VwoInstance, campaignKey, userID string, goalIdent
 func TrackWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string, goalIdentifier string, options schema.Options) bool {
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {
-		vwoInstance.Logger.Error("Error geting campaign: %+v\n", err)
+		vwoInstance.Logger.Errorf("Error geting campaign: %+v\n", err)
 		return false
 	}
 

@@ -4,9 +4,31 @@ import (
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
-
 	"github.com/stretchr/testify/assert"
 )
+
+func TestCreateImpressionForPush(t *testing.T) {
+	vwoInstance := GetInstance("../settingsFile.json")
+	URL := "https://dev.visualwebsiteoptimizer.com/server-side/push"
+
+	userID := "Chris"
+	tagValue := ""
+	tagKey := ""
+	DemoImpression := CreateImpressionForPush(vwoInstance, tagKey, tagValue, userID)
+	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
+	assert.Equal(t, "=", DemoImpression.U, "Non Matching Parameters")
+
+	userID = "Lizzie"
+	tagValue = "testVal"
+	tagKey = "testKey"
+	DemoImpression = CreateImpressionForPush(vwoInstance, tagKey, tagValue, userID)
+	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
+	assert.Equal(t, "testKey=testVal", DemoImpression.U, "Non Matching Parameters")
+}
 
 func TestCreateImpressionTrackingUser(t *testing.T) {
 	vwoInstance := GetInstance("../settingsFile.json")
@@ -15,6 +37,7 @@ func TestCreateImpressionTrackingUser(t *testing.T) {
 	goalID := 281
 	revenueGoal := 5
 	userID := "Chris"
+	URL := "https://dev.visualwebsiteoptimizer.com/server-side/track-goal"
 
 	DemoImpression := CreateImpressionTrackingGoal(vwoInstance, variationID, userID, campaignID, goalID, revenueGoal)
 	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
@@ -23,6 +46,7 @@ func TestCreateImpressionTrackingUser(t *testing.T) {
 	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
 	assert.Equal(t, revenueGoal, DemoImpression.R, "Non Matching Revenues")
 	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
 	var temp1 string
 	assert.IsType(t, temp1, DemoImpression.SID, "Incorrect SID type")
 	var temp2 float32

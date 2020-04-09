@@ -15,10 +15,12 @@ const umax32Bit = 0xFFFFFFFF
 func GetBucketerVariation(variations []schema.Variation, bucketValue int) (schema.Variation, error) {
 	/*
 		Args:
-			variations (list): list of variations
-			bucketValue (int): the bucket value of the user
+			variations : list of variations (schema.Variation)
+			bucketValue: the bucket value of the user
+
 		Returns:
-			(dict|None): variation data allotted to the user or None if not
+			schema.Variation: variation  allotted to the user
+			error: if no variation found, else nil
 	*/
 
 	for _, variation := range variations {
@@ -33,9 +35,11 @@ func GetBucketerVariation(variations []schema.Variation, bucketValue int) (schem
 func GetBucketValueForUser(vwoinstance schema.VwoInstance, userID string, maxValue, multiplier float64) int {
 	/*
 		Args:
-			user_id (string): the unique ID assigned to User
-			max_value(int): maximum value that can be alloted to the bucket value
-			multiplier(int): value for distributing ranges slightly
+			vwoinstance: vwo Instance for logger implementation
+			userID: the unique ID assigned to User
+			maxValue: maximum value that can be alloted to the bucket value
+			multiplier: value for distributing ranges slightly
+
 		Returns:
 			int: the bucket value allotted to User
 			(between 1 to MAX_TRAFFIC_PERCENT)
@@ -45,17 +49,17 @@ func GetBucketValueForUser(vwoinstance schema.VwoInstance, userID string, maxVal
 	ratio := float64(hashValue) / math.Pow(2, 32)
 	multipliedValue := (maxValue*ratio + 1) * multiplier
 	bucketValue := int(math.Floor(multipliedValue))
-	vwoinstance.Logger.Info("DEBUG_MESSAGES.VARIATION_HASH_VALUE: ", hashValue)
-	vwoinstance.Logger.Info("DEBUG_MESSAGES.VARIATION_BUCKET_VALUE: ", bucketValue)
+	vwoinstance.Logger.Info("DEBUG_MESSAGES.VARIATION_HASHV_VALUE: ", hashValue)
+	vwoinstance.Logger.Info("DEBUG_MESSAGES.VARIATION_BUCKETV_VALUE: ", bucketValue)
 	return bucketValue
 }
 
-// IsUserPartOfCampaign calculates if the provided user_id should become part of the campaign or not
+// IsUserPartOfCampaign calculates if the provided userID should become part of the campaign or not
 func IsUserPartOfCampaign(vwoinstance schema.VwoInstance, userID string, campaign schema.Campaign) bool {
 	/*
 		Args:
-			user_id (strings): the unique ID assigned to a user
-			campaign (dict): for getting traffic allotted to the campaign
+			userID: the unique ID assigned to a user
+			campaign: for getting traffic allotted to the campaign
 
 		Returns:
 			bool: if User is a part of Campaign or not
@@ -73,12 +77,13 @@ func IsUserPartOfCampaign(vwoinstance schema.VwoInstance, userID string, campaig
 // BucketUserToVariation validates the User ID and returns Variation into which the User is bucketed in.
 func BucketUserToVariation(vwoinstance schema.VwoInstance, userID string, campaign schema.Campaign) (schema.Variation, error) {
 	/*
-	   Args:
-	       user_id (string): the unique ID assigned to User
-	       campaign (dict): the Campaign of which User is a part of
+		Args:
+		    userID: the unique ID assigned to User
+		    campaign: the Campaign of which User is a part of
 
-	   Returns:
-	       (dict|None): variation data into which user is bucketed in or None if not
+		Returns:
+			schema.Variation: variation data into which user is bucketed in
+			error: if no variation found, else nil
 	*/
 
 	if len(campaign.Variations) == 0 {
@@ -89,6 +94,7 @@ func BucketUserToVariation(vwoinstance schema.VwoInstance, userID string, campai
 	return GetBucketerVariation(campaign.Variations, bucketValue)
 }
 
+// hash function generates hash value for given string using murmur hash
 func hash(s string) uint32 {
 	hasher := murmur3.New32WithSeed(uint32(constants.SeedValue))
 	hasher.Write([]byte(s))
