@@ -1,11 +1,9 @@
 package utils
 
 import (
-	"math"
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,28 +27,24 @@ func TestGetVariationBucketingRange(t *testing.T) {
 }
 
 func TestGetCampaign(t *testing.T) {
-	vwoInstance := GetTempInstance()
+	vwoInstance := GetInstance("../settingsFile.json")
 
-	campaignKey := "php2"
+	campaignKey := "phpab3"
 	campaign, _ := GetCampaign(vwoInstance.SettingsFile, campaignKey)
-	actual := campaign.ID
-	expected := 283
-	assert.Equal(t, expected, actual, "Expected and Actual Campaign IDs should be same")
+	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[2], campaign, "Expected and Actual Campaign IDs should be same")
 
-	campaignKey = "php1"
+	campaignKey = "p007"
 	campaign, _ = GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	assert.Empty(t, campaign, "Expected campaign should be empty")
 }
 
 func TestGetCampaignVariation(t *testing.T) {
-	vwoInstance := GetTempInstance()
+	vwoInstance := GetInstance("../settingsFile.json")
+	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
-	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	variationName := "Control"
 	variation, _ := GetCampaignVariation(campaign, variationName)
-	expected := variation.ID
-	actual := 1
-	assert.Equal(t, expected, actual, "Expected and Actual Variation IDs should be same")
+	assert.Equal(t, campaign.Variations[0], variation, "Expected and Actual Variation IDs should be same")
 
 	variationName = "Variation-3"
 	variation, _ = GetCampaignVariation(campaign, variationName)
@@ -58,14 +52,12 @@ func TestGetCampaignVariation(t *testing.T) {
 }
 
 func TestGetCampaignGoal(t *testing.T) {
-	vwoInstance := GetTempInstance()
+	vwoInstance := GetInstance("../settingsFile.json")
+	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
-	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	goalName := "rev"
 	goal, _ := GetCampaignGoal(campaign, goalName)
-	expected := goal.ID
-	actual := 2
-	assert.Equal(t, expected, actual, "Expected and Actual Goal IDs should be same")
+	assert.Equal(t, campaign.Goals[0], goal, "Expected and Actual Goal IDs should be same")
 
 	goalName = "demo"
 	goal, _ = GetCampaignGoal(campaign, goalName)
@@ -73,35 +65,30 @@ func TestGetCampaignGoal(t *testing.T) {
 }
 
 func TestGetControlVariation(t *testing.T) {
-	vwoInstance := GetTempInstance()
+	vwoInstance := GetInstance("../settingsFile.json")
 
-	campaign := vwoInstance.SettingsFile.Campaigns[0]
+	campaign := vwoInstance.SettingsFile.Campaigns[2]
 	variation := GetControlVariation(campaign)
-	assert.NotEmpty(t, variation, "Expected variation should be present in the campaign")
+	assert.Equal(t, campaign.Variations[0], variation, "Expected variation should be present in the campaign")
+
+	campaign = vwoInstance.SettingsFile.Campaigns[3]
+	variation = GetControlVariation(campaign)
+	assert.Empty(t, variation, "Expected variation should be empty")
 }
 
 func TestScaleVariations(t *testing.T) {
-	vwoInstance := GetTempInstance()
 
-	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
-	variations = ScaleVariations(variations)
-	actualWeightSum := 0.0
-	for _, variation := range variations {
-		actualWeightSum += variation.Weight
-	}
-	expectedWeightSum := 100.0
-	assert.Equal(t, expectedWeightSum, math.Ceil(actualWeightSum), "Sum of weights should be hundred")
+	variations := GetInstance("../settingsFile.json").SettingsFile.Campaigns[0].Variations
+	variations1 := ScaleVariations(variations)
+	vwoInstance := GetInstance("../settingsFile.json")
+	assert.NotEqual(t, vwoInstance.SettingsFile.Campaigns[0].Variations, variations1, "List of variations did not match")
+	assert.Equal(t, 50.0, variations1[0].Weight, "Variation weight did not match")
+	assert.Equal(t, 50.0, variations1[1].Weight, "Variation weight did not match")
 
-	for i := range variations {
-		variations[i].Weight = 0.0
-	}
-	variations = ScaleVariations(variations)
-	actualWeightSum = 0.0
-	for _, variation := range variations {
-		actualWeightSum += variation.Weight
-	}
-	expectedWeightSum = 100.0
-	assert.Equal(t, expectedWeightSum, math.Ceil(actualWeightSum), "Sum of weights should be hundred")
+	variations = GetInstance("../settingsFile.json").SettingsFile.Campaigns[2].Variations
+	variations1 = ScaleVariations(variations)
+	vwoInstance = GetInstance("../settingsFile.json")
+	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[2].Variations, variations1, "List of variations did not match")
 }
 
 func TestGetVariationAllocationRanges(t *testing.T) {
@@ -111,13 +98,13 @@ func TestGetVariationAllocationRanges(t *testing.T) {
 	variations = GetVariationAllocationRanges(variations)
 
 	assert.NotEmpty(t, variations, "No Variations recieved")
-  
+
 	startVal := 1
 	endVal := 1
 	for _, variation := range variations {
 		Range := GetVariationBucketingRange(variation.Weight)
 		assert.Equal(t, startVal, variation.StartVariationAllocation, "Start Allocation range failed to match")
-		endVal = min(startVal+Range-1, constants.MaxTrafficValue)
+		endVal = startVal + Range - 1
 		assert.Equal(t, endVal, variation.EndVariationAllocation, "End Allocation range failed to match")
 		startVal += Range
 	}

@@ -1,0 +1,223 @@
+{
+  "sdkKey": "7temp7f67f5a0b0fbe476c1f086a7038",
+  "accountId": 89499,
+  "version": 1,
+  "campaigns": [{
+    "id": 281,
+    "segments": {},
+    "status": "RUNNING",
+    "percentTraffic": 100,
+    "goals": [{}],
+    "variations": [{
+        "changes": {},
+        "id": 1,
+        "variables": [{
+            "value": "abcd",
+            "type": "string",
+            "key": "string2",
+            "id": 3
+          },
+          {
+            "value": false,
+            "type": "boolean",
+            "key": "bool2",
+            "id": 4
+          }
+        ],
+        "isFeatureEnabled": false,
+        "weight": 0.0,
+        "name": "Control",
+        "segments": {}
+      },
+      {
+        "segments": {
+          "or": [{
+            "user": "Varun"
+          }]
+        },
+        "changes": {},
+        "id": 1,
+        "variables": [{
+            "value": "abcd",
+            "type": "string",
+            "key": "string2",
+            "id": 3
+          },
+          {
+            "value": false,
+            "type": "boolean",
+            "key": "bool2",
+            "id": 4
+          }
+        ],
+        "isFeatureEnabled": false,
+        "weight": 0.0,
+        "name": "Control"
+      }
+    ],
+    "variables": [{
+        "value": 100,
+        "type": "integer",
+        "key": "int1",
+        "id": 1
+      },
+      {
+        "value": 0.1,
+        "type": "double",
+        "key": "float1",
+        "id": 2
+      }
+    ],
+    "isForcedVariationEnabled": false,
+    "key": "php1",
+    "type": "FEATURE_ROLLOUT"
+  }, {
+    "id": 283,
+    "status": "RUNNING",
+    "percentTraffic": 100,
+    "goals": [{
+        "identifier": "rev",
+        "id": 2,
+        "type": "REVENUE_TRACKING"
+      },
+      {
+        "identifier": "custom",
+        "id": 281,
+        "type": "CUSTOM_GOAL"
+      }
+    ],
+    "variables": [{
+        "value": 30,
+        "type": "integer",
+        "key": "int2",
+        "id": 1
+      },
+      {
+        "value": 10.67,
+        "type": "double",
+        "key": "float2",
+        "id": 2
+      }
+    ],
+    "isForcedVariationEnabled": true,
+    "key": "php2",
+    "variations": [{
+        "changes": {},
+        "id": 1,
+        "variables": [{
+            "value": "abcd",
+            "type": "string",
+            "key": "string2",
+            "id": 3
+          },
+          {
+            "value": false,
+            "type": "boolean",
+            "key": "bool2",
+            "id": 4
+          }
+        ],
+        "isFeatureEnabled": true,
+        "weight": 33.3333,
+        "name": "Control"
+      },
+      {
+        "segments": {
+          "or": [{
+            "custom_variable": {
+              "abcd": "regex(1)"
+            }
+          }]
+        },
+        "changes": {},
+        "id": 2,
+        "variables": [{
+            "value": 301,
+            "type": "integer",
+            "key": "int2",
+            "id": 1
+          },
+          {
+            "value": 10.671,
+            "type": "double",
+            "key": "float2",
+            "id": 2
+          }
+        ],
+        "isFeatureEnabled": false,
+        "weight": 33.3333,
+        "name": "Variation-1"
+      },
+      {
+        "segments": {},
+        "changes": {},
+        "id": 3,
+        "variables": [{
+            "value": 302,
+            "type": "integer",
+            "key": "int2",
+            "id": 1
+          },
+          {
+            "value": false,
+            "type": "boolean",
+            "key": "bool2",
+            "id": 4
+          }
+        ],
+        "isFeatureEnabled": false,
+        "weight": 33.3333,
+        "name": "Variation-2"
+      }
+    ],
+    "type": "FEATURE_TEST"
+  }, {
+    "id": 287,
+    "segments": {},
+    "status": "RUNNING",
+    "percentTraffic": 100,
+    "goals": [{
+        "identifier": "rev",
+        "id": 2,
+        "type": "REVENUE_TRACKING"
+      },
+      {
+        "identifier": "custom",
+        "id": 285,
+        "type": "CUSTOM_GOAL"
+      }
+    ],
+    "isForcedVariationEnabled": false,
+    "key": "phpab3",
+    "variations": [{
+        "id": 1,
+        "name": "Control",
+        "changes": {},
+        "weight": 33.3333
+      },
+      {
+        "id": 2,
+        "name": "Variation-1",
+        "changes": {},
+        "weight": 33.3333
+      },
+      {
+        "id": 3,
+        "name": "Variation-2",
+        "changes": {},
+        "weight": 33.3333
+      }
+    ],
+    "type": "VISUAL_AB"
+  }, {
+    "id": 289,
+    "segments": {},
+    "status": "RUNNING",
+    "percentTraffic": 100,
+    "goals": [{}],
+    "isForcedVariationEnabled": false,
+    "key": "phpab3",
+    "variations": [{}],
+    "type": "VISUAL_AB"
+  }]
+}

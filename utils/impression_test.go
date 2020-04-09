@@ -3,11 +3,13 @@ package utils
 import (
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/constants"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateImpressionTrackingUser(t *testing.T) {
-	vwoInstance := GetTempInstance()
+	vwoInstance := GetInstance("../settingsFile.json")
 	variationID := 1
 	campaignID := 283
 	goalID := 281
@@ -25,4 +27,16 @@ func TestCreateImpressionTrackingUser(t *testing.T) {
 	assert.IsType(t, temp1, DemoImpression.SID, "Incorrect SID type")
 	var temp2 float32
 	assert.IsType(t, temp2, DemoImpression.Random, "Incorrect Random type")
+}
+
+func TestGetCommonProperties(t *testing.T) {
+	userID := "Gimmy"
+	vwoInstance := GetInstance("../settingsFile.json")
+	impression := getCommonProperties(vwoInstance, userID)
+
+	assert.Equal(t, userID, impression.UID, "Non Matching UIDs")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, impression.AccountID, "Non Matching AccountIDs")
+	assert.Equal(t, constants.Platform, impression.Ap, "Non Matching Platforms")
+	assert.Equal(t, constants.SDKName, impression.Sdk, "Non Matching SDK")
+	assert.Equal(t, constants.SDKVersion, impression.SdkV, "Non Matching SDK Version")
 }
