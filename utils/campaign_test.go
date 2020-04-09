@@ -108,7 +108,7 @@ func TestGetVariationAllocationRanges(t *testing.T) {
 	vwoInstance := GetTempInstance()
 
 	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
-	variations = GetVariationAllocationRanges(vwoInstance, variations)
+	variations = GetVariationAllocationRanges(variations)
 
 	assert.NotEmpty(t, variations, "No Variations recieved")
   
