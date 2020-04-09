@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 	"math"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
@@ -11,7 +10,7 @@ import (
 )
 
 // GetVariationAllocationRanges returns a list of variation with set allocation ranges.
-func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []schema.Variation) []schema.Variation {
+func GetVariationAllocationRanges(variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
 			variations: list of variations(schema.Variation)
@@ -27,7 +26,7 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 		stepFactor := GetVariationBucketingRange(variation.Weight)
 		if stepFactor != 0 {
 			variation.StartVariationAllocation = currentAllocation + 1
-			variation.EndVariationAllocation = min(currentAllocation+stepFactor, 10000)
+			variation.EndVariationAllocation = currentAllocation + stepFactor
 			currentAllocation += stepFactor
 		} else {
 			variation.StartVariationAllocation = -1
@@ -85,9 +84,8 @@ func ScaleVariations(variations []schema.Variation) []schema.Variation {
 	for _, variation := range variations {
 		weightSum += variation.Weight
 	}
-	if weightSum == 0.0 {
-		normalizedWeight := float64(100.0) / float64(len(variations))
-		fmt.Println(normalizedWeight)
+	if weightSum == 0 {
+		normalizedWeight := 100.0 / float64(len(variations))
 		for i := range variations {
 			variations[i].Weight = normalizedWeight
 		}

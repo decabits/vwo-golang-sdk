@@ -52,12 +52,6 @@ func TestGetCampaignVariation(t *testing.T) {
 	actual := 1
 	assert.Equal(t, expected, actual, "Expected and Actual Variation IDs should be same")
 
-	variationName = "Variation-1"
-	variation, _ = GetCampaignVariation(campaign, variationName)
-	expected = variation.ID
-	actual = 2
-	assert.Equal(t, expected, actual, "Expected and Actual Variation IDs should be same")
-
 	variationName = "Variation-3"
 	variation, _ = GetCampaignVariation(campaign, variationName)
 	assert.Empty(t, variation, "Expected Variation should be empty")
@@ -71,12 +65,6 @@ func TestGetCampaignGoal(t *testing.T) {
 	goal, _ := GetCampaignGoal(campaign, goalName)
 	expected := goal.ID
 	actual := 2
-	assert.Equal(t, expected, actual, "Expected and Actual Goal IDs should be same")
-
-	goalName = "custom"
-	goal, _ = GetCampaignGoal(campaign, goalName)
-	expected = goal.ID
-	actual = 281
 	assert.Equal(t, expected, actual, "Expected and Actual Goal IDs should be same")
 
 	goalName = "demo"
@@ -123,9 +111,7 @@ func TestGetVariationAllocationRanges(t *testing.T) {
 	variations = GetVariationAllocationRanges(vwoInstance, variations)
 
 	assert.NotEmpty(t, variations, "No Variations recieved")
-	assert.LessOrEqual(t, variations[len(variations)-1].EndVariationAllocation, constants.MaxTrafficValue, "Allocation range exceeded maximum value")
-	assert.GreaterOrEqual(t, variations[0].StartVariationAllocation, 1, "Allocation range lesser then minimum value")
-
+  
 	startVal := 1
 	endVal := 1
 	for _, variation := range variations {

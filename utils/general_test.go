@@ -37,9 +37,6 @@ func TestCheckCampaignType(t *testing.T) {
 
 	campaignType = constants.CampaignTypeFeatureTest
 	assert.False(t, CheckCampaignType(campaign, campaignType), "Campaign should not match")
-
-	campaignType = constants.CampaignTypeVisualAB
-	assert.False(t, CheckCampaignType(campaign, campaignType), "Campaign should not match")
 }
 
 func TestGetKeyValue(t *testing.T) {

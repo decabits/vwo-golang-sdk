@@ -138,6 +138,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 	return SegmentEvaluator(segments, options)
 }
 
+// PreEvaluateSegment ...
 func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interface{}, options schema.Options) bool {
 	if len(segments) == 0 {
 		vwoInstance.Logger.Info("DEBUG_MESSAGES.SEGMENTATION_SKIPPED")
