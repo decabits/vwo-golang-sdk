@@ -1,8 +1,6 @@
 package core
 
 import (
-	"fmt"
-	"encoding/json"
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/schema"
@@ -105,6 +103,5 @@ func TestExtractResult(t *testing.T) {
 }
 
 func TestEvaluateCustomVariables(t *testing.T) {
-	
 
 }
