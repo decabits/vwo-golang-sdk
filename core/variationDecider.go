@@ -90,7 +90,7 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 		targettedVariation = whiteListedVariationsList[0]
 	} else {
 		whiteListedVariationsList = utils.ScaleVariations(whiteListedVariationsList)
-		whiteListedVariationsList = utils.GetVariationAllocationRanges(whiteListedVariationsList)
+		whiteListedVariationsList = utils.GetVariationAllocationRanges(vwoInstance, whiteListedVariationsList)
 		bucketValue := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, 1)
 		var err error
 		targettedVariation, err = GetBucketerVariation(whiteListedVariationsList, bucketValue)

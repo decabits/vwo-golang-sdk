@@ -4,12 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"strconv"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/utils"
+	"github.com/google/logger"
 )
 
 // SettingsFileM interface
@@ -68,16 +70,32 @@ func (sfm *SettingsFileManager) ProcessSettingsFile(settingsFileLocation string)
 }
 
 func (sfm *SettingsFileManager) Process() {
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
 	for i, campaign := range sfm.SettingsFile.Campaigns {
-		sfm.SettingsFile.Campaigns[i].Variations = utils.GetVariationAllocationRanges(campaign.Variations)
+		var (
+			currentAllocation         = 0
+			variationAllocationRanges []schema.Variation
+		)
+		for _, variation := range campaign.Variations {
+			stepFactor := utils.GetVariationBucketingRange(variation.Weight)
+			if stepFactor != 0 {
+				variation.StartVariationAllocation = currentAllocation + 1
+				variation.EndVariationAllocation = currentAllocation + stepFactor
+				currentAllocation += stepFactor
+			} else {
+				variation.StartVariationAllocation = -1
+				variation.EndVariationAllocation = -1
+			}
+			logs.Infof("Variation: %+v with weight: %+v got range as: ( %+v - %+v ))", variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
+			variationAllocationRanges = append(variationAllocationRanges, variation)
+		}
+		sfm.SettingsFile.Campaigns[i].Variations = variationAllocationRanges
 	}
 }
 
 // GetSettingsFile ...
 func (sfm *SettingsFileManager) GetSettingsFile() schema.SettingsFile {
-	// for i, campaign := range sfm.SettingsFile.Campaigns {
-	// 	sfm.SettingsFile.Campaigns[i].Variations = utils.GetVariationAllocationRanges(campaign.Variations)
-	// }
-	// fmt.Println(sfm.SettingsFile.Campaigns)
 	return sfm.SettingsFile
 }
