@@ -24,13 +24,14 @@ func New(settingsFileLocation string, storage schema.UserStorage) schema.VwoInst
 	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 
-	logger := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
 	defer logger.Close()
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      settingsFile,
 		UserStorage:       storage,
-		Logger:            logger,
+		Logger:            logs,
 		IsDevelopmentMode: true,
 	}
 	return vwoInstance
@@ -45,29 +46,15 @@ func Default(accountID, SDKKey string, storage schema.UserStorage) schema.VwoIns
 	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 
-	logger := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
 	defer logger.Close()
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      settingsFile,
 		UserStorage:       storage,
-		Logger:            logger,
+		Logger:            logs,
 		IsDevelopmentMode: true,
 	}
 	return vwoInstance
 }
-
-// func main() {
-// 	settingsFileManager := service.SettingsFileManager{}
-// 	if err := settingsFileManager.FetchSettingsFile("89499", "7aeed7f67f5a0b0fbe476c1f086a7038"); err != nil {
-// 		log.Println("Error Processing Settings File: " + err.Error())
-// 	}
-// 	settingsFile := settingsFileManager.GetSettingsFile()
-
-// 	fmt.Println(settingsFile)
-// 	fmt.Println(settingsFile.Campaigns[0].Goals)
-// 	fmt.Println(settingsFile.Campaigns[1].Variations[0])
-// 	fmt.Println(settingsFile.Campaigns[1].Variations[1])
-// 	fmt.Println(settingsFile.Campaigns[2].Variations[0])
-// 	fmt.Println(settingsFile.Campaigns[2].Variations[2])
-// }

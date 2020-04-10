@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
