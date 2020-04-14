@@ -42,6 +42,7 @@ func TrackWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string
 		return false
 	}
 
+	// campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
 		vwoInstance.Logger.Errorf("INFO_MESSAGES.INVALID_VARIATION_KEY %+v\n", err)

@@ -31,7 +31,7 @@ func TestGetCampaign(t *testing.T) {
 
 	campaignKey := "phpab3"
 	campaign, _ := GetCampaign(vwoInstance.SettingsFile, campaignKey)
-	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[2], campaign, "Expected and Actual Campaign IDs should be same")
+	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[3], campaign, "Expected and Actual Campaign IDs should be same")
 
 	campaignKey = "p007"
 	campaign, _ = GetCampaign(vwoInstance.SettingsFile, campaignKey)
@@ -77,22 +77,22 @@ func TestGetControlVariation(t *testing.T) {
 }
 
 func TestScaleVariations(t *testing.T) {
-
-	variations := GetInstance("../settingsFile.json").SettingsFile.Campaigns[0].Variations
-	variations1 := ScaleVariations(variations)
 	vwoInstance := GetInstance("../settingsFile.json")
-	assert.NotEqual(t, vwoInstance.SettingsFile.Campaigns[0].Variations, variations1, "List of variations did not match")
-	assert.Equal(t, 50.0, variations1[0].Weight, "Variation weight did not match")
-	assert.Equal(t, 50.0, variations1[1].Weight, "Variation weight did not match")
+
+	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
+	variations = ScaleVariations(variations)
+	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[0].Variations, variations, "List of variations did not match")
+	assert.Equal(t, 50.0, variations[0].Weight, "Variation weight did not match")
+	assert.Equal(t, 50.0, variations[1].Weight, "Variation weight did not match")
 
 	variations = GetInstance("../settingsFile.json").SettingsFile.Campaigns[2].Variations
-	variations1 = ScaleVariations(variations)
+	variations = ScaleVariations(variations)
 	vwoInstance = GetInstance("../settingsFile.json")
-	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[2].Variations, variations1, "List of variations did not match")
+	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[2].Variations, variations, "List of variations did not match")
 }
 
 func TestGetVariationAllocationRanges(t *testing.T) {
-	vwoInstance := GetTempInstance()
+	vwoInstance := GetInstance("../settingsFile.json")
 
 	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
 	variations = GetVariationAllocationRanges(vwoInstance, variations)

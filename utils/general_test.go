@@ -1,64 +1,43 @@
 package utils
 
 import (
-	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
-	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/stretchr/testify/assert"
 )
 
-var Segments1 = `{
-            "or": [
-              {
-				"custom_variable": {"abcd": "regex(1)"}
-              }
-			]
-		  }`
-
-var Segments2 = `{
-	"and": [
-              {
-                "user": "Varun"
-              }
-            ]
-		  }`
-
 func TestCheckCampaignType(t *testing.T) {
-	campaign := schema.Campaign{
-		ID:   123,
-		Key:  "DemoTest",
-		Type: constants.CampaignTypeFeatureRollout,
-	}
-	campaignType := constants.CampaignTypeFeatureRollout
-	assert.True(t, CheckCampaignType(campaign, campaignType), "Campaign should match")
+	vwoInstance := GetInstance("../settingsFile.json")
 
+	campaign := vwoInstance.SettingsFile.Campaigns[0]
+	campaignType := constants.CampaignTypeFeatureRollout
+	value := CheckCampaignType(campaign, campaignType)
+	assert.True(t, value, "Campaign should match")
+
+	campaign = vwoInstance.SettingsFile.Campaigns[1]
 	campaignType = constants.CampaignTypeFeatureTest
-	assert.False(t, CheckCampaignType(campaign, campaignType), "Campaign should not match")
+	value = CheckCampaignType(campaign, campaignType)
+	assert.True(t, value, "Campaign should not match")
+
+	campaign = vwoInstance.SettingsFile.Campaigns[2]
+	campaignType = constants.CampaignTypeVisualAB
+	value = CheckCampaignType(campaign, campaignType)
+	assert.True(t, value, "Campaign should not match")
+
+	campaign = vwoInstance.SettingsFile.Campaigns[2]
+	campaignType = constants.CampaignTypeFeatureTest
+	value = CheckCampaignType(campaign, campaignType)
+	assert.False(t, value, "Campaign should not match")
 }
 
 func TestGetKeyValue(t *testing.T) {
-	var segments1 map[string]interface{}
-	if err := json.Unmarshal([]byte(Segments1), &segments1); err != nil {
-		fmt.Println(err)
-	}
-	var segments2 map[string]interface{}
-	if err := json.Unmarshal([]byte(Segments2), &segments2); err != nil {
-		fmt.Println(err)
-	}
+	vwoInstance := GetInstance("../settingsFile.json")
 
-	actualKey, actualValue := GetKeyValue(segments1)
+	segment := vwoInstance.SettingsFile.Campaigns[1].Variations[0].Segments
+	actualKey, actualValue := GetKeyValue(segment)
 	expectedKey := "or"
 	assert.Equal(t, expectedKey, actualKey, "Expected and Actual Keys should be same")
-	//assert.Equal(t, expectedValue, actualValue, "Expected and Actual Values should be same")
 	var Temp []interface{}
-	assert.IsType(t, Temp, actualValue, "Type Mismatch")
-
-	actualKey, actualValue = GetKeyValue(segments2)
-	expectedKey = "and"
-	assert.Equal(t, expectedKey, actualKey, "Expected and Actual Keys should be same")
-	//assert.Equal(t, expectedValue, actualValue, "Expected and Actual Values should be same")
 	assert.IsType(t, Temp, actualValue, "Type Mismatch")
 }

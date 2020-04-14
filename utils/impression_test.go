@@ -20,6 +20,7 @@ func TestCreateImpressionForPush(t *testing.T) {
 	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
 	assert.Equal(t, "=", DemoImpression.U, "Non Matching Parameters")
 
+
 	userID = "Lizzie"
 	tagValue = "testVal"
 	tagKey = "testKey"
@@ -31,6 +32,21 @@ func TestCreateImpressionForPush(t *testing.T) {
 }
 
 func TestCreateImpressionTrackingUser(t *testing.T) {
+	vwoInstance := GetInstance("../settingsFile.json")
+	variationID := 1
+	campaignID := 283
+	userID := "Chris"
+	URL := "https://dev.visualwebsiteoptimizer.com/server-side/track-user"
+
+	DemoImpression := CreateImpressionTrackingUser(vwoInstance, campaignID, variationID, userID, )
+	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
+	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
+	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
+
+}
+func TestCreateImpressionTrackingGoal(t *testing.T) {
 	vwoInstance := GetInstance("../settingsFile.json")
 	variationID := 1
 	campaignID := 283
@@ -63,4 +79,9 @@ func TestGetCommonProperties(t *testing.T) {
 	assert.Equal(t, constants.Platform, impression.Ap, "Non Matching Platforms")
 	assert.Equal(t, constants.SDKName, impression.Sdk, "Non Matching SDK")
 	assert.Equal(t, constants.SDKVersion, impression.SdkV, "Non Matching SDK Version")
+	var temp1 float32
+	assert.IsType(t, temp1, impression.Random, "Random number should be of type float32")
+	var temp2 string
+	assert.IsType(t, temp2, impression.SID, "Random number should be of type float32")
+	
 }

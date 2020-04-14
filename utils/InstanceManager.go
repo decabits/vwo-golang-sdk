@@ -32,5 +32,4 @@ func GetInstance(path string) schema.VwoInstance {
 	}
 
 	return vwoInstance
-
 }

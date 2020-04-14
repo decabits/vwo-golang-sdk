@@ -23,7 +23,8 @@ func GetFeatureVariableValue(vwoInstance schema.VwoInstance, campaignKey, variab
 		vwoInstance.Logger.Error("ERROR_MESSAGES.INVALID_API")
 		return nil
 	}
-
+	
+	// campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
 		vwoInstance.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY ", err)
