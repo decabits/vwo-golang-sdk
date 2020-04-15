@@ -30,10 +30,6 @@ func TestGetFeatureVariableValue(t *testing.T) {
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	assert.Nil(t, value, "Campaign Not Valid")
 
-	/*
-	Comment out line 27 for testing
-	*/
-
 	userID = "Liza"
 	campaignKey = "phpab3"
 	variableKey = ""
@@ -47,10 +43,10 @@ func TestGetFeatureVariableValue(t *testing.T) {
 	assert.Nil(t, value, "No variable with name found")
 
 	userID = "Gimmy"
-	campaignKey = "phpab4"
-	variableKey = "int1"
+	campaignKey = "php1"
+	variableKey = "bool2"
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
-	expected1 := 301
+	expected1 := false
 	assert.Equal(t,expected1, value, "Variable Not found")
 
 	userID = "Gimmy"
@@ -60,5 +56,17 @@ func TestGetFeatureVariableValue(t *testing.T) {
 	expected2 := "abcd"
 	assert.Equal(t,expected2, value, "Variable Not found")
 
-	
+	userID = "Gimmy"
+	campaignKey = "php1"
+	variableKey = "float1"
+	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
+	expected3 := 0.1
+	assert.Equal(t,expected3, value, "Variable Not found")
+
+	userID = "Gimmy"
+	campaignKey = "phpab4"
+	variableKey = "int1"
+	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
+	expected4 := 301
+	assert.Equal(t,float64(expected4), value, "Variable Not found")
 }

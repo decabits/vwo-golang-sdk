@@ -95,7 +95,6 @@ func TestFindTargetedVariation(t *testing.T) {
 	userID = "Liza"
 	campaign = vwoInstance.SettingsFile.Campaigns[1]
 	actual, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
-	campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	expected = campaign.Variations[1]
 	assert.Equal(t, expected, actual, "Expected no variation")	
 }
@@ -114,33 +113,28 @@ func TestGetVariation(t *testing.T) {
 
 	userID := "Liza"
 	campaign := vwoInstance.SettingsFile.Campaigns[0]
-	campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	actual, _ := GetVariation(vwoInstance, userID, campaign, options)
 	expected := campaign.Variations[0]
 	assert.Equal(t, expected, actual, "Variation mis match")
 	
 	userID = "Varun"
 	campaign = vwoInstance.SettingsFile.Campaigns[4]
-	campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	actual, _ = GetVariation(vwoInstance, userID, campaign, options)
 	expected = campaign.Variations[0]
 	assert.Equal(t, expected, actual, "Variation mis match")
 
 	userID = "Gimmy"
 	campaign = vwoInstance.SettingsFile.Campaigns[4]
-	campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	actual, _ = GetVariation(vwoInstance, userID, campaign, options)
 	assert.Empty(t, actual, "No variation will be alloted")
 
 	userID = "Misty"
 	campaign = vwoInstance.SettingsFile.Campaigns[3]
-	campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	actual, _ = GetVariation(vwoInstance, userID, campaign, options)
 	assert.Empty(t, actual, "No variation will be alloted")
 
 	userID = "Robbie"
 	campaign = vwoInstance.SettingsFile.Campaigns[7]
-	campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	actual, _ = GetVariation(vwoInstance, userID, campaign, options)
 	assert.Empty(t, actual, "No variation will be alloted")
 

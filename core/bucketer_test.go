@@ -12,14 +12,12 @@ func TestBucketUserToVariation(t *testing.T) {
 	vwoInstance := utils.GetInstance("../settingsFile.json")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[2]
-	campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	userID := "Linda"
 	actual, _ := BucketUserToVariation(vwoInstance, userID, campaign)
 	expected := campaign.Variations[2]
 	assert.Equal(t, expected, actual, "Variations did not match")
 
 	campaign = vwoInstance.SettingsFile.Campaigns[3]
-	campaign.Variations = utils.GetVariationAllocationRanges(vwoInstance, campaign.Variations)
 	userID = "Linda"
 	actual, _ = BucketUserToVariation(vwoInstance, userID, campaign)
 	assert.Empty(t, actual, "Variation expected to be empty")	
@@ -29,7 +27,6 @@ func TestGetBucketerVariation(t *testing.T) {
 	vwoInstance := utils.GetInstance("../settingsFile.json")
 
 	variations := vwoInstance.SettingsFile.Campaigns[1].Variations
-	variations = utils.GetVariationAllocationRanges(vwoInstance, variations)
 	bucketValue := 2345
 	actual, _ := GetBucketerVariation(variations, bucketValue)
 	expected := variations[0]

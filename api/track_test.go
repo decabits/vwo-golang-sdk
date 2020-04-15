@@ -49,10 +49,6 @@ func TestTrack(t *testing.T) {
 	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Revenue Not defined")
 
-	/*
-		Comment out line 45 for testing, It allocates ranges to variation
-	*/
-
 	options := schema.Options{
 		RevenueGoal: 12,
 	}

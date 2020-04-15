@@ -28,10 +28,6 @@ func TestGetVariationName(t *testing.T) {
 	value = GetVariationName(vwoInstance, campaignKey, userID, options)
 	assert.Empty(t, value, "Campaign Not Valid")
 
-	/*
-	Comment out line 27 for testing
-	*/
-	
 	userID = "Liza"
 	campaignKey = "phpab2"
 	actual := GetVariationName(vwoInstance, campaignKey, userID, options)

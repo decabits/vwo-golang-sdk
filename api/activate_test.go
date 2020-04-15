@@ -25,10 +25,6 @@ func TestActivate(t *testing.T) {
 	value = Activate(vwoInstance, campaignKey, userID)
 	assert.Empty(t, value, "Campaign Not Valid")
 
-	/*
-		Comment out line 34 for testing, It allocates ranges to variation
-	*/
-
 	userID = "Liza"
 	campaignKey = "phpab2"
 	actual := Activate(vwoInstance, campaignKey, userID)

@@ -66,6 +66,16 @@
         "type": "double",
         "key": "float1",
         "id": 2
+      }, {
+        "value": "abcd",
+        "type": "string",
+        "key": "string2",
+        "id": 3
+      }, {
+        "value": false,
+        "type": "boolean",
+        "key": "bool2",
+        "id": 4
       }
     ],
     "isForcedVariationEnabled": false,
@@ -337,6 +347,11 @@
     "id": 263,
     "status": "RUNNING",
     "percentTraffic": 100,
+    "segments": {
+      "or": [{
+        "user": "Varun"
+      }]
+    },
     "goals": [{
         "identifier": "rev",
         "id": 2,
