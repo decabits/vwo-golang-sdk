@@ -10,14 +10,46 @@ import (
 	"github.com/google/logger"
 )
 
+// data is an example of how data is stored
+var data = `{
+    "php1": [{
+            "UserID": "Liza",
+            "CampaignKey": "php1",
+            "VariationName": "Variation-1"
+        },
+        {
+            "UserID": "Gimmy",
+            "CampaignKey": "php1",
+            "VariationName": "Variation-2"
+        }
+    ]
+}`
+
 // UserStorage interface for testing
 type UserStorage schema.UserStorage
 
 // UserStorageData struct for testing
 type UserStorageData struct{}
 
-// Get function is used to get the data from user storage 
+// Get function is used to get the data from user storage
 func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
+	var userDatas map[string][]schema.UserData
+	// Conect your database here to fetch the current data
+	// Uncomment the below part to user JSON as data base
+	if err := json.Unmarshal([]byte(data), &userDatas); err != nil {
+		fmt.Print("Could not unmarshall")
+	}
+	if len(userDatas) == 0 {
+		return schema.UserData{}
+	}
+	userData, ok := userDatas[campaignKey]
+	if ok {
+		for _, userdata := range userData {
+			if userdata.UserID == userID {
+				return userdata
+			}
+		}
+	}
 	return schema.UserData{}
 }
 
@@ -32,7 +64,7 @@ func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
 
 // Exist function
 func (us *UserStorageData) Exist() bool {
-	return false
+	return true
 }
 
 // GetInstance function creates and return a temporary VWO instance for testing

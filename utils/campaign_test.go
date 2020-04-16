@@ -49,6 +49,11 @@ func TestGetCampaignVariation(t *testing.T) {
 	variationName = "Variation-3"
 	variation, _ = GetCampaignVariation(campaign, variationName)
 	assert.Empty(t, variation, "Expected Variation should be empty")
+
+	campaign = vwoInstance.SettingsFile.Campaigns[3]
+	variationName = "Control"
+	variation, _ = GetCampaignVariation(campaign, variationName)
+	assert.Empty(t, variation, "Expected and Actual Variation IDs should be same")
 }
 
 func TestGetCampaignGoal(t *testing.T) {
@@ -79,11 +84,10 @@ func TestGetControlVariation(t *testing.T) {
 func TestScaleVariations(t *testing.T) {
 	vwoInstance := GetInstance("../settingsFile.json")
 
-	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
+	variations := vwoInstance.SettingsFile.Campaigns[9].Variations
 	variations = ScaleVariations(variations)
-	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[0].Variations, variations, "List of variations did not match")
-	assert.Equal(t, 50.0, variations[0].Weight, "Variation weight did not match")
-	assert.Equal(t, 50.0, variations[1].Weight, "Variation weight did not match")
+	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[9].Variations, variations, "List of variations did not match")
+	assert.Equal(t, 100.0, variations[0].Weight, "Variation weight did not match")
 
 	variations = GetInstance("../settingsFile.json").SettingsFile.Campaigns[2].Variations
 	variations = ScaleVariations(variations)
@@ -95,9 +99,7 @@ func TestGetVariationAllocationRanges(t *testing.T) {
 	vwoInstance := GetInstance("../settingsFile.json")
 
 	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
-
 	assert.NotEmpty(t, variations, "No Variations recieved")
-
 	startVal := 1
 	endVal := 1
 	for _, variation := range variations {
@@ -107,4 +109,23 @@ func TestGetVariationAllocationRanges(t *testing.T) {
 		assert.Equal(t, endVal, variation.EndVariationAllocation, "End Allocation range failed to match")
 		startVal += Range
 	}
+
+	variations = vwoInstance.SettingsFile.Campaigns[9].Variations
+	assert.NotEmpty(t, variations, "No Variations recieved")
+	variations = GetVariationAllocationRanges(vwoInstance, variations)
+	assert.Equal(t, -1, variations[0].StartVariationAllocation, "Start Allocation range failed to match")
+	assert.Equal(t, -1, variations[0].EndVariationAllocation, "End Allocation range failed to match")
+
+}
+
+func TestMin(t *testing.T) {
+	assert.Equal(t, 10, min(10,20), "Incorrect")
+	assert.Equal(t, 10, min(20,10), "Incorrect")
+	assert.NotEqual(t, 12, min(10,20), "Incorrect")
+}
+
+func TestMax(t *testing.T) {
+	assert.Equal(t, 20, max(10,20), "Incorrect")
+	assert.Equal(t, 20, max(20,10), "Incorrect")
+	assert.NotEqual(t, 12, max(10,20), "Incorrect")	
 }
