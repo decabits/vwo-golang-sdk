@@ -25,7 +25,7 @@ func TestGetFeatureVariableValue(t *testing.T) {
 	assert.Nil(t, value, "Campaign Not running")
 
 	userID = "Liza"
-	campaignKey = "phpab5"
+	campaignKey = "phpab2"
 	variableKey = ""
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	assert.Nil(t, value, "Campaign Not Valid")
@@ -37,36 +37,36 @@ func TestGetFeatureVariableValue(t *testing.T) {
 	assert.Nil(t, value, "Variation Not alloted")
 
 	userID = "Gimmy"
-	campaignKey = "php3"
+	campaignKey = "phpab4"
 	variableKey = "string1"
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	assert.Nil(t, value, "No variable with name found")
 
 	userID = "Gimmy"
-	campaignKey = "php1"
-	variableKey = "bool2"
+	campaignKey = "phpab4"
+	variableKey = "bool1"
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
-	expected1 := false
+	expected1 := true
 	assert.Equal(t,expected1, value, "Variable Not found")
-
-	userID = "Gimmy"
-	campaignKey = "php3"
-	variableKey = "string2"
-	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
-	expected2 := "abcd"
-	assert.Equal(t,expected2, value, "Variable Not found")
-
-	userID = "Gimmy"
-	campaignKey = "php1"
-	variableKey = "float1"
-	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
-	expected3 := 0.1
-	assert.Equal(t,expected3, value, "Variable Not found")
 
 	userID = "Gimmy"
 	campaignKey = "phpab4"
 	variableKey = "int1"
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
-	expected4 := 301
-	assert.Equal(t,float64(expected4), value, "Variable Not found")
+	expected2 := 301
+	assert.Equal(t,float64(expected2), value, "Variable Not found")
+
+	userID = "Gimmy"
+	campaignKey = "phpab4"
+	variableKey = "float2"
+	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
+	expected3 := 10.67
+	assert.Equal(t,expected3, value, "Variable Not found")
+
+	userID = "Gimmy"
+	campaignKey = "phpab4"
+	variableKey = "string2"
+	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
+	expected4 := "abcd"
+	assert.Equal(t,expected4, value, "Variable Not found")
 }

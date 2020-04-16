@@ -23,17 +23,17 @@ func TestIsFeatureEnabled(t *testing.T) {
 	assert.False(t, value, "Campaign Not running")
 
 	userID = "Liza"
-	campaignKey = "phpab5"
+	campaignKey = "phpab2"
 	value = IsFeatureEnabled(vwoInstance, campaignKey, userID, options)
 	assert.False(t, value, "Campaign Not Valid")
 
 	userID = "Robbie"
-	campaignKey = "phpab2"
+	campaignKey = "php4"
 	value = IsFeatureEnabled(vwoInstance, campaignKey, userID, options)
-	assert.False(t, value, "Variation Not alloted")
+	assert.False(t, value, "No Variation from campaign Not alloted")
 
-	userID = "Kate"
-	campaignKey = "php3"
+	userID = "Gimmy"
+	campaignKey = "php2"
 	value = IsFeatureEnabled(vwoInstance, campaignKey, userID, options)
 	assert.False(t, value, "Campaign Feature Test")
 
@@ -46,5 +46,4 @@ func TestIsFeatureEnabled(t *testing.T) {
 	campaignKey = "phpab4"
 	value = IsFeatureEnabled(vwoInstance, campaignKey, userID, options)
 	assert.True(t, value, "Campaign Feature Rollout")
-
 }

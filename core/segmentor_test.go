@@ -27,6 +27,12 @@ func TestEvaluate(t *testing.T) {
 	res = []bool{false, false, false, true}
 	actual = evaluate(operator, res, options)
 	assert.True(t, actual, "Value expected to be true")
+
+	operator = "not"
+	res = []bool{}
+	actual = evaluate(operator, res, options)
+	assert.False(t, actual, "Value expected to be true")
+
 }
 
 func TestOperandUserParser(t *testing.T) {
@@ -98,6 +104,17 @@ func TestExtractResult(t *testing.T) {
 
 	operandValue = "tempval"
 	tagValue = "MP"
+	value = extractResult(operandType, operandValue, tagValue)
+	assert.False(t, value, "Incorrect check")
+
+	operandType = 6
+	operandValue = "val1"
+	tagValue = "val1"
+	value = extractResult(operandType, operandValue, tagValue)
+	assert.True(t, value, "Incorrect check")
+
+	operandValue = "val1"
+	tagValue = "val"
 	value = extractResult(operandType, operandValue, tagValue)
 	assert.False(t, value, "Incorrect check")
 }

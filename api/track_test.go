@@ -1,8 +1,6 @@
 package api
 
 import (
-
-	// "github.com/decabits/vwo-golang-sdk/schema"
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/schema"
@@ -38,25 +36,35 @@ func TestTrack(t *testing.T) {
 	assert.False(t, value, "Goal Not Found")
 
 	userID = "Liza"
-	campaignKey = "phpab4"
-	goalIdentifier = "custom"
+	campaignKey = "php2"
+	goalIdentifier = "rev"
 	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Invalid Goal type")
 
 	userID = "Liza"
-	campaignKey = "phpab4"
+	campaignKey = "php2"
+	options := schema.Options{
+		RevenueGoal: 0,
+	}
 	goalIdentifier = "rev"
-	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
+	value = TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
 	assert.False(t, value, "Revenue Not defined")
 
-	options := schema.Options{
+	userID = "Liza"
+	campaignKey = "phpab3"
+	options = schema.Options{
+		RevenueGoal: 10,
+	}
+	goalIdentifier = "custom"
+	value = TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
+	assert.False(t, value, "No Variation in Campaign")
+	
+	options = schema.Options{
 		RevenueGoal: 12,
 	}
 	userID = "Misty"
 	campaignKey = "phpab6"
-	// fmt.Println(utils.CheckCampaignType(utils.GetCampaign(vwoInstance.SettingsFile, campaignKey), constants.CampaignTypeFeatureRollout))
-	goalIdentifier = "rev"
+	goalIdentifier = "custom"
 	value = TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
 	assert.True(t, value, "Variation should be defined")
-
 }

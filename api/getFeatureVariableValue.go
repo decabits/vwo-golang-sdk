@@ -37,7 +37,7 @@ func GetFeatureVariableValue(vwoInstance schema.VwoInstance, campaignKey, variab
 		variable = utils.GetVariableValueForVariation(vwoInstance, campaign, variation, variableKey)
 	}
 
-	if variable.Key != "" {
+	if variable.Key == "" {
 		vwoInstance.Logger.Info("INFO_MESSAGES.VARIABLE_NOT_FOUND")
 	} else {
 		vwoInstance.Logger.Info("INFO_MESSAGES.VARIABLE_FOUND", variable)

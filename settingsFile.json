@@ -36,7 +36,7 @@
       {
         "segments": {},
         "changes": {},
-        "id": 1,
+        "id": 2,
         "variables": [{
             "value": "abcd",
             "type": "string",
@@ -52,7 +52,7 @@
         ],
         "isFeatureEnabled": false,
         "weight": 50.0,
-        "name": "Control"
+        "name": "Variation-1"
       }
     ],
     "variables": [{
@@ -228,17 +228,29 @@
     "type": "VISUAL_AB"
   }, {
     "id": 289,
-    "segments": {},
+    "segments": {
+      "or": [{
+        "user": "Varun"
+      }]
+    },
     "status": "RUNNING",
     "percentTraffic": 100,
-    "goals": {},
-    "isForcedVariationEnabled": false,
+    "goals": [{
+      "identifier": "custom",
+      "id": 281,
+      "type": "CUSTOM_GOAL"
+    }],
+    "isForcedVariationEnabled": true,
     "key": "phpab3",
     "variations": {},
     "type": "VISUAL_AB"
   }, {
     "id": 290,
-    "segments": {},
+    "segments": {
+      "or": [{
+        "user": "Varun"
+      }]
+    },
     "status": "RUNNING",
     "percentTraffic": 100,
     "goals": [{
@@ -276,7 +288,7 @@
         }
       ],
       "isFeatureEnabled": true,
-      "weight": 33.3333,
+      "weight": 100,
       "name": "Control"
     }],
     "variables": [{
@@ -284,6 +296,18 @@
         "type": "integer",
         "key": "int1",
         "id": 1
+      },
+      {
+        "value": 10.67,
+        "type": "double",
+        "key": "float2",
+        "id": 2
+      },
+      {
+        "value": "abcd",
+        "type": "string",
+        "key": "string2",
+        "id": 3
       },
       {
         "value": true,
@@ -302,7 +326,7 @@
     "isForcedVariationEnabled": false,
     "key": "phpab5",
     "variations": {},
-    "type": "VISUAL_AB"
+    "type": "FEATURE_TEST"
   }, {
     "id": 290,
     "segments": {},
@@ -379,7 +403,11 @@
     "isForcedVariationEnabled": true,
     "key": "php3",
     "variations": [{
-        "segments": {},
+        "segments": {
+      "or": [{
+        "user": "Varun"
+      }]
+    },
         "changes": {},
         "id": 1,
         "variables": [{
@@ -416,5 +444,30 @@
       }
     ],
     "type": "FEATURE_TEST"
+  }, {
+    "id": 302,
+    "segments": {},
+    "status": "RUNNING",
+    "percentTraffic": 100,
+    "goals": {},
+    "isForcedVariationEnabled": false,
+    "key": "php4",
+    "variations": {},
+    "type": "FEATURE_TEST"
+  }, {
+    "id": 200,
+    "segments": {},
+    "status": "RUNNING",
+    "percentTraffic": 0,
+    "goals": {},
+    "isForcedVariationEnabled": false,
+    "key": "php5",
+    "variations": [{
+      "id": 1,
+      "name": "Control",
+      "changes": {},
+      "weight": 0
+    }],
+    "type": "FEATURE_ROLLOUT"
   }]
 }

@@ -35,7 +35,7 @@ func TestGetVariationName(t *testing.T) {
 	assert.Equal(t, expected, actual, "Variation Name does not match")
 
 	userID = "Liza"
-	campaignKey = "php1"
+	campaignKey = "phpab3"
 	value = GetVariationName(vwoInstance, campaignKey, userID, options)
 	assert.Empty(t, value, "Variation Not found")
 }

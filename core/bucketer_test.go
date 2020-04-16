@@ -32,6 +32,10 @@ func TestGetBucketerVariation(t *testing.T) {
 	expected := variations[0]
 	assert.Equal(t, expected, actual, "Expected Variation do not match with Actual")
 
+	bucketValue = 0
+	actual, _ = GetBucketerVariation(variations, bucketValue)
+	assert.Empty(t, actual, "Variation should be empty")
+
 	bucketValue = 12345
 	actual, _ = GetBucketerVariation(variations, bucketValue)
 	assert.Empty(t, actual, "Variation should be empty")
@@ -55,13 +59,23 @@ func TestGetBucketValueForUser(t *testing.T) {
 	vwoInstance := utils.GetInstance("../settingsFile.json")
 
 	userID := "Chris"
-	actual := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 0.5)
-	expected := 46
+	actual := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)
+	expected := 93
+	assert.Equal(t, expected, actual, "Bucket Values do not match")
+
+	userID = "Chris"
+	actual = GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 0.5)
+	expected = 46
 	assert.Equal(t, expected, actual, "Bucket Values do not match")
 
 	userID = "Liza"
 	actual = GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, 1)
 	expected = 3379
+	assert.Equal(t, expected, actual, "Bucket Values do not match")
+
+	userID = "Gimmy"
+	actual = GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, 1)
+	expected = 9572
 	assert.Equal(t, expected, actual, "Bucket Values do not match")
 }
 
