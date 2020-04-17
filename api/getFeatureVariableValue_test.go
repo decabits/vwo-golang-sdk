@@ -4,12 +4,11 @@ import (
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetFeatureVariableValue(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFiles/settings3.json")
+	vwoInstance := GetInstance("./testData/settings3.json")
 	options := schema.Options{}
 
 	userID := "Varun"

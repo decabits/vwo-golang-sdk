@@ -4,12 +4,11 @@ import (
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/schema"
-	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTrack(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFiles/settings2.json")
+	vwoInstance := GetInstance("./testData/settings2.json")
 
 	userID := "Varun"
 	campaignKey := "notPresent"

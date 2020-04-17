@@ -22,7 +22,7 @@
         "key": "php1",
         "variations": [{
             "segments": {
-                "or": [{
+                "and": [{
                     "user": "Varun,Kate"
                 }]
             },
@@ -113,7 +113,7 @@
         "status": "RUNNING",
         "percentTraffic": 100,
         "goals": {},
-        "isForcedVariationEnabled": false,
+        "isForcedVariationEnabled": true,
         "key": "php4",
         "variations": [{
             "id": 1,

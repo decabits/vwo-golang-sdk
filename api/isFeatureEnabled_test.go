@@ -4,12 +4,11 @@ import (
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/schema"
-	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestIsFeatureEnabled(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFiles/settings4.json")
+	vwoInstance := GetInstance("./testData/settings4.json")
 	options := schema.Options{}
 
 	userID := "Varun"
