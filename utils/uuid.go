@@ -28,5 +28,3 @@ func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) s
 	return desiredUUID
 }
 
-
-}
