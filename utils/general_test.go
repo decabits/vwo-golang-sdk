@@ -8,7 +8,7 @@ import (
 )
 
 func TestCheckCampaignType(t *testing.T) {
-	vwoInstance := GetInstance("../settingsFiles/settings5.json")
+	vwoInstance := GetInstance("./testData/settings5.json")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	campaignType := constants.CampaignTypeVisualAB
@@ -32,7 +32,7 @@ func TestCheckCampaignType(t *testing.T) {
 }
 
 func TestGetKeyValue(t *testing.T) {
-	vwoInstance := GetInstance("../settingsFiles/settings5.json")
+	vwoInstance := GetInstance("./testData/settings5.json")
 
 	segment := vwoInstance.SettingsFile.Campaigns[4].Variations[0].Segments
 	actualKey, actualValue := GetKeyValue(segment)
