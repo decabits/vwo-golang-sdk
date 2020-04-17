@@ -1,15 +1,66 @@
 package api
 
 import (
-	"github.com/decabits/vwo-golang-sdk/schema"
+	"io/ioutil"
+	"log"
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/utils"
+	"github.com/decabits/vwo-golang-sdk/constants"
+	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/decabits/vwo-golang-sdk/service"
+	"github.com/google/logger"
 	"github.com/stretchr/testify/assert"
 )
 
+// UserStorage interface for testing
+type UserStorage schema.UserStorage
+
+// UserStorageData struct for testing
+type UserStorageData struct{}
+
+// Get function is used to get the data from user storage
+func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
+	return schema.UserData{
+		UserID:        userID,
+		CampaignKey:   campaignKey,
+		VariationName: "Control",
+	}
+}
+
+// Set function
+func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
+}
+
+// Exist function
+func (us *UserStorageData) Exist() bool {
+	return false
+}
+
+// GetInstance function creates and return a temporary VWO instance for testing
+func GetInstance(path string) schema.VwoInstance {
+	settingsFileManager := service.SettingsFileManager{}
+	if err := settingsFileManager.ProcessSettingsFile(path); err != nil {
+		log.Println("Error Processing Settings File: ", err)
+	}
+	settingsFileManager.Process()
+	settingsFile := settingsFileManager.GetSettingsFile()
+
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
+
+	storage := &UserStorageData{}
+
+	vwoInstance := schema.VwoInstance{
+		SettingsFile:      settingsFile,
+		UserStorage:       storage,
+		Logger:            logs,
+		IsDevelopmentMode: true,
+	}
+	return vwoInstance
+}
 func TestActivate(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFile.json")
+	vwoInstance := GetInstance("./testData/settings1.json")
 
 	userID := "Varun"
 	campaignKey := "notPresent"
@@ -17,30 +68,22 @@ func TestActivate(t *testing.T) {
 	assert.Empty(t, value, "Campaign does not exist")
 
 	userID = "Varun"
-	campaignKey = "phpab5"
+	campaignKey = "phpab1"
 	value = Activate(vwoInstance, campaignKey, userID)
 	assert.Empty(t, value, "Campaign Not running")
 
 	userID = "Liza"
-	campaignKey = "phpab4"
+	campaignKey = "php1"
 	value = Activate(vwoInstance, campaignKey, userID)
 	assert.Empty(t, value, "Campaign Not Valid")
 
 	userID = "Liza"
-	campaignKey = "phpab3"
-	actual := Activate(vwoInstance, campaignKey, userID)
-	assert.Empty(t, actual, "No Variation in Campaign")
+	campaignKey = "phpab2"
+	value = Activate(vwoInstance, campaignKey, userID)
+	assert.Empty(t, value, "No Variation in Campaign")
 
 	userID = "Liza"
-	campaignKey = "phpab2"
-	actual = Activate(vwoInstance, campaignKey, userID)
-	expected := vwoInstance.SettingsFile.Campaigns[2].Variations[1].Name
-	assert.Equal(t, expected, actual, "Variation should be found")
-
-	userID = "Gimmy"
-	campaignKey = "phpab2"
-	options:= schema.Options{}
-	actual = ActivateWithOptions(vwoInstance, campaignKey, userID, options)
-	expected = vwoInstance.SettingsFile.Campaigns[2].Variations[2].Name
-	assert.Equal(t, expected, actual, "Variation Not found with options")
+	campaignKey = "phpab3"
+	actual := Activate(vwoInstance, campaignKey, userID)
+	assert.NotEmpty(t, actual, "Variation should be found")
 }

@@ -17,7 +17,7 @@ func TestGetRequest(t *testing.T) {
 	assert.NotNil(t, err, "Could not make the Get Request")
 	assert.Empty(t, content, "Recieved no content")
 
-	url = "http://www.gogxle.com"
+	url = "https://github.com/vaibhavsethia/Portfolio---Me"
 	content, err = GetRequest(url)
 	assert.NotNil(t, err, "Could not make the Get Request")
 	assert.Empty(t, content, "Recieved no content")

@@ -1,9 +1,12 @@
 package core
 
 import (
+	// "encoding/json"
+	// "io/ioutil"
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/schema"
+	// "github.com/google/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -119,6 +122,32 @@ func TestExtractResult(t *testing.T) {
 	assert.False(t, value, "Incorrect check")
 }
 
-func TestEvaluateCustomVariables(t *testing.T) {
+// type TestCase struct {
+// 	DSL            map[string]interface{} `json:"dsl"`
+// 	Expected       bool                   `json:"expectation"`
+// 	CustomVariable map[string]interface{} `json:"custom_variable"`
+// }
 
-}
+// func TestSegmentEvaluator(t *testing.T) {
+// 	var testData map[string]map[string]TestCase
+// 	data, err := ioutil.ReadFile("./testData/segmentTestCase.json")
+// 	if err != nil {
+// 		logger.Info("Error: " + err.Error())
+// 	}
+
+// 	if err = json.Unmarshal(data, &testData); err != nil {
+// 		logger.Info("Error: " + err.Error())
+// 	}
+
+// 	for parent, v := range testData {
+// 		for child, value := range v {
+// 			options := schema.Options{
+// 				CustomVariables: value.CustomVariable,
+// 			}
+// 			actual := SegmentEvaluator(value.DSL, options)
+// 			expected := value.Expected
+// 			assert.Equal(t, expected, actual, parent + " " + child)
+// 		}
+// 	}
+
+// }

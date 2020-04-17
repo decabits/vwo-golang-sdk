@@ -4,12 +4,11 @@ import (
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetFeatureVariableValue(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFile.json")
+	vwoInstance := GetInstance("./testData/settings3.json")
 	options := schema.Options{}
 
 	userID := "Varun"
@@ -19,54 +18,54 @@ func TestGetFeatureVariableValue(t *testing.T) {
 	assert.Nil(t, value, "Campaign does not exist")
 
 	userID = "Varun"
-	campaignKey = "phpab5"
+	campaignKey = "php1"
 	variableKey = ""
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	assert.Nil(t, value, "Campaign Not running")
 
 	userID = "Liza"
-	campaignKey = "phpab2"
+	campaignKey = "phpab1"
 	variableKey = ""
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	assert.Nil(t, value, "Campaign Not Valid")
 
 	userID = "Liza"
-	campaignKey = "phpab3"
+	campaignKey = "php2"
 	variableKey = ""
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
-	assert.Nil(t, value, "Variation Not alloted")
+	assert.Nil(t, value, "Variation Not alloted as none exist")
 
 	userID = "Gimmy"
-	campaignKey = "phpab4"
+	campaignKey = "php3"
 	variableKey = "string1"
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	assert.Nil(t, value, "No variable with name found")
 
-	userID = "Gimmy"
-	campaignKey = "phpab4"
+	userID = "Kate"
+	campaignKey = "php3"
+	variableKey = "float2"
+	actual := GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
+	expected := 10.67
+	assert.Equal(t, expected, actual, "Value mismatch for variable")
+
+	userID = "Kate"
+	campaignKey = "php4"
 	variableKey = "bool1"
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	expected1 := true
-	assert.Equal(t,expected1, value, "Variable Not found")
+	assert.Equal(t,expected1, value, "Value mismatch for variable")
 
-	userID = "Gimmy"
-	campaignKey = "phpab4"
+	userID = "Kate"
+	campaignKey = "php4"
 	variableKey = "int1"
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	expected2 := 301
-	assert.Equal(t,float64(expected2), value, "Variable Not found")
+	assert.Equal(t,float64(expected2), value, "Value mismatch for variable")
 
-	userID = "Gimmy"
-	campaignKey = "phpab4"
-	variableKey = "float2"
-	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
-	expected3 := 10.67
-	assert.Equal(t,expected3, value, "Variable Not found")
-
-	userID = "Gimmy"
-	campaignKey = "phpab4"
+	userID = "Kate"
+	campaignKey = "php4"
 	variableKey = "string2"
 	value = GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
 	expected4 := "abcd"
-	assert.Equal(t,expected4, value, "Variable Not found")
+	assert.Equal(t,expected4, value, "Value mismatch for variable")
 }

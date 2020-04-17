@@ -2,13 +2,12 @@ package api
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/decabits/vwo-golang-sdk/utils"
 	"testing"
 
 )
 
 func TestPush(t *testing.T){
-	vwoInstance := utils.GetInstance("../settingsFile.json")
+	vwoInstance := GetInstance("./testData/settings1.json")
 	userID := "Ash"
 
 	tagKey := "demoTagKey"
