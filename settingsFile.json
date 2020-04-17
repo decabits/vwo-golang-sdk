@@ -248,7 +248,7 @@
     "id": 290,
     "segments": {
       "or": [{
-        "user": "Varun"
+        "user": "Varun,Kate"
       }]
     },
     "status": "RUNNING",
@@ -269,7 +269,7 @@
     "variations": [{
       "segments": {
         "or": [{
-          "user": "Varun"
+          "user": "Varun,Kate"
         }]
       },
       "changes": {},

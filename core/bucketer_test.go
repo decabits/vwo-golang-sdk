@@ -9,22 +9,22 @@ import (
 )
 
 func TestBucketUserToVariation(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFile.json")
+	vwoInstance := utils.GetInstance("../settingsFiles/settings6.json")
 
-	campaign := vwoInstance.SettingsFile.Campaigns[2]
+	campaign := vwoInstance.SettingsFile.Campaigns[1]
 	userID := "Linda"
 	actual, _ := BucketUserToVariation(vwoInstance, userID, campaign)
 	expected := campaign.Variations[2]
 	assert.Equal(t, expected, actual, "Variations did not match")
 
-	campaign = vwoInstance.SettingsFile.Campaigns[3]
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	userID = "Linda"
 	actual, _ = BucketUserToVariation(vwoInstance, userID, campaign)
-	assert.Empty(t, actual, "Variation expected to be empty")	
+	assert.Empty(t, actual, "Variation expected to be empty")
 }
 
 func TestGetBucketerVariation(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFile.json")
+	vwoInstance := utils.GetInstance("../settingsFiles/settings6.json")
 
 	variations := vwoInstance.SettingsFile.Campaigns[1].Variations
 	bucketValue := 2345
@@ -42,21 +42,21 @@ func TestGetBucketerVariation(t *testing.T) {
 }
 
 func TestIsUserPartOfCampaign(t *testing.T) {
-	vwoinstance := utils.GetInstance("../settingsFile.json")
+	vwoinstance := utils.GetInstance("../settingsFiles/settings6.json")
 
 	userID := "James"
-	campaign := vwoinstance.SettingsFile.Campaigns[0]
+	campaign := vwoinstance.SettingsFile.Campaigns[1]
 	actual := IsUserPartOfCampaign(vwoinstance, userID, campaign)
 	assert.True(t, actual, "User should be part of the campaign")
 
 	userID = "Christy"
-	campaign = vwoinstance.SettingsFile.Campaigns[3]
+	campaign = vwoinstance.SettingsFile.Campaigns[0]
 	actual = IsUserPartOfCampaign(vwoinstance, userID, campaign)
 	assert.False(t, actual, "User should not be part of the campaign")
 }
 
 func TestGetBucketValueForUser(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFile.json")
+	vwoInstance := utils.GetInstance("../settingsFiles/settings6.json")
 
 	userID := "Chris"
 	actual := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)

@@ -8,7 +8,7 @@ import (
 )
 
 func TestCreateImpressionForPush(t *testing.T) {
-	vwoInstance := GetInstance("../settingsFile.json")
+	vwoInstance := GetInstance("../settingsFiles/settings5.json")
 	URL := "https://dev.visualwebsiteoptimizer.com/server-side/push"
 
 	userID := "Chris"
@@ -32,7 +32,7 @@ func TestCreateImpressionForPush(t *testing.T) {
 }
 
 func TestCreateImpressionTrackingUser(t *testing.T) {
-	vwoInstance := GetInstance("../settingsFile.json")
+	vwoInstance := GetInstance("../settingsFiles/settings5.json")
 	variationID := 1
 	campaignID := 283
 	userID := "Chris"
@@ -47,7 +47,7 @@ func TestCreateImpressionTrackingUser(t *testing.T) {
 
 }
 func TestCreateImpressionTrackingGoal(t *testing.T) {
-	vwoInstance := GetInstance("../settingsFile.json")
+	vwoInstance := GetInstance("../settingsFiles/settings5.json")
 	variationID := 1
 	campaignID := 283
 	goalID := 281
@@ -71,7 +71,7 @@ func TestCreateImpressionTrackingGoal(t *testing.T) {
 
 func TestGetCommonProperties(t *testing.T) {
 	userID := "Gimmy"
-	vwoInstance := GetInstance("../settingsFile.json")
+	vwoInstance := GetInstance("../settingsFiles/settings5.json")
 	impression := getCommonProperties(vwoInstance, userID)
 
 	assert.Equal(t, userID, impression.UID, "Non Matching UIDs")

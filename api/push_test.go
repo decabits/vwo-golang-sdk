@@ -8,7 +8,7 @@ import (
 )
 
 func TestPush(t *testing.T){
-	vwoInstance := utils.GetInstance("../settingsFile.json")
+	vwoInstance := utils.GetInstance("../settingsFiles/settings1.json")
 	userID := "Ash"
 
 	tagKey := "demoTagKey"

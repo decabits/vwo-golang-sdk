@@ -15,7 +15,7 @@ var data = `{
     "php1": [{
             "UserID": "Liza",
             "CampaignKey": "php1",
-            "VariationName": "Variation-1"
+            "VariationName": "Control"
         },
         {
             "UserID": "Gimmy",

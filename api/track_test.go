@@ -9,7 +9,7 @@ import (
 )
 
 func TestTrack(t *testing.T) {
-	vwoInstance := utils.GetInstance("../settingsFile.json")
+	vwoInstance := utils.GetInstance("../settingsFiles/settings2.json")
 
 	userID := "Varun"
 	campaignKey := "notPresent"
@@ -18,31 +18,31 @@ func TestTrack(t *testing.T) {
 	assert.False(t, value, "Campaign does not exist")
 
 	userID = "Varun"
-	campaignKey = "phpab5"
+	campaignKey = "phpab1"
 	goalIdentifier = ""
 	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Campaign Not running")
 
 	userID = "Liza"
-	campaignKey = "phpab4"
+	campaignKey = "php1"
 	goalIdentifier = ""
 	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Campaign Not Valid")
 
 	userID = "Liza"
-	campaignKey = "php2"
+	campaignKey = "phpab2"
 	goalIdentifier = "test"
 	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Goal Not Found")
 
 	userID = "Liza"
-	campaignKey = "php2"
+	campaignKey = "phpab3"
 	goalIdentifier = "rev"
 	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Invalid Goal type")
 
 	userID = "Liza"
-	campaignKey = "php2"
+	campaignKey = "phpab3"
 	options := schema.Options{
 		RevenueGoal: 0,
 	}
@@ -51,7 +51,7 @@ func TestTrack(t *testing.T) {
 	assert.False(t, value, "Revenue Not defined")
 
 	userID = "Liza"
-	campaignKey = "phpab3"
+	campaignKey = "php2"
 	options = schema.Options{
 		RevenueGoal: 10,
 	}
@@ -63,7 +63,7 @@ func TestTrack(t *testing.T) {
 		RevenueGoal: 12,
 	}
 	userID = "Misty"
-	campaignKey = "phpab6"
+	campaignKey = "phpab3"
 	goalIdentifier = "custom"
 	value = TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
 	assert.True(t, value, "Variation should be defined")

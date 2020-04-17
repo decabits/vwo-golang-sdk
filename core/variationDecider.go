@@ -63,8 +63,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 	if EvaluateSegment(vwoInstance, campaign.Segments, options) && IsUserPartOfCampaign(vwoInstance, userID, campaign) {
 		variation, err := BucketUserToVariation(vwoInstance, userID, campaign)
 		if err != nil {
-			vwoInstance.Logger.Info("DEBUG_MESSAGES.VARIATION_NOT_FOUND")
-			return schema.Variation{}, nil
+			return schema.Variation{}, errors.New("DEBUG_MESSAGES.VARIATION_NOT_FOUND: "+err.Error())
 		}
 		if vwoInstance.UserStorage.Exist() {
 			vwoInstance.UserStorage.Set(userID, campaign.Key, variationName)
@@ -73,7 +72,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 		return variation, nil
 	}
 
-	return schema.Variation{}, nil
+	return schema.Variation{}, errors.New("DEBUG_MESSAGES.VARIATION_NOT_FOUND: "+err.Error())
 }
 
 // FindTargetedVariation function

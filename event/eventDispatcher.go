@@ -24,7 +24,7 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 
 	_, err := utils.GetRequest(URL)
 	if err != nil {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
+		vwoInstance.Logger.Errorf("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
 	}
 }
 
@@ -46,6 +46,6 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 
 	_, err := utils.GetRequest(URL)
 	if err != nil {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
+		vwoInstance.Logger.Errorf("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
 	}
 }
