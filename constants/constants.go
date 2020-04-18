@@ -44,11 +44,8 @@ const (
 	Integer = "integer"
 	String  = "string"
 
-	Lower         = `^lower`
 	LowerMatch    = `^lower\((.*)\)`
-	Wildcard      = `^wildcard`
 	WildcardMatch = `^wildcard\((.*)\)`
-	Regex         = `^regex`
 	RegexMatch    = `^regex\((.*)\)`
 	StartingStar  = `^\*`
 	EndingStar    = `\*$`

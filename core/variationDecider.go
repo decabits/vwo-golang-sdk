@@ -41,7 +41,9 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 			assigned else None
 			error(error): Error message
 	*/
-	options.VWOUserID = userID
+	options = schema.Options{
+		CustomVariables: map[string]interface{}{"_vwo_user_id": userID},
+	}
 
 	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	if err != nil {

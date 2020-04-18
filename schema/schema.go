@@ -65,10 +65,9 @@ type Variable struct {
 
 // Options struct
 type Options struct {
-	CustomVariables             map[string]interface{}
-	VariationTargetingVariables map[string]interface{}
+	CustomVariables             map[string]interface{} `json:"custom_variables"`
+	VariationTargetingVariables map[string]interface{} `json:"variation_targeting_variables"`
 	RevenueGoal                 int
-	VWOUserID string
 }
 
 // UserData  struct

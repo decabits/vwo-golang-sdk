@@ -18,15 +18,14 @@ func TestPreEvaluateSegment(t *testing.T) {
 
 	segments = vwoInstance.SettingsFile.Campaigns[0].Variations[0].Segments
 	options = schema.Options{
-		VWOUserID:   "Kate",
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "Kate"},
 		RevenueGoal: 12,
-		
 	}
 	value = PreEvaluateSegment(vwoInstance, segments, options)
 	assert.True(t, value, "Expected True")
 
 	options = schema.Options{
-		VWOUserID:   "Misty",
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "Misty"},
 		RevenueGoal: 12,
 	}
 	value = PreEvaluateSegment(vwoInstance, segments, options)
@@ -43,15 +42,15 @@ func TestEvaluateSegment(t *testing.T) {
 
 	segments = vwoInstance.SettingsFile.Campaigns[0].Variations[0].Segments
 	options = schema.Options{
-		VWOUserID:   "Varun",
-		RevenueGoal: 12,
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "Varun"},
+		RevenueGoal:     12,
 	}
 	value = EvaluateSegment(vwoInstance, segments, options)
 	assert.True(t, value, "Expected True")
 
 	options = schema.Options{
-		VWOUserID:   "Liza",
-		RevenueGoal: 12,
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "Liza"},
+		RevenueGoal:     12,
 	}
 	value = EvaluateSegment(vwoInstance, segments, options)
 	assert.False(t, value, "Expected True")
@@ -67,7 +66,7 @@ func TestGetWhiteListedVariationsList(t *testing.T) {
 	assert.Empty(t, actual, "No WhiteListed Variations Found")
 
 	options = schema.Options{
-		VWOUserID:   "Varun",
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "Varun"},
 		RevenueGoal: 12,
 	}
 	userID = "test"
@@ -80,7 +79,7 @@ func TestGetWhiteListedVariationsList(t *testing.T) {
 func TestFindTargetedVariation(t *testing.T) {
 	vwoInstance := GetInstance("./testData/settings7.json")
 	options := schema.Options{
-		VWOUserID:   "Varun",
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "Varun"},
 		RevenueGoal: 12,
 	}
 
@@ -107,7 +106,7 @@ func TestFindTargetedVariation(t *testing.T) {
 	assert.Equal(t, expected, actual, "Expected single variation")
 
 	options = schema.Options{
-		VWOUserID:   "Gimmy",
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "Gimmy"},
 		RevenueGoal: 12,
 	}
 	userID = "Gimmy"
@@ -120,7 +119,7 @@ func TestFindTargetedVariation(t *testing.T) {
 func TestGetVariation(t *testing.T) {
 	vwoInstance := GetInstance("./testData/settings7.json")
 	options := schema.Options{
-		VWOUserID:   "Varun",
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "Varun"},
 		RevenueGoal: 12,
 	}
 
@@ -145,7 +144,7 @@ func TestGetVariation(t *testing.T) {
 	campaign = vwoInstance.SettingsFile.Campaigns[3]
 	actual, _ = GetVariation(vwoInstance, userID, campaign, options)
 	assert.Empty(t, actual, "User not eligible for campaign")
-	
+
 	userID = "Varun"
 	campaign = vwoInstance.SettingsFile.Campaigns[3]
 	actual, _ = GetVariation(vwoInstance, userID, campaign, options)

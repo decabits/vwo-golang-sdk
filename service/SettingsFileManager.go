@@ -37,7 +37,7 @@ func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) erro
 	path := constants.AccountSettings + "?" +
 		"a=" + accountID +
 		"&i=" + SDKKey +
-		"&r=" + strconv.FormatFloat(float64(rand.Float32()), 'f', -1, 32) +
+		"&r=" + strconv.FormatFloat(float64(rand.Float32()), 'f', -1, 64) +
 		"&platform=server&" +
 		"&sdk=" + constants.SDKName +
 		"&sdk-v=" + constants.SDKVersion +
