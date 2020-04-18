@@ -7,7 +7,7 @@ import (
 )
 
 func TestGenerateFor(t *testing.T) {
-	vwoInstance := GetInstance("../settingsFile.json")
+	vwoInstance := GetInstance()
 	
 	accountID := 89499
 	userID := "Chris"

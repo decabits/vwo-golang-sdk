@@ -60,7 +60,7 @@ func GetInstance(path string) schema.VwoInstance {
 	return vwoInstance
 }
 func TestActivate(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings1.json")
+	vwoInstance := GetInstance("./testData/testdata.json")
 
 	userID := "Varun"
 	campaignKey := "notPresent"

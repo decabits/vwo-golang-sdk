@@ -19,7 +19,7 @@ type TestCase struct {
 
 func TestSegmentEvaluator(t *testing.T) {
 	var testData map[string]map[string]TestCase
-	data, err := ioutil.ReadFile("./testData/segmentTestCase.json")
+	data, err := ioutil.ReadFile("./testData/testSegment.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}

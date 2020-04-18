@@ -8,7 +8,7 @@ import (
 )
 
 func TestCreateImpressionForPush(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 	URL := "https://dev.visualwebsiteoptimizer.com/server-side/push"
 
 	userID := "Chris"
@@ -19,7 +19,6 @@ func TestCreateImpressionForPush(t *testing.T) {
 	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
 	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
 	assert.Equal(t, "=", DemoImpression.U, "Non Matching Parameters")
-
 
 	userID = "Lizzie"
 	tagValue = "testVal"
@@ -32,13 +31,13 @@ func TestCreateImpressionForPush(t *testing.T) {
 }
 
 func TestCreateImpressionTrackingUser(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 	variationID := 1
 	campaignID := 283
 	userID := "Chris"
 	URL := "https://dev.visualwebsiteoptimizer.com/server-side/track-user"
 
-	DemoImpression := CreateImpressionTrackingUser(vwoInstance, campaignID, variationID, userID, )
+	DemoImpression := CreateImpressionTrackingUser(vwoInstance, campaignID, variationID, userID)
 	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
 	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
 	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
@@ -47,7 +46,7 @@ func TestCreateImpressionTrackingUser(t *testing.T) {
 
 }
 func TestCreateImpressionTrackingGoal(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 	variationID := 1
 	campaignID := 283
 	goalID := 281
@@ -71,7 +70,7 @@ func TestCreateImpressionTrackingGoal(t *testing.T) {
 
 func TestGetCommonProperties(t *testing.T) {
 	userID := "Gimmy"
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 	impression := getCommonProperties(vwoInstance, userID)
 
 	assert.Equal(t, userID, impression.UID, "Non Matching UIDs")
@@ -83,5 +82,5 @@ func TestGetCommonProperties(t *testing.T) {
 	assert.IsType(t, temp1, impression.Random, "Random number should be of type float32")
 	var temp2 string
 	assert.IsType(t, temp2, impression.SID, "Random number should be of type float32")
-	
+
 }

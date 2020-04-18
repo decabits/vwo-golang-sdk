@@ -37,11 +37,11 @@ func (us *UserStorageData) Exist() bool {
 }
 
 // GetInstance function creates and return a temporary VWO instance for testing
-func GetInstance(path string) schema.VwoInstance {
+func GetInstance() schema.VwoInstance {
 	logger := logger.Init(constants.SDKName, true, false, ioutil.Discard)
 	defer logger.Close()
 
-	settingsFile, err := ioutil.ReadFile(path)
+	settingsFile, err := ioutil.ReadFile("./testData/testUtils.json")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -102,7 +102,7 @@ func TestGetVariationBucketingRange(t *testing.T) {
 }
 
 func TestGetCampaign(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 
 	campaignKey := "phpab1"
 	campaign, _ := GetCampaign(vwoInstance.SettingsFile, campaignKey)
@@ -114,7 +114,7 @@ func TestGetCampaign(t *testing.T) {
 }
 
 func TestGetCampaignVariation(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
 	variationName := "Control"
@@ -132,7 +132,7 @@ func TestGetCampaignVariation(t *testing.T) {
 }
 
 func TestGetCampaignGoal(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
 	goalName := "rev"
@@ -145,7 +145,7 @@ func TestGetCampaignGoal(t *testing.T) {
 }
 
 func TestGetControlVariation(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 	variation := GetControlVariation(campaign)
@@ -157,7 +157,7 @@ func TestGetControlVariation(t *testing.T) {
 }
 
 func TestScaleVariations(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 
 	variations := vwoInstance.SettingsFile.Campaigns[3].Variations
 	variations = ScaleVariations(variations)
@@ -170,7 +170,7 @@ func TestScaleVariations(t *testing.T) {
 }
 
 func TestGetVariationAllocationRanges(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 
 	variations := vwoInstance.SettingsFile.Campaigns[3].Variations
 	assert.NotEmpty(t, variations, "No Variations recieved")

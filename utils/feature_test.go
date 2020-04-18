@@ -7,9 +7,9 @@ import (
 )
 
 func TestGetVariableValueForVariation(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
-  campaign := vwoInstance.SettingsFile.Campaigns[2]
-  
+	vwoInstance := GetInstance()
+	campaign := vwoInstance.SettingsFile.Campaigns[2]
+
 	variation := campaign.Variations[0]
 	variableKey := "string1"
 	variable := GetVariableValueForVariation(vwoInstance, campaign, variation, variableKey)
@@ -22,7 +22,7 @@ func TestGetVariableValueForVariation(t *testing.T) {
 }
 
 func TestGetVariableForFeature(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings5.json")
+	vwoInstance := GetInstance()
 
 	variables := vwoInstance.SettingsFile.Campaigns[2].Variables
 	variableKey := "int1"

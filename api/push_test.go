@@ -1,13 +1,13 @@
 package api
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 )
 
-func TestPush(t *testing.T){
-	vwoInstance := GetInstance("./testData/settings1.json")
+func TestPush(t *testing.T) {
+	vwoInstance := GetInstance("./testData/testdata.json")
 	userID := "Ash"
 
 	tagKey := "demoTagKey"

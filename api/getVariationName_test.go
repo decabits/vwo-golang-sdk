@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetVariationName(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings1.json")
+	vwoInstance := GetInstance("./testData/testdata.json")
 	options := schema.Options{}
 
 	userID := "Varun"

@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetFeatureVariableValue(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings3.json")
+	vwoInstance := GetInstance("./testData/testGetFeatureVariableValue.json")
 	options := schema.Options{}
 
 	userID := "Varun"

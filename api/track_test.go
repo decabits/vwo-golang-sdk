@@ -8,7 +8,7 @@ import (
 )
 
 func TestTrack(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings2.json")
+	vwoInstance := GetInstance("./testData/testTrack.json")
 
 	userID := "Varun"
 	campaignKey := "notPresent"

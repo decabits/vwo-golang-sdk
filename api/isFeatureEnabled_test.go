@@ -8,7 +8,7 @@ import (
 )
 
 func TestIsFeatureEnabled(t *testing.T) {
-	vwoInstance := GetInstance("./testData/settings4.json")
+	vwoInstance := GetInstance("./testData/testIsFeatureEnabled.json")
 	options := schema.Options{}
 
 	userID := "Varun"
