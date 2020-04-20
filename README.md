@@ -1,8 +1,11 @@
 # VWO-Golang-SDK
 
+[![Build Status](http://img.shields.io/travis/decabits/vwo-golang-sdk/master.svg?style=flat)](https://img.shields.io/travis/decabits/vwo-golang-sdk)
+[![Coverage Status](https://coveralls.io/repos/github/decabits/vwo-golang-sdk/badge.svg)](https://img.shields.io/coveralls/GitHub/decabits/vwo-golang-sdk)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 This open source library allows you to A/B Test your Website at server-side.
-
+https://img.shields.io/github/license/decabits/vwo-golang-sdk
 ## Requirements
 
 * Works with Go 1.1x
@@ -115,7 +118,57 @@ isSuccessful = api.Push(tagKey, tagValue, userID)
 
 **User Storage**
 
+```go
 
+import "github.com/decabits/vwo-golang-sdk/schema"
+
+// UserStorage interface
+type UserStorage schema.UserStorage
+
+// UserStorageData struct
+type UserStorageData struct{}
+
+func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
+    
+    //Example code showing how to get userData  from DB
+    userData, ok := userDatas[campaignKey]
+	if ok {
+		for _, userdata := range userData {
+			if userdata.UserID == userID {
+				return userdata
+			}
+		}
+	}
+	return schema.UserData{}
+}
+
+func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
+
+    //Example code showing how to store userData in DB
+    userdata := schema.UserData{
+		UserID:        userID,
+		CampaignKey:   campaignKey,
+		VariationName: variationName,
+	}
+	flag := false
+	userData, ok := userDatas[userdata.CampaignKey]
+	if ok {
+		for _, user := range userData {
+			if user.UserID == userdata.UserID {
+				flag = true
+			}
+		}
+		if !flag {
+			userDatas[userdata.CampaignKey] = append(userDatas[userdata.CampaignKey], userdata)
+		}
+	} else {
+		userDatas[userdata.CampaignKey] = []schema.UserData{
+			userdata,
+		}
+	}
+}
+
+```
 
 
 ## Documentation
@@ -133,6 +186,7 @@ Refer [Official VWO Documentation](https://developers.vwo.com/reference#server-s
 ## Authors
 
 
+
 ## Contributing
 
 Please go through our [contributing guidelines](CONTRIBUTING.md)
@@ -145,4 +199,4 @@ Please go through our [contributing guidelines](CONTRIBUTING.md)
 
 ## License
 
-
+[Apache License, Version 2.0](LICENSE)
