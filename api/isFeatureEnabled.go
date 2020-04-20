@@ -8,7 +8,7 @@ import (
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
-//IsFeatureEnabled ...
+// IsFeatureEnabled ...
 func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options) bool {
 	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	if err != nil {

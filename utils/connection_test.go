@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetRequest(t *testing.T) {
@@ -22,4 +22,3 @@ func TestGetRequest(t *testing.T) {
 	assert.NotNil(t, err, "Could not make the Get Request")
 	assert.Empty(t, content, "Recieved no content")
 }
-

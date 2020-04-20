@@ -8,7 +8,7 @@ import (
 
 func TestGenerateFor(t *testing.T) {
 	vwoInstance := GetInstance()
-	
+
 	accountID := 89499
 	userID := "Chris"
 	actual := generateFor(vwoInstance, userID, accountID)
