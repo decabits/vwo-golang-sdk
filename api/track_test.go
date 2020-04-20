@@ -57,7 +57,7 @@ func TestTrack(t *testing.T) {
 	goalIdentifier = "custom"
 	value = TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
 	assert.False(t, value, "No Variation in Campaign")
-	
+
 	options = schema.Options{
 		RevenueGoal: 12,
 	}
