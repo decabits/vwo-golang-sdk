@@ -1,10 +1,11 @@
 # VWO-Golang-SDK
 
+
 This open source library allows you to A/B Test your Website at server-side.
 
 ## Requirements
 
-* Works with Go 1.11 +
+* Works with Go 1.1x
 
 
 ## Installation
@@ -27,80 +28,78 @@ import (
 )
 
 // Initialize client
-VWO := vwo.Default(config.GetString("accountID"), config.GetString("SDKKey"), storage)
-
-// // Initialize client with all parameters(explained in next section)
-// vwo_client_instance = VWO.new(account_id, sdk_key, custom_logger, UserStorage.new, true, settings_file)
+// storage should be of type schema.UserStorage
+VWO := vwo.Default("accountID", "SDKKey", storage)
 
 // Get Settings
-settingsFile = service.SettingsFileManager.GetSettingsFile()
-
-// Get Instance
-// path of the required settings file is passed as an arguement 
-vwoInstance = api.GetInstance(path)
+settingsFile = VWO.SettingsFile
 
 // Activate API
 // With Custom Variables
 options = schema.Options{
-        CustomVariables : { "a" = "x"},
+        CustomVariables : { "a" : "x"},
     }
-variationName = api.ActivateWithOptions(vwoInstance, campaignKey, userID, options)
+variationName = api.ActivateWithOptions(VWO, campaignKey, userID, options)
 
 // Without Custom Variables
-variationName = api.Activate(vwoInstance, campaignKey, userID)
+variationName = api.Activate(VWO, campaignKey, userID)
+
 
 // GetVariation
 // With Custom Variables
 options = schema.Options{
-        CustomVariables : { "a" = "x"},
+        CustomVariables : { "a" : "x"},
     }
-variationName = api.GetVariationName(vwoInstance, campaignKey, userID, options)
+variationName = api.GetVariationName(VWO, campaignKey, userID, options)
 
 //Without Custom Variables
 options = {}
-variationName = api.GetVariationName(vwoInstance, campaignKey, userID, options)
+variationName = api.GetVariationName(VWO, campaignKey, userID, options)
+
 
 // Track API
 // With Custom Variables
 options = schema.Options{
-        CustomVariables : { "a" = "x"},
+        CustomVariables : { "a" : "x"},
     }
-isSuccessful = api.TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
+isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
 
 // With Revenue Value
 options = schema.Options{
         RevenueGoal => 10.23,
     }
-isSuccessful = api.TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
+isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
 
 // With both Custom Variables and Revenue Value
 options = schema.Options{
-        CustomVariables : { "a" = "x"},
+        CustomVariables : { "a" : "x"},
         RevenueGoal : 10.23,
     }
-isSuccessful = api.TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
+isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
+
 
 // FeatureEnabled API
 // With Custom Varibles
 options = schema.Options{
-        CustomVariables : { "a" = "x"},
+        CustomVariables : { "a" : "x"},
     }
-isSuccessful = api.IsFeatureEnabled(vwoInstance, campaignKey, userID, options)
+isSuccessful = api.IsFeatureEnabled(VWO, campaignKey, userID, options)
 
 // Without Custom Variables
 options = {}
-isSuccessful = api.IsFeatureEnabled(vwoInstance, campaignKey, userID, options)
+isSuccessful = api.IsFeatureEnabled(VWO, campaignKey, userID, options)
+
 
 // GetFeatureVariableValue API
 // With Custom Variables
 options = schema.Options{
-        CustomVariables : { "a" = "x"}
+        CustomVariables : { "a" : "x"},
     }
-variableValue = api.GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
+variableValue = api.GetFeatureVariableValue(VWO, campaignKey, variableKey, userID, options)
 
 // Without Custom Variables
 options = {}
-variableValue = api.GetFeatureVariableValue(vwoInstance, campaignKey, variableKey, userID, options)
+variableValue = api.GetFeatureVariableValue(VWO, campaignKey, variableKey, userID, options)
 
 // Push API
 isSuccessful = api.Push(tagKey, tagValue, userID)
@@ -114,16 +113,14 @@ isSuccessful = api.Push(tagKey, tagValue, userID)
 1. `settingsFile` - Settings file if already present during initialization. Its stringified JSON format.
 
 
-**API usage**
+**User Storage**
 
-**User Defined Logger**
+
+
 
 ## Documentation
 
 Refer [Official VWO Documentation](https://developers.vwo.com/reference#server-side-introduction)
-
-
-## Setting up Local development environment
 
 
 ## Running Unit Tests
@@ -132,23 +129,18 @@ Refer [Official VWO Documentation](https://developers.vwo.com/reference#server-s
 ./test.sh
 ```
 
-## Third-party Resources and Credits
-
 
 ## Authors
 
 
-## Changelog
-
-
 ## Contributing
 
-Please go through our [contributing guidelines](https://github.com/decabits/vwo-golang-sdk/blob/master/CONTRIBUTING.md)
+Please go through our [contributing guidelines](CONTRIBUTING.md)
 
 
 ## Code of Conduct
 
-[Code of Conduct](https://github.com/decabits/vwo-golang-sdk/blob/master/CODE_OF_CONDUCT.md)
+[Code of Conduct](CODE_OF_CONDUCT.md)
 
 
 ## License
