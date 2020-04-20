@@ -5,7 +5,8 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 This open source library allows you to A/B Test your Website at server-side.
-https://img.shields.io/github/license/decabits/vwo-golang-sdk
+
+
 ## Requirements
 
 * Works with Go 1.1x
