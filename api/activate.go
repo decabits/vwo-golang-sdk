@@ -39,6 +39,6 @@ func ActivateWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID str
 
 	impression := utils.CreateImpressionTrackingUser(vwoInstance, campaign.ID, variation.ID, userID)
 	event.Dispatch(vwoInstance, impression)
-	
+
 	return variation.Name
 }

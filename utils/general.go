@@ -21,7 +21,7 @@ func GetKeyValue(obj map[string]interface{}) (string, interface{}) {
 	/*
 		Args:
 			obj: map whose firsr key value pair is needed
-		
+
 		Return:
 			string: Key
 			interface: value

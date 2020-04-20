@@ -8,7 +8,7 @@ const (
 	SDKName           = "vwo-golang-sdk"
 	Platform          = "server"
 	SeedValue         = 1
-	// CampaignType
+
 	CampaignTypeVisualAB       = "VISUAL_AB"
 	CampaignTypeFeatureTest    = "FEATURE_TEST"
 	CampaignTypeFeatureRollout = "FEATURE_ROLLOUT"

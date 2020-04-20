@@ -1,0 +1,436 @@
+{
+    "sdkKey": "somrthing12345",
+    "campaigns": [
+        {
+            "id": 281,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": [],
+            "variations": [
+                {
+                    "id": 1,
+                    "name": "website",
+                    "changes": {},
+                    "weight": 100
+                }
+            ],
+            "variables": [
+                {
+                    "value": 100,
+                    "type": "integer",
+                    "key": "int1",
+                    "id": 1
+                },
+                {
+                    "value": 0.1,
+                    "type": "double",
+                    "key": "float1",
+                    "id": 2
+                },
+                {
+                    "value": "abcd",
+                    "type": "string",
+                    "key": "string1",
+                    "id": 3
+                },
+                {
+                    "value": true,
+                    "type": "boolean",
+                    "key": "bool1",
+                    "id": 4
+                }
+            ],
+            "isForcedVariationEnabled": false,
+            "key": "php1",
+            "type": "FEATURE_ROLLOUT"
+        },
+        {
+            "id": 283,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": [
+                {
+                    "identifier": "rev",
+                    "id": 2,
+                    "type": "REVENUE_TRACKING"
+                },
+                {
+                    "identifier": "custom",
+                    "id": 281,
+                    "type": "CUSTOM_GOAL"
+                }
+            ],
+            "isForcedVariationEnabled": true,
+            "key": "php2",
+            "variations": [
+                {
+                    "segments": {
+                        "or": [
+                            {
+                                "user": "Varun"
+                            }
+                        ]
+                    },
+                    "changes": {},
+                    "id": 1,
+                    "variables": [
+                        {
+                            "value": 30,
+                            "type": "integer",
+                            "key": "int2",
+                            "id": 1
+                        },
+                        {
+                            "value": 10.67,
+                            "type": "double",
+                            "key": "float2",
+                            "id": 2
+                        },
+                        {
+                            "value": "abcd",
+                            "type": "string",
+                            "key": "string2",
+                            "id": 3
+                        },
+                        {
+                            "value": false,
+                            "type": "boolean",
+                            "key": "bool2",
+                            "id": 4
+                        }
+                    ],
+                    "isFeatureEnabled": false,
+                    "weight": 33.3333,
+                    "name": "Control"
+                },
+                {
+                    "segments": {
+                        "or": [
+                            {
+                                "custom_variable": {
+                                    "abcd": "regex(1)"
+                                }
+                            }
+                        ]
+                    },
+                    "changes": {},
+                    "id": 2,
+                    "variables": [
+                        {
+                            "value": 301,
+                            "type": "integer",
+                            "key": "int2",
+                            "id": 1
+                        },
+                        {
+                            "value": 10.671,
+                            "type": "double",
+                            "key": "float2",
+                            "id": 2
+                        },
+                        {
+                            "value": "abcde",
+                            "type": "string",
+                            "key": "string2",
+                            "id": 3
+                        },
+                        {
+                            "value": true,
+                            "type": "boolean",
+                            "key": "bool2",
+                            "id": 4
+                        }
+                    ],
+                    "isFeatureEnabled": true,
+                    "weight": 33.3333,
+                    "name": "Variation-1"
+                },
+                {
+                    "segments": {},
+                    "changes": {},
+                    "id": 3,
+                    "variables": [
+                        {
+                            "value": 302,
+                            "type": "integer",
+                            "key": "int2",
+                            "id": 1
+                        },
+                        {
+                            "value": 10.672,
+                            "type": "double",
+                            "key": "float2",
+                            "id": 2
+                        },
+                        {
+                            "value": "abcdef",
+                            "type": "string",
+                            "key": "string2",
+                            "id": 3
+                        },
+                        {
+                            "value": false,
+                            "type": "boolean",
+                            "key": "bool2",
+                            "id": 4
+                        }
+                    ],
+                    "isFeatureEnabled": true,
+                    "weight": 33.3333,
+                    "name": "Variation-2"
+                }
+            ],
+            "type": "FEATURE_TEST"
+        },
+        {
+            "id": 286,
+            "segments": {
+                "or": [
+                    {
+                        "custom_variable": {
+                            "email": "wildcard(*%O`brian+uk!#$^&*?@gmail.com%*)"
+                        }
+                    }
+                ]
+            },
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": [
+                {
+                    "identifier": "rev",
+                    "id": 2,
+                    "type": "REVENUE_TRACKING"
+                },
+                {
+                    "identifier": "custom",
+                    "id": 284,
+                    "type": "CUSTOM_GOAL"
+                }
+            ],
+            "isForcedVariationEnabled": false,
+            "key": "phpab2",
+            "variations": [
+                {
+                    "id": 1,
+                    "name": "Control",
+                    "changes": {},
+                    "weight": 33.3333
+                },
+                {
+                    "id": 2,
+                    "name": "Variation-1",
+                    "changes": {},
+                    "weight": 33.3333
+                },
+                {
+                    "id": 3,
+                    "name": "Variation-2",
+                    "changes": {},
+                    "weight": 33.3333
+                }
+            ],
+            "type": "VISUAL_AB"
+        },
+        {
+            "id": 287,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": [
+                {
+                    "identifier": "rev",
+                    "id": 2,
+                    "type": "REVENUE_TRACKING"
+                },
+                {
+                    "identifier": "custom",
+                    "id": 285,
+                    "type": "CUSTOM_GOAL"
+                }
+            ],
+            "isForcedVariationEnabled": false,
+            "key": "phpab3",
+            "variations": [
+                {
+                    "id": 1,
+                    "name": "Control",
+                    "changes": {},
+                    "weight": 33.3333
+                },
+                {
+                    "id": 2,
+                    "name": "Variation-1",
+                    "changes": {},
+                    "weight": 33.3333
+                },
+                {
+                    "id": 3,
+                    "name": "Variation-2",
+                    "changes": {},
+                    "weight": 33.3333
+                }
+            ],
+            "type": "VISUAL_AB"
+        },
+        {
+            "id": 288,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": [
+                {
+                    "identifier": "custom",
+                    "id": 286,
+                    "type": "CUSTOM_GOAL"
+                }
+            ],
+            "isForcedVariationEnabled": false,
+            "key": "php4",
+            "variations": [
+                {
+                    "changes": {},
+                    "id": 1,
+                    "variables": [],
+                    "isFeatureEnabled": false,
+                    "weight": 33.3333,
+                    "name": "Control"
+                },
+                {
+                    "changes": {},
+                    "id": 2,
+                    "variables": [],
+                    "isFeatureEnabled": true,
+                    "weight": 33.3333,
+                    "name": "Variation-1"
+                },
+                {
+                    "changes": {},
+                    "id": 3,
+                    "variables": [],
+                    "isFeatureEnabled": false,
+                    "weight": 33.3333,
+                    "name": "Variation-2"
+                }
+            ],
+            "type": "FEATURE_TEST"
+        },
+        {
+            "id": 291,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": [
+                {
+                    "identifier": "rev",
+                    "id": 2,
+                    "type": "REVENUE_TRACKING"
+                },
+                {
+                    "identifier": "custom",
+                    "id": 288,
+                    "type": "CUSTOM_GOAL"
+                }
+            ],
+            "isForcedVariationEnabled": false,
+            "key": "hhjjjj",
+            "variations": [
+                {
+                    "id": 1,
+                    "name": "Control",
+                    "changes": {},
+                    "weight": 33.3333
+                },
+                {
+                    "id": 2,
+                    "name": "Variation-1",
+                    "changes": {},
+                    "weight": 33.3333
+                },
+                {
+                    "id": 3,
+                    "name": "Variation-2",
+                    "changes": {},
+                    "weight": 33.3333
+                }
+            ],
+            "type": "VISUAL_AB"
+        },
+        {
+            "id": 300,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": [
+                {
+                    "identifier": "rev",
+                    "id": 2,
+                    "type": "REVENUE_TRACKING"
+                },
+                {
+                    "identifier": "custom",
+                    "id": 294,
+                    "type": "CUSTOM_GOAL"
+                }
+            ],
+            "isForcedVariationEnabled": true,
+            "key": "rubyab1",
+            "variations": [
+                {
+                    "changes": {},
+                    "id": 1,
+                    "segments": {},
+                    "name": "Control",
+                    "weight": 25
+                },
+                {
+                    "changes": {},
+                    "id": 2,
+                    "segments": {
+                        "or": [
+                            {
+                                "user": "Varun,  You, Faizan,    Rohit , Bob"
+                            }
+                        ]
+                    },
+                    "name": "Variation-1",
+                    "weight": 25
+                },
+                {
+                    "changes": {},
+                    "id": 3,
+                    "segments": {
+                        "or": [
+                            {
+                                "custom_variable": {
+                                    "abcd": "1"
+                                }
+                            }
+                        ]
+                    },
+                    "name": "Variation-2",
+                    "weight": 25
+                },
+                {
+                    "changes": {},
+                    "id": 4,
+                    "segments": {
+                        "or": [
+                            {
+                                "custom_variable": {
+                                    "abcd": "regex(1)"
+                                }
+                            }
+                        ]
+                    },
+                    "name": "Variation-3",
+                    "weight": 25
+                }
+            ],
+            "type": "VISUAL_AB"
+        }
+    ],
+    "accountId": 12345,
+    "version": 1
+}
