@@ -9,10 +9,10 @@ import (
 func TestGenerateFor(t *testing.T) {
 	vwoInstance := GetInstance()
 
-	accountID := 89499
+	accountID := 12345
 	userID := "Chris"
 	actual := generateFor(vwoInstance, userID, accountID)
-	expected := "C50CFF01A27E51F080BAA50397B18BCF"
+	expected := "810E5C0420C2541C8E9BDACD245E6476"
 	assert.Equal(t, expected, actual, "Expected and Actual UUIDs should be same")
 
 	accountID = 12345
