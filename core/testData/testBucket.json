@@ -1,18 +1,18 @@
 {
-    "sdkKey": "7temp7f67f5a0b0fbe476c1f086a7038",
-    "accountId": 89499,
+    "sdkKey": "",
+    "accountId": 12345,
     "version": 1,
     "campaigns": [{
-            "id": 202,
-            "segments": {},
-            "status": "RUNNING",
-            "percentTraffic": 0,
-            "goals": {},
-            "isForcedVariationEnabled": false,
-            "key": "php1",
-            "variations": {},
-            "type": "FEATURE_ROLLOUT"
-        }, {
+        "id": 202,
+        "segments": {},
+        "status": "RUNNING",
+        "percentTraffic": 0,
+        "goals": {},
+        "isForcedVariationEnabled": false,
+        "key": "php1",
+        "variations": {},
+        "type": "FEATURE_ROLLOUT"
+    }, {
         "id": 287,
         "segments": {},
         "status": "RUNNING",

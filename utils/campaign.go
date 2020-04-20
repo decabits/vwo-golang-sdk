@@ -71,7 +71,7 @@ func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.C
 }
 
 // ScaleVariations function It extracts the weights from all the variations inside the campaign and scales them so that the total sum of eligible variations' weights become 100%
-func ScaleVariations(variations []schema.Variation) []schema.Variation {
+func  ScaleVariations(variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
 			variations: list of variations(schema.Variartion) having weight as a property

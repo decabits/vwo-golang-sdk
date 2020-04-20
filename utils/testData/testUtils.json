@@ -1,6 +1,6 @@
 {
-    "sdkKey": "7temp7f67f5a0b0fbe476c1f086a7038",
-    "accountId": 89499,
+    "sdkKey": "",
+    "accountId": 12345,
     "version": 1,
     "campaigns": [{
         "id": 202,
@@ -71,23 +71,21 @@
             "changes": {},
             "id": 2,
             "variables": [{
-                    "value": 302,
-                    "type": "integer",
-                    "key": "int2",
-                    "id": 1
-                }
-            ],
+                "value": 302,
+                "type": "integer",
+                "key": "int2",
+                "id": 1
+            }],
             "isFeatureEnabled": true,
             "weight": 100,
             "name": "Variation-1"
         }],
         "variables": [{
-                "value": 301,
-                "type": "integer",
-                "key": "int1",
-                "id": 1
-            }
-        ],
+            "value": 301,
+            "type": "integer",
+            "key": "int1",
+            "id": 1
+        }],
         "type": "FEATURE_ROLLOUT"
     }, {
         "id": 290,
