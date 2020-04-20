@@ -1,8 +1,8 @@
 # VWO-Golang-SDK
 
-[![Build Status](http://img.shields.io/travis/decabits/vwo-golang-sdk/master.svg?style=flat)](https://img.shields.io/travis/decabits/vwo-golang-sdk)
-[![Coverage Status](https://coveralls.io/repos/github/decabits/vwo-golang-sdk/badge.svg)](https://img.shields.io/coveralls/GitHub/decabits/vwo-golang-sdk)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+![Build Status](https://img.shields.io/travis/decabits/vwo-golang-sdk)
+![Size in Bytes](https://img.shields.io/github/languages/code-size/decabits/vwo-golang-sdk)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
 This open source library allows you to A/B Test your Website at server-side.
 
@@ -28,7 +28,6 @@ import (
 	vwo "github.com/decabits/vwo-golang-sdk"
     "github.com/decabits/vwo-golang-sdk/schema"
     "github.com/decabits/vwo-golang-sdk/api"
-    "github.com/decabits/vwo-golang-sdk/service"
 )
 
 // Initialize client
@@ -125,6 +124,14 @@ import "github.com/decabits/vwo-golang-sdk/schema"
 
 // UserStorage interface
 type UserStorage schema.UserStorage
+/*
+// UserStorage struct
+type UserStorage interface {
+	Get(userID, campaignKey string) UserData
+	Set(string, string, string)
+	Exist() bool
+}
+*/
 
 // UserStorageData struct
 type UserStorageData struct{}
@@ -139,7 +146,15 @@ func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
 				return userdata
 			}
 		}
-	}
+    }
+    /*
+    // UserData  struct
+    type UserData struct {
+        UserID        string
+        CampaignKey   string
+        VariationName string
+    }
+    */
 	return schema.UserData{}
 }
 
@@ -167,6 +182,12 @@ func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
 			userdata,
 		}
 	}
+}
+
+// Exist function
+func (us *UserStorageData) Exist() bool {
+	// Set the return value true in case there is a user storage else false
+	return true
 }
 
 ```
