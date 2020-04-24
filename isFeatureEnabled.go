@@ -1,4 +1,4 @@
-package api
+package vwo
 
 import (
 	"github.com/decabits/vwo-golang-sdk/constants"
@@ -9,25 +9,37 @@ import (
 )
 
 // IsFeatureEnabled ...
-func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options) bool {
-	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
+func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
+	options := schema.Options{}
+	return vwo.IsFeatureEnabledWithOptions(campaignKey, userID, options)
+}
+
+// IsFeatureEnabledWithOptions function
+func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, options schema.Options) bool {
+	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		vwoInstance.Logger.Error("Error geting campaign: ", err)
+		vwo.Logger.Error("Error geting campaign: ", err)
 		return false
 	}
 
 	if campaign.Status != constants.StatusRunning {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
+		vwo.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
 		return false
 	}
 	if utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.INVALID_API")
+		vwo.Logger.Error("ERROR_MESSAGES.INVALID_API")
 		return false
 	}
 
+	vwoInstance := schema.VwoInstance{
+		SettingsFile:      vwo.SettingsFile,
+		UserStorage:       vwo.UserStorage,
+		Logger:            vwo.Logger,
+		IsDevelopmentMode: vwo.IsDevelopmentMode,
+	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
+		vwo.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
 		return false
 	}
 
@@ -41,9 +53,9 @@ func IsFeatureEnabled(vwoInstance schema.VwoInstance, campaignKey, userID string
 	}
 
 	if isFeatureEnabled {
-		vwoInstance.Logger.Info("INFO_MESSAGES.FEATURE_ENABLED_FOR_USER")
+		vwo.Logger.Info("INFO_MESSAGES.FEATURE_ENABLED_FOR_USER")
 	} else {
-		vwoInstance.Logger.Info("INFO_MESSAGES.FEATURE_NOT_ENABLED_FOR_USER")
+		vwo.Logger.Info("INFO_MESSAGES.FEATURE_NOT_ENABLED_FOR_USER")
 	}
 
 	return isFeatureEnabled

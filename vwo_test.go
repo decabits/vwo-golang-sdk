@@ -1,15 +1,14 @@
-package api
+package vwo
 
 import (
 	"io/ioutil"
 	"log"
-	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/service"
 	"github.com/google/logger"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 // UserStorage interface for testing
@@ -36,8 +35,12 @@ func (us *UserStorageData) Exist() bool {
 	return false
 }
 
+type MockRunner struct {
+	mock.Mock
+}
+
 // GetInstance function creates and return a temporary VWO instance for testing
-func GetInstance(path string) schema.VwoInstance {
+func (vwo *VWOInstance) getInstance(path string) {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.ProcessSettingsFile(path); err != nil {
 		log.Println("Error Processing Settings File: ", err)
@@ -47,43 +50,22 @@ func GetInstance(path string) schema.VwoInstance {
 
 	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
 	logger.SetFlags(log.LstdFlags)
-	defer logger.Close()
+	// defer logger.Close()
 
 	storage := &UserStorageData{}
 
-	vwoInstance := schema.VwoInstance{
-		SettingsFile:      settingsFile,
-		UserStorage:       storage,
-		Logger:            logs,
-		IsDevelopmentMode: true,
-	}
-	return vwoInstance
+	vwo.LaunchWithLogger(true, settingsFile, storage, logs)
 }
-func TestActivate(t *testing.T) {
-	vwoInstance := GetInstance("./testData/testdata.json")
 
-	userID := "Varun"
-	campaignKey := "notPresent"
-	value := Activate(vwoInstance, campaignKey, userID)
-	assert.Empty(t, value, "Campaign does not exist")
+// func TestLaunch(t *testing.T) {
+// 	mockRunner := MockRunner{}
+// 	vwoInstance := schema.VwoInstance{
+// 		SettingsFile:      settingsFile,
+// 		UserStorage:       storage,
+// 		Logger:            logs,
+// 		IsDevelopmentMode: isDevelopmentMode,
+// 	}
 
-	userID = "Varun"
-	campaignKey = "phpab1"
-	value = Activate(vwoInstance, campaignKey, userID)
-	assert.Empty(t, value, "Campaign Not running")
-
-	userID = "Liza"
-	campaignKey = "php1"
-	value = Activate(vwoInstance, campaignKey, userID)
-	assert.Empty(t, value, "Campaign Not Valid")
-
-	userID = "Liza"
-	campaignKey = "phpab2"
-	value = Activate(vwoInstance, campaignKey, userID)
-	assert.Empty(t, value, "No Variation in Campaign")
-
-	userID = "Liza"
-	campaignKey = "phpab3"
-	actual := Activate(vwoInstance, campaignKey, userID)
-	assert.NotEmpty(t, actual, "Variation should be found")
-}
+// 	mockRunner.On("FetchSettingsFile", "accountID", "SDKKey").Return(errors.New("there was an error"))
+// 	mockRunner.AssertExpectations(t)
+// }

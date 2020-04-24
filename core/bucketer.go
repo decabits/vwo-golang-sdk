@@ -32,10 +32,10 @@ func GetBucketerVariation(variations []schema.Variation, bucketValue int) (schem
 }
 
 // GetBucketValueForUser returns Bucket Value of the user by hashing the userId with murmur hash and scaling it down.
-func GetBucketValueForUser(vwoinstance schema.VwoInstance, userID string, maxValue, multiplier float64) int {
+func GetBucketValueForUser(vwoInstance schema.VwoInstance, userID string, maxValue, multiplier float64) int {
 	/*
 		Args:
-			vwoinstance: vwo Instance for logger implementation
+			vwoInstance: vwo Instance for logger implementation
 			userID: the unique ID assigned to User
 			maxValue: maximum value that can be alloted to the bucket value
 			multiplier: value for distributing ranges slightly
@@ -49,13 +49,13 @@ func GetBucketValueForUser(vwoinstance schema.VwoInstance, userID string, maxVal
 	ratio := float64(hashValue) / math.Pow(2, 32)
 	multipliedValue := (maxValue*ratio + 1) * multiplier
 	bucketValue := int(math.Floor(multipliedValue))
-	vwoinstance.Logger.Info("DEBUG_MESSAGES.VARIATION_HASHV_VALUE: ", hashValue)
-	vwoinstance.Logger.Info("DEBUG_MESSAGES.VARIATION_BUCKETV_VALUE: ", bucketValue)
+	vwoInstance.Logger.Info("DEBUG_MESSAGES.VARIATION_HASHV_VALUE: ", hashValue)
+	vwoInstance.Logger.Info("DEBUG_MESSAGES.VARIATION_BUCKETV_VALUE: ", bucketValue)
 	return bucketValue
 }
 
 // IsUserPartOfCampaign calculates if the provided userID should become part of the campaign or not
-func IsUserPartOfCampaign(vwoinstance schema.VwoInstance, userID string, campaign schema.Campaign) bool {
+func IsUserPartOfCampaign(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) bool {
 	/*
 		Args:
 			userID: the unique ID assigned to a user
@@ -68,14 +68,14 @@ func IsUserPartOfCampaign(vwoinstance schema.VwoInstance, userID string, campaig
 	if len(campaign.Variations) == 0 {
 		return false
 	}
-	valueAssignedToUser := GetBucketValueForUser(vwoinstance, userID, constants.MaxTrafficPercent, 1)
+	valueAssignedToUser := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)
 	isUserPart := valueAssignedToUser != 0 && valueAssignedToUser <= campaign.PercentTraffic
-	vwoinstance.Logger.Info("INFO_MESSAGES.USER_ELIGIBILITY_FOR_CAMPAIGN: ", isUserPart)
+	vwoInstance.Logger.Info("INFO_MESSAGES.USER_ELIGIBILITY_FOR_CAMPAIGN: ", isUserPart)
 	return isUserPart
 }
 
 // BucketUserToVariation validates the User ID and returns Variation into which the User is bucketed in.
-func BucketUserToVariation(vwoinstance schema.VwoInstance, userID string, campaign schema.Campaign) (schema.Variation, error) {
+func BucketUserToVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) (schema.Variation, error) {
 	/*
 		Args:
 		    userID: the unique ID assigned to User
@@ -90,7 +90,7 @@ func BucketUserToVariation(vwoinstance schema.VwoInstance, userID string, campai
 		return schema.Variation{}, errors.New("No valid Campaign")
 	}
 	multiplier := (float64(constants.MaxTrafficValue) / float64(campaign.PercentTraffic)) / 100
-	bucketValue := GetBucketValueForUser(vwoinstance, userID, constants.MaxTrafficValue, multiplier)
+	bucketValue := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, multiplier)
 	return GetBucketerVariation(campaign.Variations, bucketValue)
 }
 

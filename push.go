@@ -1,4 +1,4 @@
-package api
+package vwo
 
 import (
 	"github.com/decabits/vwo-golang-sdk/constants"
@@ -8,16 +8,22 @@ import (
 )
 
 // Push ...
-func Push(vwoInstance schema.VwoInstance, tagKey, tagValue, userID string) bool {
+func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
 	if len(tagKey) > constants.PushAPITagKeyLength {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.TAG_KEY_LENGTH_EXCEEDED")
+		vwo.Logger.Error("ERROR_MESSAGES.TAG_KEY_LENGTH_EXCEEDED")
 		return false
 	}
 	if len(tagValue) > constants.PushAPITagValueLength {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.TAG_VALUE_LENGTH_EXCEEDED")
+		vwo.Logger.Error("ERROR_MESSAGES.TAG_VALUE_LENGTH_EXCEEDED")
 		return false
 	}
 
+	vwoInstance := schema.VwoInstance{
+		SettingsFile:      vwo.SettingsFile,
+		UserStorage:       vwo.UserStorage,
+		Logger:            vwo.Logger,
+		IsDevelopmentMode: vwo.IsDevelopmentMode,
+	}
 	impression := utils.CreateImpressionForPush(vwoInstance, tagKey, tagValue, userID)
 	event.Dispatch(vwoInstance, impression)
 

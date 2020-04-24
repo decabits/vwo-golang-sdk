@@ -1,4 +1,4 @@
-package api
+package vwo
 
 import (
 	"testing"
@@ -8,36 +8,37 @@ import (
 )
 
 func TestTrack(t *testing.T) {
-	vwoInstance := GetInstance("./testData/testTrack.json")
+	vwoInstance := VWOInstance{}
+	vwoInstance.getInstance("./testData/testTrack.json")
 
 	userID := "Varun"
 	campaignKey := "notPresent"
 	goalIdentifier := ""
-	value := Track(vwoInstance, campaignKey, userID, goalIdentifier)
+	value := vwoInstance.Track(campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Campaign does not exist")
 
 	userID = "Varun"
 	campaignKey = "phpab1"
 	goalIdentifier = ""
-	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
+	value = vwoInstance.Track(campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Campaign Not running")
 
 	userID = "Liza"
 	campaignKey = "php1"
 	goalIdentifier = ""
-	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
+	value = vwoInstance.Track(campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Campaign Not Valid")
 
 	userID = "Liza"
 	campaignKey = "phpab2"
 	goalIdentifier = "test"
-	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
+	value = vwoInstance.Track(campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Goal Not Found")
 
 	userID = "Liza"
 	campaignKey = "phpab3"
 	goalIdentifier = "rev"
-	value = Track(vwoInstance, campaignKey, userID, goalIdentifier)
+	value = vwoInstance.Track(campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Invalid Goal type")
 
 	userID = "Liza"
@@ -46,7 +47,7 @@ func TestTrack(t *testing.T) {
 		RevenueGoal: 0,
 	}
 	goalIdentifier = "rev"
-	value = TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
+	value = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 	assert.False(t, value, "Revenue Not defined")
 
 	userID = "Liza"
@@ -55,7 +56,7 @@ func TestTrack(t *testing.T) {
 		RevenueGoal: 10,
 	}
 	goalIdentifier = "custom"
-	value = TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
+	value = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 	assert.False(t, value, "No Variation in Campaign")
 
 	options = schema.Options{
@@ -64,6 +65,6 @@ func TestTrack(t *testing.T) {
 	userID = "Misty"
 	campaignKey = "phpab3"
 	goalIdentifier = "custom"
-	value = TrackWithOptions(vwoInstance, campaignKey, userID, goalIdentifier, options)
+	value = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 	assert.True(t, value, "Variation should be defined")
 }
