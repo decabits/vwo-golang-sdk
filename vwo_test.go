@@ -1,13 +1,10 @@
 package vwo
 
 import (
-	"io/ioutil"
 	"log"
 
-	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/service"
-	"github.com/google/logger"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -48,24 +45,7 @@ func (vwo *VWOInstance) getInstance(path string) {
 	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 
-	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
-	logger.SetFlags(log.LstdFlags)
-	// defer logger.Close()
-
 	storage := &UserStorageData{}
 
-	vwo.LaunchWithLogger(true, settingsFile, storage, logs)
+	vwo.Launch(true, settingsFile, storage)
 }
-
-// func TestLaunch(t *testing.T) {
-// 	mockRunner := MockRunner{}
-// 	vwoInstance := schema.VwoInstance{
-// 		SettingsFile:      settingsFile,
-// 		UserStorage:       storage,
-// 		Logger:            logs,
-// 		IsDevelopmentMode: isDevelopmentMode,
-// 	}
-
-// 	mockRunner.On("FetchSettingsFile", "accountID", "SDKKey").Return(errors.New("there was an error"))
-// 	mockRunner.AssertExpectations(t)
-// }

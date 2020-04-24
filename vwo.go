@@ -36,10 +36,7 @@ func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.Setti
 	logger.SetFlags(log.LstdFlags)
 	defer logger.Close()
 
-	vwo.SettingsFile = settingsFile
-	vwo.UserStorage = storage
-	vwo.Logger = logs
-	vwo.IsDevelopmentMode = isDevelopmentMode
+	vwo.LaunchWithLogger(isDevelopmentMode, settingsFile, storage, logs)
 }
 
 // LaunchWithLogger Function
