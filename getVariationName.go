@@ -22,12 +22,30 @@ This API method: Gets the variation assigned for the user for the campaign
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 */
 func (vwo *VWOInstance) GetVariationName(campaignKey, userID string) string {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+		Returns:
+			string: Variation Name for user to corresponding camapign
+	*/
 	options := schema.Options{}
 	return vwo.GetVariationNameWithOptions(campaignKey, userID, options)
 }
 
 // GetVariationNameWithOptions ...
 func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, options schema.Options) string {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
+			customVariables = {}
+			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
+			variationTargetingVariables = {}
+		Returns:
+			string: Variation Name for user to corresponding camapign
+	*/
 	if !utils.ValidateGetVariationName(campaignKey, userID) {
 		message := fmt.Sprintf(constants.ErrorMessagesGetVariationAPIMissingParams)
 		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)

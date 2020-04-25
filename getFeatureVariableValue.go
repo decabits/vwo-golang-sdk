@@ -24,12 +24,32 @@ This API method: Gets the value of the variable whose key is passed
 7. Logs and returns the value
 */
 func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID string) interface{} {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			variableKey: Key of variable whose value is to be found
+			userID: Unique identification of user
+		Returns:
+			interrface{}: Value of the variable
+	*/
 	options := schema.Options{}
 	return vwo.GetFeatureVariableValueWithOptions(campaignKey, variableKey, userID, options)
 }
 
 // GetFeatureVariableValueWithOptions function
 func (vwo *VWOInstance) GetFeatureVariableValueWithOptions(campaignKey, variableKey, userID string, options schema.Options) interface{} {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			variableKey: Key of variable whose value is to be found
+			userID: Unique identification of user
+			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
+			customVariables = {}
+			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
+			variationTargetingVariables = {}
+		Returns:
+			interrface{}: Value of the variable
+	*/
 	if !utils.ValidateGetFeatureVariableValue(campaignKey, variableKey, userID) {
 		message := fmt.Sprintf(constants.ErrorMessagesGetFeatureVariableMissingParams)
 		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)

@@ -26,12 +26,33 @@ This API method: Marks the conversion of the campaign for a particular goal
 8. If feature enabled, sends a call to VWO server for tracking visitor
 */
 func (vwo *VWOInstance) Track(campaignKey, userID string, goalIdentifier string) bool {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+			goalIdentifier: Unique identification of corresponding goal
+		Returns:
+			bool: True if the track is successfull else false
+	*/
 	options := schema.Options{}
 	return vwo.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 }
 
 // TrackWithOptions function
 func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID, goalIdentifier string, options schema.Options) bool {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+			goalIdentifier: Unique identification of corresponding goal
+			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
+			customVariables = {}
+			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
+			variationTargetingVariables = {}
+			RevenueGoal(In schema.Options): Value of revenue for the goal if the goal is revenue tracking
+		Returns:
+			bool: True if the track is successfull else false
+	*/
 	if !utils.ValidateTrack(campaignKey, userID, goalIdentifier) {
 		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIMissingParams)
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)

@@ -24,12 +24,30 @@ This API method: Whether a feature is enabled or not for the given user
 6. If feature enabled, sends a call to VWO server for tracking visitor
 */
 func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+		Returns:
+			bool: True if the user the feature is enambled for the user, else false
+	*/
 	options := schema.Options{}
 	return vwo.IsFeatureEnabledWithOptions(campaignKey, userID, options)
 }
 
 // IsFeatureEnabledWithOptions function
 func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, options schema.Options) bool {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
+			customVariables = {}
+			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
+			variationTargetingVariables = {}
+		Returns:
+			bool: True if the user the feature is enambled for the user, else false
+	*/
 	if !utils.ValidateIsFeatureEnabled(campaignKey, userID) {
 		message := fmt.Sprintf(constants.ErrorMessagesIsFeatureEnabledAPIMissingParams)
 		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)

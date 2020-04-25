@@ -23,12 +23,30 @@ This API method: Gets the variation assigned for the user for the campaign and s
 6. Sends an impression call to VWO server to track user
 */
 func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+		Returns:
+			string: Variation Name for user to corresponding camapign
+	*/
 	options := schema.Options{}
 	return vwo.ActivateWithOptions(campaignKey, userID, options)
 }
 
 // ActivateWithOptions ...
 func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options schema.Options) string {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
+			customVariables = {}
+			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
+			variationTargetingVariables = {}
+		Returns:
+			string: Variation Name for user to corresponding camapign
+	*/
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      vwo.SettingsFile,
