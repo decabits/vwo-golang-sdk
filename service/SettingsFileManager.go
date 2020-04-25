@@ -47,7 +47,7 @@ func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) erro
 	if err = json.Unmarshal([]byte(resp), &sfm.SettingsFile); err != nil {
 		return fmt.Errorf(constants.ErrorMessagesInvalidSettingsFile, err.Error())
 	}
-
+	logger.Warning(constants.DebugMessagesValidConfiguration)
 	return nil
 }
 

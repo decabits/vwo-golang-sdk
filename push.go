@@ -19,6 +19,14 @@ This API method: Pushes the key-value tag pair for a particular user
 3. Sends a call to VWO push api
 */
 func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
+	/*
+		Args:
+			tagKey: Key of the corresponding tag
+			tagValue: Value of the corresponding tag
+			userID: Unique identification of user
+		Returns:
+			bool: true if the push api call is done, else false
+	*/
 	if !utils.ValidatePush(tagKey, tagValue, userID) {
 		message := fmt.Sprintf(constants.ErrorMessagesPushAPIMissingParams)
 		utils.LogMessage(vwo.Logger, constants.Error, push, message)
