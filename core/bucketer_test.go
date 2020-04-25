@@ -79,16 +79,16 @@ func TestGetBucketerVariation(t *testing.T) {
 
 	variations := vwoInstance.SettingsFile.Campaigns[1].Variations
 	bucketValue := 2345
-	actual, _ := GetBucketerVariation(variations, bucketValue)
+	actual, _ := GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
 	expected := variations[0]
 	assert.Equal(t, expected, actual, "Expected Variation do not match with Actual")
 
 	bucketValue = 0
-	actual, _ = GetBucketerVariation(variations, bucketValue)
+	actual, _ = GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
 	assert.Empty(t, actual, "Variation should be empty")
 
 	bucketValue = 12345
-	actual, _ = GetBucketerVariation(variations, bucketValue)
+	actual, _ = GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
 	assert.Empty(t, actual, "Variation should be empty")
 }
 

@@ -1,12 +1,16 @@
 package vwo
 
 import (
+	"fmt"
+
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/event"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
+
+const track = "track.go"
 
 // Track function
 func (vwo *VWOInstance) Track(campaignKey, userID string, goalIdentifier string) bool {
@@ -18,27 +22,34 @@ func (vwo *VWOInstance) Track(campaignKey, userID string, goalIdentifier string)
 func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID string, goalIdentifier string, options schema.Options) bool {
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		vwo.Logger.Errorf("Error geting campaign: %+v\n", err)
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		utils.LogMessage(vwo.Logger, constants.Error, track, err.Error())
 		return false
 	}
 
 	if campaign.Status != constants.StatusRunning {
-		vwo.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
+		message := fmt.Sprintf(constants.ErrorMessagesCampaignNotRunning, "Track", campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
 	}
 	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
-		vwo.Logger.Error("ERROR_MESSAGES.INVALID_API")
+		message := fmt.Sprintf(constants.ErrorMessagesInvalidAPI, "Track", campaignKey, campaign.Type, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
 	}
 
 	goal, err := utils.GetCampaignGoal(campaign, goalIdentifier)
 	if err != nil {
-		vwo.Logger.Errorf("ERROR_MESSAGES.TRACK_API_GOAL_NOT_FOUND: %+v\n", err)
+		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIGoalNotFound, goalIdentifier, campaignKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		utils.LogMessage(vwo.Logger, constants.Error, track, err.Error())
 		return false
 	}
 
 	if goal.Type == constants.GoalTypeRevenue && options.RevenueGoal == 0 {
-		vwo.Logger.Error("ERROR_MESSAGES.TRACK_API_REVENUE_NOT_PASSED_FOR_REVENUE_GOAL")
+		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIRevenueNotPassedForRevenueGoal, options.RevenueGoal, campaignKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
 	}
 
@@ -50,7 +61,9 @@ func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID string, goalIdentif
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwo.Logger.Errorf("INFO_MESSAGES.INVALID_VARIATION_KEY %+v\n", err)
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, userID, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Info, track, message)
+		utils.LogMessage(vwo.Logger, constants.Error, track, err.Error())
 		return false
 	}
 

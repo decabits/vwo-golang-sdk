@@ -1,14 +1,18 @@
 package vwo
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 
+	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/service"
 	"github.com/google/logger"
 )
+
+const fileVWO = "vwo.go"
 
 // VWOInstance struct
 type VWOInstance schema.VwoInstance
@@ -45,13 +49,18 @@ func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile sc
 	vwo.UserStorage = storage
 	vwo.Logger = logger
 	vwo.IsDevelopmentMode = isDevelopmentMode
+	
+	message := fmt.Sprintf(constants.DebugMessagesDevelopmentMode, isDevelopmentMode)
+	utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, message)
 }
 
+//GetSettingsFile function makes the HTTP call to VWO server to fetch the settings file
 func (vwo *VWOInstance) GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {
-		vwo.Logger.Info("Error Processing Settings File: ", err)
+		utils.LogMessage(vwo.Logger, constants.Error, fileVWO, err.Error())
 	}
 	settingsFileManager.Process()
+	utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessagesSettingsFileProcessed)
 	return settingsFileManager.GetSettingsFile()
 }

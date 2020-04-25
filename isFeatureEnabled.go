@@ -1,12 +1,16 @@
 package vwo
 
 import (
+	"fmt"
+
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/event"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
+
+const fileIsFeatureEnabled = "isFeatureEnabled.go"
 
 // IsFeatureEnabled ...
 func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
@@ -18,16 +22,20 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
 func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, options schema.Options) bool {
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		vwo.Logger.Error("Error geting campaign: ", err)
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, err.Error())
 		return false
 	}
 
 	if campaign.Status != constants.StatusRunning {
-		vwo.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
+		message := fmt.Sprintf(constants.ErrorMessagesCampaignNotRunning, "IsFeatureEnabled", campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
 		return false
 	}
 	if utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
-		vwo.Logger.Error("ERROR_MESSAGES.INVALID_API")
+		message := fmt.Sprintf(constants.ErrorMessagesInvalidAPI, "IsFeatureEnabled", campaignKey, campaign.Type, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
 		return false
 	}
 
@@ -39,7 +47,9 @@ func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, 
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwo.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, userID, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Info, fileIsFeatureEnabled, message)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, err.Error())
 		return false
 	}
 
@@ -53,9 +63,11 @@ func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, 
 	}
 
 	if isFeatureEnabled {
-		vwo.Logger.Info("INFO_MESSAGES.FEATURE_ENABLED_FOR_USER")
+		message := fmt.Sprintf(constants.InfoMessageFeatureEnabledForUser, campaignKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Info, fileIsFeatureEnabled, message)
 	} else {
-		vwo.Logger.Info("INFO_MESSAGES.FEATURE_NOT_ENABLED_FOR_USER")
+		message := fmt.Sprintf(constants.InfoMessageFeatureNotEnabledForUser, campaignKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Info, fileIsFeatureEnabled, message)
 	}
 
 	return isFeatureEnabled
