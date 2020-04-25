@@ -16,8 +16,8 @@ type VWOInstance schema.VwoInstance
 
 // VWO interface
 type VWO interface {
-	Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage schema.UserStorage) *schema.VwoInstance
-	LaunchWithLogger(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage schema.UserStorage, logger *logger.Logger) *schema.VwoInstance
+	Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage schema.UserStorage)
+	LaunchWithLogger(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage schema.UserStorage, logger *logger.Logger)
 	Activate(campaignKey, userID string) string
 	ActivateWithOptions(campaignKey, userID string, options schema.Options) string
 	GetFeatureVariableValue(campaignKey, variableKey, userID string) interface{}
@@ -48,6 +48,7 @@ func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile sc
 	vwo.IsDevelopmentMode = isDevelopmentMode
 }
 
+// GetSettingsFile function to fetch settingsfile
 func GetSettingsFile(accountID, SDKKey string) (schema.SettingsFile, error) {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {

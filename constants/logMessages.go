@@ -5,7 +5,7 @@ const (
 	InfoMessageUserHashBucketValue           = "User ID: %v having hash: %v got bucketValue: %v"
 	InfoMessageUserEligibilityForCampaign    = "Is userID: %v part of campaign ? %v"
 	InfoMessageSegmentationSkipped           = "Segment was missing, hence skipping segmentation for segments: %v and custom variables: %v"
-	InfoMessageWhitelistingSkipped           = "variationDecider.go: For userId: %v of Campaign: %v, whitelisting was skipped"
+	InfoMessageWhitelistingSkipped           = "For userId: %v of Campaign: %v, whitelisting was skipped"
 	InfoMessageNoWhitelistedVariation        = "No whitelisting variation found in campaign: %v"
 	InfoMessageNoTargettedVariation          = "No targetted variation found : %v"
 	InfoMessageNoUserStorageServiceGet       = "No UserStorageService to get stored data"

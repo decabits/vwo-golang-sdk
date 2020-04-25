@@ -18,7 +18,7 @@ func (vwo *VWOInstance) GetFeatureVariableValueWithOptions(campaignKey, variable
 	if !utils.ValidateGetFeatureVariableValue(campaignKey, variableKey, userID) {
 		return nil
 	}
-	
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
 		vwo.Logger.Error("Error geting campaign: ", err)

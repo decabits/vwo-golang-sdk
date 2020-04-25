@@ -8,6 +8,8 @@ import (
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
+const activate = "activate.go"
+
 // Activate function
 func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
 	options := schema.Options{}
@@ -20,9 +22,17 @@ func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options 
 		return ""
 	}
 
+	vwoInstance := schema.VwoInstance{
+		SettingsFile:      vwo.SettingsFile,
+		UserStorage:       vwo.UserStorage,
+		Logger:            vwo.Logger,
+		IsDevelopmentMode: vwo.IsDevelopmentMode,
+		UserID:            userID,
+	}
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		vwo.Logger.Error("Error getting campaign: ", err)
+		utils.LogMessage(vwoInstance, constants.Error, activate, "Error getting campaign: "+err.Error())
 		return ""
 	}
 
@@ -35,14 +45,8 @@ func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options 
 		return ""
 	}
 
-	vwoInstance := schema.VwoInstance{
-		SettingsFile:      vwo.SettingsFile,
-		UserStorage:       vwo.UserStorage,
-		Logger:            vwo.Logger,
-		IsDevelopmentMode: vwo.IsDevelopmentMode,
-		UserID:            userID,
-		Campaign:          campaign,
-	}
+	vwoInstance.Campaign = campaign
+
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
 		vwo.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")

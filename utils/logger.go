@@ -1,8 +1,8 @@
 package utils
 
 import (
-   "github.com/decabits/vwo-golang-sdk/schema"
-   "github.com/decabits/vwo-golang-sdk/constants"
+	"github.com/decabits/vwo-golang-sdk/constants"
+	"github.com/decabits/vwo-golang-sdk/schema"
 )
 
 // LogMessage function generates Log messages and logs them into the logger, logger can be defined by the user itself too
