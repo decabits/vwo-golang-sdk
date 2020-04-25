@@ -1,8 +1,6 @@
 package schema
 
-import (
-	"github.com/google/logger"
-)
+import "github.com/google/logger"
 
 // VwoInstance struct utils
 type VwoInstance struct {

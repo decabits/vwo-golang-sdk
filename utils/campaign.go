@@ -8,6 +8,8 @@ import (
 	"github.com/decabits/vwo-golang-sdk/schema"
 )
 
+const campaign = "campaign.go"
+
 // GetVariationAllocationRanges returns a list of variation with set allocation ranges.
 func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []schema.Variation) []schema.Variation {
 	/*
@@ -32,9 +34,8 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 			variation.EndVariationAllocation = -1
 		}
 
-		file := "campaign.go"
-		message := fmt.Sprintf(constants.InfoMessageVariationRageAllocation,variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
-		LogMessage(vwoInstance, constants.Info, file, message)
+		message := fmt.Sprintf(constants.InfoMessageVariationRageAllocation, variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
+		LogMessage(vwoInstance, constants.Info, campaign, message)
 		variationAllocationRanges = append(variationAllocationRanges, variation)
 	}
 	return variationAllocationRanges

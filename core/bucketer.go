@@ -10,7 +10,10 @@ import (
 	"github.com/spaolacci/murmur3"
 )
 
-const umax32Bit = 0xFFFFFFFF
+const (
+	umax32Bit = 0xFFFFFFFF
+	bucketer  = "bucketer.go"
+)
 
 // GetBucketerVariation function returns the Variation by checking the Start and End Bucket Allocations of each Variation
 func GetBucketerVariation(variations []schema.Variation, bucketValue int) (schema.Variation, error) {
@@ -51,9 +54,8 @@ func GetBucketValueForUser(vwoInstance schema.VwoInstance, userID string, maxVal
 	multipliedValue := (maxValue*ratio + 1) * multiplier
 	bucketValue := int(math.Floor(multipliedValue))
 
-	file := "bucketer.go"
 	message := fmt.Sprintf(constants.InfoMessageUserHashBucketValue, userID, hashValue, bucketValue)
-	utils.LogMessage(vwoInstance, constants.Info, file, message)
+	utils.LogMessage(vwoInstance, constants.Info, bucketer, message)
 
 	return bucketValue
 }
@@ -75,9 +77,8 @@ func IsUserPartOfCampaign(vwoInstance schema.VwoInstance, userID string, campaig
 	valueAssignedToUser := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)
 	isUserPart := valueAssignedToUser != 0 && valueAssignedToUser <= campaign.PercentTraffic
 
-	file := "bucketer.go"
 	message := fmt.Sprintf(constants.InfoMessageUserEligibilityForCampaign, userID, isUserPart)
-	utils.LogMessage(vwoInstance, constants.Info, file, message)
+	utils.LogMessage(vwoInstance, constants.Info, bucketer, message)
 
 	return isUserPart
 }

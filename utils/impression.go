@@ -11,6 +11,8 @@ import (
 	"github.com/decabits/vwo-golang-sdk/schema"
 )
 
+const impressions = "impression.go"
+
 // CreateImpressionForPush creates the impression from the arguments passed to push
 func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, userID string) schema.Impression {
 	/*
@@ -28,9 +30,8 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	parameters.Add(tagKey, tagValue)
 	impression.U = parameters.Encode()
 
-	file := "impression.go"
 	message := fmt.Sprintf(constants.InfoMessageImpressionForPush, impression)
-	LogMessage(vwoInstance, constants.Info, file, message)
+	LogMessage(vwoInstance, constants.Info, impressions, message)
 
 	return impression
 }
@@ -59,9 +60,8 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 		impression.R = revenueGoal
 	}
 
-	file := "impression.go"
 	message := fmt.Sprintf(constants.InfoMessageImpressionForTrackGoal, impression)
-	LogMessage(vwoInstance, constants.Info, file, message)
+	LogMessage(vwoInstance, constants.Info, impressions, message)
 
 	return impression
 }
@@ -85,9 +85,8 @@ func CreateImpressionTrackingUser(vwoInstance schema.VwoInstance, campaignID int
 	impression.ED = `{\"p\":\"` + constants.Platform + `\"}`
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackUser
 
-	file := "impression.go"
 	message := fmt.Sprintf(constants.InfoMessageImpressionForTrackUser, impression)
-	LogMessage(vwoInstance, constants.Info, file, message)
+	LogMessage(vwoInstance, constants.Info, impressions, message)
 
 	return impression
 }

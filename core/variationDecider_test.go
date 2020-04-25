@@ -3,9 +3,8 @@ package core
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPreEvaluateSegment(t *testing.T) {

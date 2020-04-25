@@ -6,11 +6,12 @@ import (
 	"strings"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
-
 	"github.com/decabits/vwo-golang-sdk/schema"
 	guuid "github.com/google/uuid"
 	suuid "github.com/satori/go.uuid"
 )
+
+const uuid = "uuid.go"
 
 // generateFor generates desired UUID
 func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) string {
@@ -28,9 +29,8 @@ func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) s
 	uuidForAccountUserID := suuid.NewV5(userIDNamespace, userID)
 	desiredUUID := strings.ToUpper(strings.Replace(uuidForAccountUserID.String(), "-", "", -1))
 
-	file := "uuid.go"
 	message := fmt.Sprintf(constants.InfoMessageUUIDForUser, userID, accountID, desiredUUID)
-	LogMessage(vwoInstance, constants.Info, file, message)
+	LogMessage(vwoInstance, constants.Info, uuid, message)
 
 	return desiredUUID
 }

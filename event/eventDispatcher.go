@@ -9,6 +9,8 @@ import (
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
+const eventDispatcher = "eventDispatcher.go"
+
 // Dispatch function dispatches the event represented by the impression object to our servers
 func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 	/*
@@ -31,13 +33,13 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 		"&ed=" + impression.ED
 
 	_, err := utils.GetRequest(URL)
-	file := "eventDispatcher.go"
+
 	if err != nil {
 		message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
-		utils.LogMessage(vwoInstance,constants.Error, file, message)
+		utils.LogMessage(vwoInstance,constants.Error, eventDispatcher, message)
 	} else {
 		message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, impression)
-		utils.LogMessage(vwoInstance, constants.Info, file, message)
+		utils.LogMessage(vwoInstance, constants.Info, eventDispatcher, message)
 	}
 }
 
@@ -65,8 +67,7 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 
 	_, err := utils.GetRequest(URL)
 	if err != nil {
-		file := "eventDispatcher.go"
 		message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
-		utils.LogMessage(vwoInstance,constants.Error, file, message)
+		utils.LogMessage(vwoInstance,constants.Error, eventDispatcher, message)
 	}
 }

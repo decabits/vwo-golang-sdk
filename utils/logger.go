@@ -14,15 +14,16 @@ func LogMessage(vwoInstance schema.VwoInstance, level, file, message string) {
 			level: level of logging
 	*/
 
-	var log string
-	log = string(file) + " : " + message
+	log := string(file) + " : " + message
 
 	switch level {
 	case constants.Info:
 		vwoInstance.Logger.Info(log)
+	case constants.Debug:
+		vwoInstance.Logger.Warning(log)
 	case constants.Error:
 		vwoInstance.Logger.Error(log)
 	default:
-		vwoInstance.Logger.Error("INVALID LEVEL TYPE")
+		vwoInstance.Logger.Error("Invalid Logger Level")
 	}
 }

@@ -9,6 +9,8 @@ import (
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
+const variationDecider = "variationDecider.go"
+
 // VariationDecider struct
 type VariationDecider struct {
 	Bucketer         string
@@ -45,24 +47,23 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 		options.VariationTargetingVariables = map[string]interface{}{"_vwo_user_id": userID}
 	}
 
-	file := "variationDecider.go"
 
 	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		utils.LogMessage(vwoInstance,constants.Error, file, err.Error())
+		utils.LogMessage(vwoInstance,constants.Error, variationDecider, err.Error())
 	} else {
 		message := fmt.Sprintf(constants.InfoMessageGotVariation, userID, campaign.Key, targettedVariation.Name)
-		utils.LogMessage(vwoInstance, constants.Info, file, message)
+		utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 		return targettedVariation, nil
 	}
 
 	variationName, err := GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	if err != nil {
-		utils.LogMessage(vwoInstance,constants.Error, file, err.Error())
+		utils.LogMessage(vwoInstance,constants.Error, variationDecider, err.Error())
 	}
 	if variationName != "" {
 		message := fmt.Sprintf(constants.InfoMessageGettingStoredVariation, userID, campaign.Key, variationName)
-		utils.LogMessage(vwoInstance, constants.Info, file, message)
+		utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 		return utils.GetCampaignVariation(campaign, variationName)
 	}
 
@@ -74,11 +75,11 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 		if vwoInstance.UserStorage.Exist() {
 			vwoInstance.UserStorage.Set(userID, campaign.Key, variationName)
 			message := fmt.Sprintf(constants.InfoMessageSettingDataUserStorageService, userID)
-			utils.LogMessage(vwoInstance, constants.Info, file, message)
+			utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 		}
 
 		message := fmt.Sprintf(constants.InfoMessageGotVariationForUser, userID, campaign.Key, variation.Name, "GetVariation")
-		utils.LogMessage(vwoInstance, constants.Info, file, message)
+		utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 		return variation, nil
 	}
 
@@ -141,9 +142,8 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 	}
 	userStorageFetch := vwoInstance.UserStorage.Get(userID, campaign.Key)
 
-	file := "variationDecider.go"
 	message := fmt.Sprintf(constants.InfoMessageGettingDataUserStorageService, userID)
-	utils.LogMessage(vwoInstance, constants.Info, file, message)
+	utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 	return userStorageFetch.VariationName, nil
 }
 
@@ -165,18 +165,16 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 	var whiteListedVariationsList []schema.Variation
 	for _, variation := range campaign.Variations {
 		if len(variation.Segments) == 0 {
-			file := "variationDecider.go"
 			message := fmt.Sprintf(constants.InfoMessageNoSegmentsInVariation, userID, campaign.Key, variation)
-			utils.LogMessage(vwoInstance, constants.Info, file, message)
+			utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 		}
 		status := PreEvaluateSegment(vwoInstance, variation.Segments, options)
 		if status {
 			whiteListedVariationsList = append(whiteListedVariationsList, variation)
 		}
 
-		file := "variationDecider.go"
 		message := fmt.Sprintf(constants.InfoMessageSegmentationStatus, userID, campaign.Key, options.CustomVariables, strconv.FormatBool(status), variation)
-		utils.LogMessage(vwoInstance, constants.Info, file, message)
+		utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 	}
 	return whiteListedVariationsList
 }
@@ -193,9 +191,8 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 	*/
 
 	if len(segments) == 0 {
-		file := "variationDecider.go"
 		message := fmt.Sprintf(constants.InfoMessageSegmentationSkipped, segments, options.CustomVariables)
-		utils.LogMessage(vwoInstance, constants.Info, file, message)
+		utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 		vwoInstance.Logger.Info()
 
 		return true
@@ -215,9 +212,8 @@ func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]inte
 	*/
 
 	if len(segments) == 0 {
-		file := "variationDecider.go"
 		message := fmt.Sprintf(constants.InfoMessageSegmentationSkipped, segments, options.CustomVariables)
-		utils.LogMessage(vwoInstance, constants.Info, file, message)
+		utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
 		vwoInstance.Logger.Info()
 
 		return false
