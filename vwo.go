@@ -54,12 +54,12 @@ func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile sc
 }
 
 // GetSettingsFile function to fetch settingsfile
-func GetSettingsFile(accountID, SDKKey string) (schema.SettingsFile, error) {
+func GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {
-		return schema.SettingsFile{}, fmt.Errorf("Error Processing Settings File: %v", err)
+		logger.Warning("Error Processing Settings File: " + err.Error())
 	}
 	settingsFileManager.Process()
 	logger.Warning(fileVWO + " : " + constants.DebugMessagesSettingsFileProcessed)
-	return settingsFileManager.GetSettingsFile(), nil
+	return settingsFileManager.GetSettingsFile()
 }
