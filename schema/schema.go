@@ -107,7 +107,7 @@ type Response struct {
 	StatusCode int
 }
 
-// UserStorage struct
+// UserStorage interface
 type UserStorage interface {
 	Get(userID, campaignKey string) UserData
 	Set(string, string, string)

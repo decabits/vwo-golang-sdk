@@ -11,8 +11,17 @@ import (
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
-// SegmentEvaluator function
+// SegmentEvaluator function evaluates segments to get the keys and values and perform appropriate functions
 func SegmentEvaluator(segments map[string]interface{}, options schema.Options) bool {
+	/*
+		Args:
+			segments: segments from campaign or variation
+			options: options object containing CustomVariables, VariationTargertting variables and Revenue Goal
+		
+		Returns: 
+			bool: if the options falls in the segments criteria
+	*/
+
 	operator, subSegments := utils.GetKeyValue(segments)
 
 	if operator == constants.OperatorTypeNot {
@@ -37,7 +46,17 @@ func SegmentEvaluator(segments map[string]interface{}, options schema.Options) b
 	return true
 }
 
+// evaluate function checks the res array, if operator is or then performs or on all elements else and
 func evaluate(operator string, res []bool) bool {
+	/*
+		Args:
+			operator: AND or OR operator
+			res: array of bool values
+		
+		Returns: 
+			bool: final computed value of OR or AND
+	*/
+
 	if operator == constants.OperatorTypeAnd {
 		for _, v := range res {
 			if v == false {
@@ -56,7 +75,17 @@ func evaluate(operator string, res []bool) bool {
 	return false
 }
 
+//evaluateCustomVariables function processes the custom variables in the segments
 func evaluateCustomVariables(custom map[string]interface{}, options schema.Options) bool {
+	/*
+		Args:
+			segments: segments from campaign or variation
+			options: options object containing CustomVariables, VariationTargertting variables and Revenue Goal
+		
+		Returns: 
+			bool: if the options falls in the segments criteria
+	*/
+
 	operandKey, operand := utils.GetKeyValue(custom)
 	_, okCustomVar := options.CustomVariables[operandKey]
 	_, okVariationTar := options.VariationTargetingVariables[operandKey]
@@ -76,6 +105,7 @@ func evaluateCustomVariables(custom map[string]interface{}, options schema.Optio
 	return extractResult(operandType, processedValues, tagValue)
 }
 
+// extractResult function compares the operand value and tag value on the basis of operand type
 func extractResult(operandType int, operandValue, tagValue string) bool {
 	result := false
 	switch operandType {
@@ -103,7 +133,17 @@ func extractResult(operandType int, operandValue, tagValue string) bool {
 	return result
 }
 
+//operandUserParser function checks if the VWO user lies in the list of users in the segments
 func operandUserParser(operand string, options schema.Options) bool {
+	/*
+		Args:
+			operand: list of users
+			options: options object containing CustomVariables, VariationTargertting variables and Revenue Goal
+
+		Returns:
+			bool: true if user in list, else false
+	*/
+
 	users := strings.Split(operand, ",")
 	for _, user := range users {
 		if strings.TrimSpace(user) == options.CustomVariables["_vwo_user_id"] || strings.TrimSpace(user) == options.VariationTargetingVariables["_vwo_user_id"] {
@@ -113,6 +153,7 @@ func operandUserParser(operand string, options schema.Options) bool {
 	return false
 }
 
+// processCustomVariablesValue function converts interface value of customVariables to string
 func processCustomVariablesValue(value interface{}) string {
 	switch value.(type) {
 	// handle cases
@@ -126,6 +167,7 @@ func processCustomVariablesValue(value interface{}) string {
 	return value.(string)
 }
 
+// preProcessOperandValue
 func preProcessOperandValue(operand interface{}) (operandType int, operandValue string) {
 	if matchWithRegex(operand.(string), constants.LowerMatch) {
 		operandType = constants.LowerValue
@@ -156,7 +198,6 @@ func preProcessOperandValue(operand interface{}) (operandType int, operandValue 
 	return
 }
 
-// ProcessValues function
 func processValues(operandValue string, tagValue interface{}) (newProcessedOperandValue string, newProcessedTagValue string) {
 	processedOperandValue, err := strconv.ParseFloat(operandValue, 64)
 	if err != nil {
@@ -186,6 +227,7 @@ func processValues(operandValue string, tagValue interface{}) (newProcessedOpera
 	return
 }
 
+// matchWithRegex function reports whether the string s contains any match of the regular expression pattern
 func matchWithRegex(operand, regex string) bool {
 	result, err := regexp.MatchString(regex, operand)
 	if err != nil {
@@ -194,6 +236,7 @@ func matchWithRegex(operand, regex string) bool {
 	return result
 }
 
+//extractOperandValue function a string holding the text of the leftmost match of the regular expression in s and the matches, if any, of its subexpressions, as defined by the 'Submatch' description in the package comment. A return value of nil indicates no match.
 func extractOperandValue(operand, regex string) string {
 	re := regexp.MustCompile(regex)
 	submatchall := re.FindStringSubmatch(operand)
