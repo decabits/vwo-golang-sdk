@@ -88,7 +88,7 @@ func getInstanceWithStorage(path string) schema.VwoInstance {
 }
 
 func getInstanceWithoutStorage(path string) schema.VwoInstance {
-	settingsFileManager := &service.SettingsFileManager{}
+	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.ProcessSettingsFile(path); err != nil {
 		log.Println("Error Processing Settings File: ", err)
 	}
