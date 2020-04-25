@@ -93,16 +93,16 @@ func TestGetBucketerVariation(t *testing.T) {
 }
 
 func TestIsUserPartOfCampaign(t *testing.T) {
-	vwoinstance := GetInstance("./testData/testBucket.json")
+	vwoInstance := GetInstance("./testData/testBucket.json")
 
 	userID := "James"
-	campaign := vwoinstance.SettingsFile.Campaigns[1]
-	actual := IsUserPartOfCampaign(vwoinstance, userID, campaign)
+	campaign := vwoInstance.SettingsFile.Campaigns[1]
+	actual := IsUserPartOfCampaign(vwoInstance, userID, campaign)
 	assert.True(t, actual, "User should be part of the campaign")
 
 	userID = "Christy"
-	campaign = vwoinstance.SettingsFile.Campaigns[0]
-	actual = IsUserPartOfCampaign(vwoinstance, userID, campaign)
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
+	actual = IsUserPartOfCampaign(vwoInstance, userID, campaign)
 	assert.False(t, actual, "User should not be part of the campaign")
 }
 
