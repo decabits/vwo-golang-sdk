@@ -1,12 +1,14 @@
 package utils
 
 import (
-	"errors"
+	"fmt"
 	"math"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 )
+
+const campaign = "campaign.go"
 
 // GetVariationAllocationRanges returns a list of variation with set allocation ranges.
 func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []schema.Variation) []schema.Variation {
@@ -31,7 +33,9 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 			variation.StartVariationAllocation = -1
 			variation.EndVariationAllocation = -1
 		}
-		vwoInstance.Logger.Infof("Variation: %+v with weight: %+v got range as: ( %+v - %+v ))", variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
+
+		message := fmt.Sprintf(constants.InfoMessageVariationRageAllocation, variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
+		LogMessage(vwoInstance.Logger, constants.Info, campaign, message)
 		variationAllocationRanges = append(variationAllocationRanges, variation)
 	}
 	return variationAllocationRanges
@@ -67,7 +71,7 @@ func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.C
 			return campaign, nil
 		}
 	}
-	return schema.Campaign{}, errors.New("Campaign not found")
+	return schema.Campaign{}, fmt.Errorf(constants.ErrorMessageCampaignNotFound, campaignKey)
 }
 
 // ScaleVariations function It extracts the weights from all the variations inside the campaign and scales them so that the total sum of eligible variations' weights become 100%
@@ -111,7 +115,7 @@ func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) (schema.Go
 			return goal, nil
 		}
 	}
-	return schema.Goal{}, errors.New("Goal Not Found")
+	return schema.Goal{}, fmt.Errorf(constants.ErrorMessageGoalNotFound, goalIdentifier)
 }
 
 // GetCampaignVariation returns variation from given campaign and variation_name.
@@ -124,14 +128,14 @@ func GetCampaignVariation(campaign schema.Campaign, variationName string) (schem
 			schema.Variation: Variation corresponding to variation_name in respective campaign
 	*/
 	if len(campaign.Variations) == 0 {
-		return schema.Variation{}, errors.New("No Campaign available")
+		return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationInCampaign, campaign.Key)
 	}
 	for _, variation := range campaign.Variations {
 		if variation.Name == variationName {
 			return variation, nil
 		}
 	}
-	return schema.Variation{}, errors.New("CampaignVariation not found")
+	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageVariationNotFound, variationName, campaign.Key)
 }
 
 // GetControlVariation Returns control variation from a given campaign

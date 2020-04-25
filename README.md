@@ -6,11 +6,9 @@
 
 This open source library allows you to A/B Test your Website at server-side.
 
-
 ## Requirements
 
-* Works with Go 1.1x
-
+- Works with Go 1.11 +
 
 ## Installation
 
@@ -18,34 +16,34 @@ This open source library allows you to A/B Test your Website at server-side.
 go get "github.com/decabits/vwo-golang-sdk"
 ```
 
-
 ## Basic usage
 
 **Importing and Instantiation**
 
 ```go
 import (
-	vwo "github.com/decabits/vwo-golang-sdk"
+    vwo "github.com/decabits/vwo-golang-sdk"
     "github.com/decabits/vwo-golang-sdk/schema"
-    "github.com/decabits/vwo-golang-sdk/api"
 )
 
-// Initialize client
-// storage should be of type schema.UserStorage
-VWO := vwo.Default("accountID", "SDKKey", storage)
+// Get SettingsFile
+settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
 
-// Get Settings
-settingsFile = VWO.SettingsFile
+// Declaration of VwoInstance
+vwoInstance = vwo.VWOInstance{}
+
+// Create VwoInstance and handle error if any
+err := vwoInstance.Launch("isDevelopmentMode", settingsFile, nil)
 
 // Activate API
 // With Custom Variables
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-variationName = api.ActivateWithOptions(VWO, campaignKey, userID, options)
+variationName = vwoInstance.ActivateWithOptions(campaignKey, userID, options)
 
 // Without Custom Variables
-variationName = api.Activate(VWO, campaignKey, userID)
+variationName = vwoInstance.Activate(campaignKey, userID)
 
 
 // GetVariation
@@ -53,11 +51,10 @@ variationName = api.Activate(VWO, campaignKey, userID)
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-variationName = api.GetVariationName(VWO, campaignKey, userID, options)
+variationName = vwoInstance.GetVariationName(campaignKey, userID, options)
 
 //Without Custom Variables
-options = {}
-variationName = api.GetVariationName(VWO, campaignKey, userID, options)
+variationName = vwoInstance.GetVariationNameWithOptions(campaignKey, userID)
 
 
 // Track API
@@ -65,32 +62,33 @@ variationName = api.GetVariationName(VWO, campaignKey, userID, options)
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
+isSuccessful = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 
 // With Revenue Value
 options = schema.Options{
         RevenueGoal => 10.23,
     }
-isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
+isSuccessful = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 
 // With both Custom Variables and Revenue Value
 options = schema.Options{
         CustomVariables : { "a" : "x"},
         RevenueGoal : 10.23,
     }
-isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
+isSuccessful = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 
+//Without Custom Variables
+isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier)
 
 // FeatureEnabled API
 // With Custom Varibles
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-isSuccessful = api.IsFeatureEnabled(VWO, campaignKey, userID, options)
+isSuccessful = vwoInstance.IsFeatureEnabledWithOptions(campaignKey, userID, options)
 
 // Without Custom Variables
-options = {}
-isSuccessful = api.IsFeatureEnabled(VWO, campaignKey, userID, options)
+isSuccessful = vwoInstance.IsFeatureEnabled(campaignKey, userID)
 
 
 // GetFeatureVariableValue API
@@ -98,49 +96,41 @@ isSuccessful = api.IsFeatureEnabled(VWO, campaignKey, userID, options)
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-variableValue = api.GetFeatureVariableValue(VWO, campaignKey, variableKey, userID, options)
+variableValue = vwoInstance.GetFeatureVariableValueWithOptions(campaignKey, variableKey, userID, options)
 
 // Without Custom Variables
-options = {}
-variableValue = api.GetFeatureVariableValue(VWO, campaignKey, variableKey, userID, options)
+variableValue = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID)
 
 // Push API
-isSuccessful = api.Push(tagKey, tagValue, userID)
+isSuccessful = vwoInstance.Push(tagKey, tagValue, userID)
 ```
 
 1. `accountID` - Account for which sdk needs to be initialized
-1. `SDKKey` - SDK key for that account
-1. `logger` - If you need to pass your own logger. Check documentation below
-1. `UserStorage.new` - An object allowing `get` and `set` for maintaining user storage
-1. `developmentMode` - on/off (true/false). Default - false
-1. `settingsFile` - Settings file if already present during initialization. Its stringified JSON format.
-
+2. `SDKKey` - SDK key for that account
+3. `logger` - If you need to pass your own logger. Check documentation below
+4. `UserStorage.new` - An object allowing `get` and `set` for maintaining user storage
+5. `developmentMode` - on/off (true/false). Default - false
+6. `settingsFile` - Settings file if already present during initialization. Its stringified JSON format.
 
 **User Storage**
 
 ```go
-
 import "github.com/decabits/vwo-golang-sdk/schema"
 
-// UserStorage interface
-type UserStorage schema.UserStorage
-/*
-// UserStorage struct
-type UserStorage interface {
-	Get(userID, campaignKey string) UserData
-	Set(string, string, string)
-	Exist() bool
+// declare UserStorage interface with the following Get & Set function signature
+type UserStorage interface{
+    Get(userID, campaignKey string) UserData
+    Set(string, string, string)
 }
-*/
 
-// UserStorageData struct
+// declare a UserStorageData struct to implement UserStorage interface
 type UserStorageData struct{}
 
+// Get method to fetch user variation from storage
 func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
-    
     //Example code showing how to get userData  from DB
     userData, ok := userDatas[campaignKey]
-	if ok {
+    if ok {
 		for _, userdata := range userData {
 			if userdata.UserID == userID {
 				return userdata
@@ -158,8 +148,8 @@ func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
 	return schema.UserData{}
 }
 
+// Set method to save user variation to storage
 func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
-
     //Example code showing how to store userData in DB
     userdata := schema.UserData{
 		UserID:        userID,
@@ -184,19 +174,50 @@ func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
 	}
 }
 
-// Exist function
-func (us *UserStorageData) Exist() bool {
-	// Set the return value true in case there is a user storage else false
-	return true
+func main() {
+	settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
+	// create UserStorageData object
+	storage := &UserStorageData{}
+	v.vwoInstance = vwo.VWOInstance{}
+	err := v.vwoInstance.Launch(config.GetBool("isDevelopmentMode"), settingsFile, storage)
+	if err != nil {
+		fmt.Println("error intialising sdk")
+	}
 }
 
 ```
 
+**Custom Logger**
+
+```go
+import vwo "github.com/decabits/vwo-golang-sdk"
+
+// declare Log interface with the following CustomLog function signature
+type Log interface {
+	CustomLog(level, errorMessage string)
+}
+
+// declare a LogS struct to implement Log interface
+type LogS struct{}
+
+// Get function to handle logs
+func (c *LogS) CustomLog(level, errorMessage string) {}
+
+func main() {
+	settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
+	// create LogS object
+	logger := &LogS{}
+	v.vwoInstance = vwo.VWOInstance{}
+	err := v.vwoInstance.LaunchWithLogger(config.GetBool("isDevelopmentMode"), settingsFile, nil, logger)
+	if err != nil {
+		fmt.Println("error intialising sdk")
+	}
+}
+```
 
 ## Documentation
 
 Refer [Official VWO Documentation](https://developers.vwo.com/reference#server-side-introduction)
-
 
 ## Running Unit Tests
 
@@ -204,20 +225,22 @@ Refer [Official VWO Documentation](https://developers.vwo.com/reference#server-s
 ./test.sh
 ```
 
+## Third-party Resources and Credits
+
+Refer [third-party-attributions.txt](third-party-attribution.txt)
 
 ## Authors
 
-
+- [Piyushh bhutoria](https://github.com/Piyushhbhutoria)
+- [Vaibhav Sethia](https://github.com/vaibhavsethia)
 
 ## Contributing
 
 Please go through our [contributing guidelines](CONTRIBUTING.md)
 
-
 ## Code of Conduct
 
 [Code of Conduct](CODE_OF_CONDUCT.md)
-
 
 ## License
 

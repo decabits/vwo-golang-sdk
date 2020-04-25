@@ -1,13 +1,17 @@
 package utils
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
+	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	guuid "github.com/google/uuid"
 	suuid "github.com/satori/go.uuid"
 )
+
+const uuid = "uuid.go"
 
 // generateFor generates desired UUID
 func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) string {
@@ -23,7 +27,10 @@ func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) s
 	VWONamespace := suuid.NewV5(suuid.UUID(NameSpaceURL), "https://vwo.com")
 	userIDNamespace := suuid.NewV5(VWONamespace, strconv.Itoa(accountID))
 	uuidForAccountUserID := suuid.NewV5(userIDNamespace, userID)
-	desiredUUID := strings.ToUpper(strings.Replace(uuidForAccountUserID.String(), "-", "", -1)) //To be confirmed
-	vwoInstance.Logger.Info("DEBUG_MESSAGES.UUID_FOR_USER " + desiredUUID)
+	desiredUUID := strings.ToUpper(strings.Replace(uuidForAccountUserID.String(), "-", "", -1))
+
+	message := fmt.Sprintf(constants.DebugMessageUUIDForUser, userID, accountID, desiredUUID)
+	LogMessage(vwoInstance.Logger, constants.Debug, uuid, message)
+
 	return desiredUUID
 }
