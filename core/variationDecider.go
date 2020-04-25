@@ -40,8 +40,9 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 			assigned else empty object
 			error(error): Error message
 	*/
-	options = schema.Options{
-		CustomVariables: map[string]interface{}{"_vwo_user_id": userID},
+	_, ok := options.VariationTargetingVariables["_vwo_user_id"]
+	if !ok {
+		options.VariationTargetingVariables = map[string]interface{}{"_vwo_user_id": userID}
 	}
 
 	file := "variationDecider.go"
