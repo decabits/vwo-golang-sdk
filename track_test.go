@@ -11,21 +11,27 @@ func TestTrack(t *testing.T) {
 	vwoInstance := VWOInstance{}
 	vwoInstance.getInstance("./testData/testTrack.json")
 
-	userID := "Varun"
-	campaignKey := "notPresent"
+	userID := ""
+	campaignKey := ""
 	goalIdentifier := ""
 	value := vwoInstance.Track(campaignKey, userID, goalIdentifier)
+	assert.False(t, value, "Invalid params")
+
+	userID = "Varun"
+	campaignKey = "notPresent"
+	goalIdentifier = "custom"
+	value = vwoInstance.Track(campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Campaign does not exist")
 
 	userID = "Varun"
 	campaignKey = "phpab1"
-	goalIdentifier = ""
+	goalIdentifier = "custom"
 	value = vwoInstance.Track(campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Campaign Not running")
 
 	userID = "Liza"
 	campaignKey = "php1"
-	goalIdentifier = ""
+	goalIdentifier = "custom"
 	value = vwoInstance.Track(campaignKey, userID, goalIdentifier)
 	assert.False(t, value, "Campaign Not Valid")
 

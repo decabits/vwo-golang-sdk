@@ -10,9 +10,14 @@ func TestActivate(t *testing.T) {
 	vwoInstance := VWOInstance{}
 	vwoInstance.getInstance("./testData/testdata.json")
 
-	userID := "Varun"
-	campaignKey := "notPresent"
+	userID := ""
+	campaignKey := ""
 	value := vwoInstance.Activate(campaignKey, userID)
+	assert.Empty(t, value, "Invalid params")
+
+	userID = "Varun"
+	campaignKey = "notPresent"
+	value = vwoInstance.Activate(campaignKey, userID)
 	assert.Empty(t, value, "Campaign does not exist")
 
 	userID = "Varun"

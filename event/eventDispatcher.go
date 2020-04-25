@@ -19,27 +19,29 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 		Returns:
 	*/
 
-	URL := impression.URL + "?" +
-		"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 64) +
-		"&sdk=" + impression.Sdk +
-		"&sdk-v=" + impression.SdkV +
-		"&ap=" + impression.Ap +
-		"&sId=" + impression.SID +
-		"&u=" + impression.U +
-		"&account_id=" + strconv.Itoa(impression.AccountID) +
-		"&uId=" + impression.UID +
-		"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
-		"&combination=" + strconv.Itoa(impression.Combination) +
-		"&ed=" + impression.ED
+	if !vwoInstance.IsDevelopmentMode {
+		URL := impression.URL + "?" +
+			"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 64) +
+			"&sdk=" + impression.Sdk +
+			"&sdk-v=" + impression.SdkV +
+			"&ap=" + impression.Ap +
+			"&sId=" + impression.SID +
+			"&u=" + impression.U +
+			"&account_id=" + strconv.Itoa(impression.AccountID) +
+			"&uId=" + impression.UID +
+			"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
+			"&combination=" + strconv.Itoa(impression.Combination) +
+			"&ed=" + impression.ED
 
-	_, err := utils.GetRequest(URL)
+		_, err := utils.GetRequest(URL)
 
-	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
-		utils.LogMessage(vwoInstance,constants.Error, eventDispatcher, message)
-	} else {
-		message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, impression)
-		utils.LogMessage(vwoInstance, constants.Info, eventDispatcher, message)
+		if err != nil {
+			message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
+			utils.LogMessage(vwoInstance, constants.Error, eventDispatcher, message)
+		} else {
+			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, impression)
+			utils.LogMessage(vwoInstance, constants.Info, eventDispatcher, message)
+		}
 	}
 }
 
@@ -51,23 +53,25 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 		Returns:
 	*/
 
-	URL := impression.URL + "?" +
-		"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 64) +
-		"&sdk=" + impression.Sdk +
-		"&sdk-v=" + impression.SdkV +
-		"&ap=" + impression.Ap +
-		"&sId=" + impression.SID +
-		"&u=" + impression.U +
-		"&account_id=" + strconv.Itoa(impression.AccountID) +
-		"&uId=" + impression.UID +
-		"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
-		"&combination=" + strconv.Itoa(impression.Combination) +
-		"&goal_id=" + strconv.Itoa(impression.GoalID) +
-		"&r=" + strconv.Itoa(impression.R)
+	if !vwoInstance.IsDevelopmentMode {
+		URL := impression.URL + "?" +
+			"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 64) +
+			"&sdk=" + impression.Sdk +
+			"&sdk-v=" + impression.SdkV +
+			"&ap=" + impression.Ap +
+			"&sId=" + impression.SID +
+			"&u=" + impression.U +
+			"&account_id=" + strconv.Itoa(impression.AccountID) +
+			"&uId=" + impression.UID +
+			"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
+			"&combination=" + strconv.Itoa(impression.Combination) +
+			"&goal_id=" + strconv.Itoa(impression.GoalID) +
+			"&r=" + strconv.Itoa(impression.R)
 
-	_, err := utils.GetRequest(URL)
-	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
-		utils.LogMessage(vwoInstance,constants.Error, eventDispatcher, message)
+		_, err := utils.GetRequest(URL)
+		if err != nil {
+			message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
+			utils.LogMessage(vwoInstance, constants.Error, eventDispatcher, message)
+		}
 	}
 }

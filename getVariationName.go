@@ -15,6 +15,10 @@ func (vwo *VWOInstance) GetVariationName(campaignKey, userID string) string {
 
 // GetVariationNameWithOptions
 func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, options schema.Options) string {
+	if !utils.ValidateGetVariationName(campaignKey, userID) {
+		return ""
+	}
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
 		vwo.Logger.Error("Error geting campaign: ", err)
@@ -35,6 +39,8 @@ func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, 
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
+		UserID:            userID,
+		Campaign:          campaign,
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {

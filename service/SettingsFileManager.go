@@ -14,13 +14,6 @@ import (
 	"github.com/google/logger"
 )
 
-// SettingsFileM interface
-type SettingsFileM interface {
-	FetchSettingsFile(accountID, SDKKey string) error
-	ProcessSettingsFile(settingsFileLocation string) error
-	GetSettingsFile() schema.SettingsFile
-}
-
 // SettingsFileManager struct to implement SettingsFileM
 type SettingsFileManager struct {
 	SettingsFile schema.SettingsFile

@@ -10,9 +10,14 @@ func TestIsFeatureEnabled(t *testing.T) {
 	vwoInstance := VWOInstance{}
 	vwoInstance.getInstance("./testData/testIsFeatureEnabled.json")
 
-	userID := "Varun"
-	campaignKey := "notPresent"
+	userID := ""
+	campaignKey := ""
 	value := vwoInstance.IsFeatureEnabled(campaignKey, userID)
+	assert.False(t, value, "Invalid params")
+
+	userID = "Varun"
+	campaignKey = "notPresent"
+	value = vwoInstance.IsFeatureEnabled(campaignKey, userID)
 	assert.False(t, value, "Campaign does not exist")
 
 	userID = "Varun"

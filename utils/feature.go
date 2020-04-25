@@ -40,7 +40,6 @@ func GetVariableValueForVariation(vwoInstance schema.VwoInstance, campaign schem
 	*/
 
 	if !variation.IsFeatureEnabled {
-
 		message := fmt.Sprintf(constants.InfoMessageFeatureEnabledForUser, campaign.Key)
 		LogMessage(vwoInstance, constants.Info, feature, message)
 		variation = GetControlVariation(campaign)

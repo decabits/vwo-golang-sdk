@@ -16,6 +16,10 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
 
 // IsFeatureEnabledWithOptions function
 func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, options schema.Options) bool {
+	if !utils.ValidateIsFeatureEnabled(campaignKey, userID) {
+		return false
+	}
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
 		vwo.Logger.Error("Error geting campaign: ", err)
@@ -36,6 +40,8 @@ func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, 
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
+		UserID:            userID,
+		Campaign:          campaign,
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {

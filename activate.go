@@ -16,6 +16,10 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
 
 // ActivateWithOptions ...
 func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options schema.Options) string {
+	if !utils.ValidateActivate(campaignKey, userID) {
+		return ""
+	}
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
 		vwo.Logger.Error("Error getting campaign: ", err)
@@ -36,6 +40,8 @@ func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options 
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
+		UserID:            userID,
+		Campaign:          campaign,
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {

@@ -15,6 +15,10 @@ func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID
 
 // GetFeatureVariableValueWithOptions function
 func (vwo *VWOInstance) GetFeatureVariableValueWithOptions(campaignKey, variableKey, userID string, options schema.Options) interface{} {
+	if !utils.ValidateGetFeatureVariableValue(campaignKey, variableKey, userID) {
+		return nil
+	}
+	
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
 		vwo.Logger.Error("Error geting campaign: ", err)
@@ -35,6 +39,8 @@ func (vwo *VWOInstance) GetFeatureVariableValueWithOptions(campaignKey, variable
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
+		UserID:            userID,
+		Campaign:          campaign,
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {

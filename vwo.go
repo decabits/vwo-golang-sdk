@@ -1,6 +1,7 @@
 package vwo
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -47,11 +48,11 @@ func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile sc
 	vwo.IsDevelopmentMode = isDevelopmentMode
 }
 
-func (vwo *VWOInstance) GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
+func GetSettingsFile(accountID, SDKKey string) (schema.SettingsFile, error) {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {
-		vwo.Logger.Info("Error Processing Settings File: ", err)
+		return schema.SettingsFile{}, fmt.Errorf("Error Processing Settings File: %v", err)
 	}
 	settingsFileManager.Process()
-	return settingsFileManager.GetSettingsFile()
+	return settingsFileManager.GetSettingsFile(), nil
 }

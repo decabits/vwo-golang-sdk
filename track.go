@@ -15,7 +15,11 @@ func (vwo *VWOInstance) Track(campaignKey, userID string, goalIdentifier string)
 }
 
 // TrackWithOptions function
-func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID string, goalIdentifier string, options schema.Options) bool {
+func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID, goalIdentifier string, options schema.Options) bool {
+	if !utils.ValidateTrack(campaignKey, userID, goalIdentifier) {
+		return false
+	}
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
 		vwo.Logger.Errorf("Error geting campaign: %+v\n", err)
@@ -47,6 +51,8 @@ func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID string, goalIdentif
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
+		UserID:            userID,
+		Campaign:          campaign,
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {

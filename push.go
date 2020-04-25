@@ -9,6 +9,10 @@ import (
 
 // Push ...
 func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
+	if !utils.ValidatePush(tagKey, tagValue, userID) {
+		return false
+	}
+
 	if len(tagKey) > constants.PushAPITagKeyLength {
 		vwo.Logger.Error("ERROR_MESSAGES.TAG_KEY_LENGTH_EXCEEDED")
 		return false
@@ -23,6 +27,7 @@ func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
+		UserID:            userID,
 	}
 	impression := utils.CreateImpressionForPush(vwoInstance, tagKey, tagValue, userID)
 	event.Dispatch(vwoInstance, impression)

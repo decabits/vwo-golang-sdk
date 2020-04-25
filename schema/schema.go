@@ -8,6 +8,8 @@ type VwoInstance struct {
 	UserStorage       UserStorage
 	Logger            *logger.Logger
 	IsDevelopmentMode bool
+	UserID            string
+	Campaign          Campaign
 }
 
 // SettingsFile struct
