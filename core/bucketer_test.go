@@ -1,6 +1,8 @@
 package core
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"testing"
@@ -12,7 +14,80 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func getInstance(path string) schema.VwoInstance {
+// UserStorage interface
+type UserStorage interface {
+	Get(userID, campaignKey string) schema.UserData
+	Set(userID, campaignKey, variationName string)
+}
+
+// UserStorageData struct
+type UserStorageData struct{}
+
+// data is an example of how data is stored
+var data = `{
+    "php1": [{
+            "UserID": "user1",
+            "CampaignKey": "php1",
+            "VariationName": "Control"
+        },
+        {
+            "UserID": "user2",
+            "CampaignKey": "php1",
+            "VariationName": "Variation-1"
+        }
+    ]
+}`
+
+// Get function is used to get the data from user storage
+func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
+	var userDatas map[string][]schema.UserData
+	// Conect your database here to fetch the current data
+	// Uncomment the below part to user JSON as data base
+	if err := json.Unmarshal([]byte(data), &userDatas); err != nil {
+		fmt.Print("Could not unmarshall")
+	}
+	if len(userDatas) == 0 {
+		return schema.UserData{}
+	}
+	userData, ok := userDatas[campaignKey]
+	if ok {
+		for _, userdata := range userData {
+			if userdata.UserID == userID {
+				return userdata
+			}
+		}
+	}
+	return schema.UserData{}
+}
+
+// Set function
+func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
+}
+
+func getInstanceWithStorage(path string) schema.VwoInstance {
+	settingsFileManager := service.SettingsFileManager{}
+	if err := settingsFileManager.ProcessSettingsFile(path); err != nil {
+		log.Println("Error Processing Settings File: ", err)
+	}
+	settingsFileManager.Process()
+	settingsFile := settingsFileManager.GetSettingsFile()
+
+	logs := logger.Init(constants.SDKName, false, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
+
+	storage := &UserStorageData{}
+
+	vwoInstance := schema.VwoInstance{
+		SettingsFile:      settingsFile,
+		UserStorage:       storage,
+		Logger:            logs,
+		IsDevelopmentMode: true,
+	}
+	return vwoInstance
+}
+
+func getInstanceWithoutStorage(path string) schema.VwoInstance {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.ProcessSettingsFile(path); err != nil {
 		log.Println("Error Processing Settings File: ", err)
@@ -34,7 +109,7 @@ func getInstance(path string) schema.VwoInstance {
 }
 
 func TestBucketUserToVariation(t *testing.T) {
-	vwoInstance := getInstance("./testData/testBucket.json")
+	vwoInstance := getInstanceWithoutStorage("./testData/testBucket.json")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 	userID := "Linda"
@@ -49,7 +124,7 @@ func TestBucketUserToVariation(t *testing.T) {
 }
 
 func TestGetBucketerVariation(t *testing.T) {
-	vwoInstance := getInstance("./testData/testBucket.json")
+	vwoInstance := getInstanceWithoutStorage("./testData/testBucket.json")
 
 	variations := vwoInstance.SettingsFile.Campaigns[1].Variations
 	bucketValue := 2345
@@ -67,7 +142,7 @@ func TestGetBucketerVariation(t *testing.T) {
 }
 
 func TestIsUserPartOfCampaign(t *testing.T) {
-	vwoInstance := getInstance("./testData/testBucket.json")
+	vwoInstance := getInstanceWithoutStorage("./testData/testBucket.json")
 
 	userID := "James"
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
@@ -81,7 +156,7 @@ func TestIsUserPartOfCampaign(t *testing.T) {
 }
 
 func TestGetBucketValueForUser(t *testing.T) {
-	vwoInstance := getInstance("./testData/testBucket.json")
+	vwoInstance := getInstanceWithoutStorage("./testData/testBucket.json")
 
 	userID := "Chris"
 	actual := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)
