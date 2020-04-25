@@ -8,29 +8,36 @@ import (
 
 func TestGetFeatureVariableValue(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	vwoInstance.getInstance("./testData/testGetFeatureVariableValue.json")
+	err := vwoInstance.getInstance("./testData/testGetFeatureVariableValue.json")
+	assert.Nil(t, err, "error fetching instance")
 
-	userID := "Varun"
-	campaignKey := "notPresent"
+	userID := ""
+	campaignKey := ""
 	variableKey := ""
 	value := vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID)
+	assert.Nil(t, value, "Invalid params")
+
+	userID = "Varun"
+	campaignKey = "notPresent"
+	variableKey = "float2"
+	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID)
 	assert.Nil(t, value, "Campaign does not exist")
 
 	userID = "Varun"
 	campaignKey = "php1"
-	variableKey = ""
+	variableKey = "float2"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID)
 	assert.Nil(t, value, "Campaign Not running")
 
 	userID = "Liza"
 	campaignKey = "phpab1"
-	variableKey = ""
+	variableKey = "float2"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID)
 	assert.Nil(t, value, "Campaign Not Valid")
 
 	userID = "Liza"
 	campaignKey = "php2"
-	variableKey = ""
+	variableKey = "float2"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID)
 	assert.Nil(t, value, "Variation Not alloted as none exist")
 

@@ -8,11 +8,17 @@ import (
 
 func TestGetVariationName(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	vwoInstance.getInstance("./testData/testdata.json")
+	err := vwoInstance.getInstance("./testData/testdata.json")
+	assert.Nil(t, err, "error fetching instance")
 
-	userID := "Varun"
-	campaignKey := "notPresent"
+	userID := ""
+	campaignKey := ""
 	value := vwoInstance.GetVariationName(campaignKey, userID)
+	assert.Empty(t, value, "Invalid params")
+
+	userID = "Varun"
+	campaignKey = "notPresent"
+	value = vwoInstance.GetVariationName(campaignKey, userID)
 	assert.Empty(t, value, "Campaign does not exist")
 
 	userID = "Varun"
