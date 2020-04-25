@@ -13,6 +13,9 @@ func TestFetchSettingsFile(t *testing.T) {
 
 	err = settingsFileManager.FetchSettingsFile("", "")
 	assert.Error(t, err, "No settingsFile processed")
+
+	err = settingsFileManager.FetchSettingsFile("accountID", "")
+	assert.Error(t, err, "No settingsFile processed")
 }
 
 func TestProcessSettingsFile(t *testing.T) {

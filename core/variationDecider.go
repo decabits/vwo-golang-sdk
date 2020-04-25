@@ -139,7 +139,7 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 	*/
 
 	if vwoInstance.UserStorage == nil {
-		return "", fmt.Errorf(constants.InfoMessageNoUserStorageServiceGet)
+		return "", fmt.Errorf(constants.DebugMessageNoUserStorageServiceGet)
 	}
 	if storage, ok := vwoInstance.UserStorage.(interface {
 		Get(a, b string) schema.UserData
@@ -149,7 +149,7 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 		utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
 		return userStorageFetch.VariationName, nil
 	}
-	return "", fmt.Errorf(constants.InfoMessageNoUserStorageServiceGet)
+	return "", fmt.Errorf(constants.DebugMessageNoUserStorageServiceGet)
 }
 
 //GetWhiteListedVariationsList function identifies all forced variations which are targeted by variation_targeting_variables

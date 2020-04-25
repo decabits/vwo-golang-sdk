@@ -61,6 +61,6 @@ func GetSettingsFile(accountID, SDKKey string) (schema.SettingsFile, error) {
 		return schema.SettingsFile{}, fmt.Errorf("Error Processing Settings File: %v", err)
 	}
 	settingsFileManager.Process()
-	utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessagesSettingsFileProcessed)
+	logger.Warning(fileVWO + " : " + constants.DebugMessagesSettingsFileProcessed)
 	return settingsFileManager.GetSettingsFile(), nil
 }
