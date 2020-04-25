@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 
+	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/service"
@@ -49,7 +50,6 @@ func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile sc
 	vwo.UserStorage = storage
 	vwo.Logger = logger
 	vwo.IsDevelopmentMode = isDevelopmentMode
-
 	message := fmt.Sprintf(constants.DebugMessagesDevelopmentMode, isDevelopmentMode)
 	utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, message)
 }

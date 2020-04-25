@@ -17,6 +17,8 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
 	return vwo.ActivateWithOptions(campaignKey, userID, options)
 }
 
+const activate = "activate.go"
+
 // ActivateWithOptions ...
 func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options schema.Options) string {
 	if !utils.ValidateActivate(campaignKey, userID) {
