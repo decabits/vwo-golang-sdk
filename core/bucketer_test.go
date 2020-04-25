@@ -109,7 +109,7 @@ func getInstanceWithoutStorage(path string) schema.VwoInstance {
 }
 
 func TestBucketUserToVariation(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testdata/testBucket.json")
+	vwoInstance := getInstanceWithoutStorage("testdata/testBucket.json")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 	userID := "Linda"
