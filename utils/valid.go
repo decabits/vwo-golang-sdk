@@ -1,5 +1,35 @@
 package utils
 
+import (
+	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/google/logger"
+)
+
+// ValidateLogger - validates Custom logger
+func ValidateLogger(logs interface{}) bool {
+	if logs == nil {
+		return false
+	}
+	_, ok := logs.(interface {
+		CustomLog(a, b string)
+	})
+	if !ok {
+		_, ok = logs.(*logger.Logger)
+	}
+	return ok
+}
+
+func ValidateStorage(storage interface{}) bool {
+	_, okGet := storage.(interface {
+		Get(a, b string) schema.UserData
+	})
+	_, okSet := storage.(interface{ Set(a, b, c string) })
+	if (okGet && okSet) || storage == nil {
+		return true
+	}
+	return false
+}
+
 // ValidateActivate - validates Activate API parameters
 func ValidateActivate(campaignKey, userID string) bool {
 	if campaignKey == "" || userID == "" {

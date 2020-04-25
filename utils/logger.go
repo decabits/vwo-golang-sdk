@@ -6,7 +6,7 @@ import (
 )
 
 // LogMessage function generates Log messages and logs them into the logger, logger can be defined by the user itself too
-func LogMessage(log *logger.Logger, level, file, message string) {
+func LogMessage(logs interface{}, level, file, message string) {
 	/*
 		Args:
 			file: Name of file from where the function is called
@@ -16,6 +16,14 @@ func LogMessage(log *logger.Logger, level, file, message string) {
 
 	formattedMessage := string(file) + " : " + message
 
+	if customlog, ok := logs.(interface {
+		CustomLog(a, b string)
+	}); ok {
+		customlog.CustomLog(level, formattedMessage)
+		return
+	}
+
+	log := logs.(*logger.Logger)
 	switch level {
 	case constants.Info:
 		log.Info(formattedMessage)

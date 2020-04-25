@@ -8,7 +8,8 @@ import (
 
 func TestActivate(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	vwoInstance.getInstance("./testData/testdata.json")
+	err := vwoInstance.getInstance("./testData/testdata.json")
+	assert.Nil(t, err, "error fetching instance")
 
 	userID := ""
 	campaignKey := ""

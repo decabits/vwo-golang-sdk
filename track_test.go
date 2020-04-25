@@ -9,7 +9,8 @@ import (
 
 func TestTrack(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	vwoInstance.getInstance("./testData/testTrack.json")
+	err := vwoInstance.getInstance("./testData/testTrack.json")
+	assert.Nil(t, err, "error fetching instance")
 
 	userID := ""
 	campaignKey := ""
