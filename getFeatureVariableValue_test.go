@@ -8,7 +8,7 @@ import (
 
 func TestGetFeatureVariableValue(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	err := vwoInstance.getInstance("./testData/testGetFeatureVariableValue.json")
+	err := vwoInstance.getInstance("./testdata/testGetFeatureVariableValue.json")
 	assert.Nil(t, err, "error fetching instance")
 
 	userID := ""

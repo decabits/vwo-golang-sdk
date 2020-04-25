@@ -26,7 +26,7 @@ func (vwo *VWOInstance) getInstance(path string) error {
 
 func TestLaunchWithLogger(t *testing.T) {
 	settingsFileManager := service.SettingsFileManager{}
-	if err := settingsFileManager.ProcessSettingsFile("./testData/testdata.json"); err != nil {
+	if err := settingsFileManager.ProcessSettingsFile("./testdata/testdata.json"); err != nil {
 		log.Println("Error Processing Settings File: ", err)
 	}
 	settingsFileManager.Process()
@@ -50,7 +50,7 @@ func (us *WUserStorageData) Setter(userID, campaignKey, variationName string) {}
 
 func TestLaunch(t *testing.T) {
 	settingsFileManager := service.SettingsFileManager{}
-	if err := settingsFileManager.ProcessSettingsFile("./testData/testdata.json"); err != nil {
+	if err := settingsFileManager.ProcessSettingsFile("./testdata/testdata.json"); err != nil {
 		log.Println("Error Processing Settings File: ", err)
 	}
 	settingsFileManager.Process()

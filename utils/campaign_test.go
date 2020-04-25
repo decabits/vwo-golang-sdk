@@ -14,7 +14,7 @@ import (
 
 // getInstance function creates and return a temporary VWO instance for testing
 func getInstance() schema.VwoInstance {
-	settingsFile, err := ioutil.ReadFile("./testData/testUtils.json")
+	settingsFile, err := ioutil.ReadFile("./testdata/testUtils.json")
 	if err != nil {
 		fmt.Println(err)
 	}

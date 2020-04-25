@@ -8,7 +8,7 @@ import (
 )
 
 func TestPreEvaluateSegment(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testData/testVariation.json")
+	vwoInstance := getInstanceWithoutStorage("./testdata/testVariation.json")
 
 	segments := vwoInstance.SettingsFile.Campaigns[0].Segments
 	options := schema.Options{}
@@ -32,7 +32,7 @@ func TestPreEvaluateSegment(t *testing.T) {
 }
 
 func TestEvaluateSegment(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testData/testVariation.json")
+	vwoInstance := getInstanceWithoutStorage("./testdata/testVariation.json")
 
 	segments := vwoInstance.SettingsFile.Campaigns[0].Segments
 	options := schema.Options{}
@@ -56,7 +56,7 @@ func TestEvaluateSegment(t *testing.T) {
 }
 
 func TestGetWhiteListedVariationsList(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testData/testVariation.json")
+	vwoInstance := getInstanceWithoutStorage("./testdata/testVariation.json")
 
 	options := schema.Options{}
 	userID := "test"
@@ -76,7 +76,7 @@ func TestGetWhiteListedVariationsList(t *testing.T) {
 }
 
 func TestFindTargetedVariation(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testData/testVariation.json")
+	vwoInstance := getInstanceWithoutStorage("./testdata/testVariation.json")
 	options := schema.Options{
 		CustomVariables: map[string]interface{}{"_vwo_user_id": "Varun"},
 		RevenueGoal:     12,
@@ -116,7 +116,7 @@ func TestFindTargetedVariation(t *testing.T) {
 }
 
 func TestGetVariation(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testData/testVariation.json")
+	vwoInstance := getInstanceWithoutStorage("./testdata/testVariation.json")
 	options := schema.Options{
 		CustomVariables: map[string]interface{}{"_vwo_user_id": "Varun"},
 		RevenueGoal:     12,
@@ -144,7 +144,7 @@ func TestGetVariation(t *testing.T) {
 	actual, _ = GetVariation(vwoInstance, userID, campaign, options)
 	assert.Empty(t, actual, "User not eligible for campaign")
 
-	vwoInstance = getInstanceWithStorage("./testData/testVariation.json")
+	vwoInstance = getInstanceWithStorage("./testdata/testVariation.json")
 	options = schema.Options{
 		CustomVariables: map[string]interface{}{"_vwo_user_id": "Varun"},
 		RevenueGoal:     12,
@@ -158,14 +158,14 @@ func TestGetVariation(t *testing.T) {
 }
 
 func TestGetVariationFromUserStorage(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testData/testVariation.json")
+	vwoInstance := getInstanceWithoutStorage("./testdata/testVariation.json")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	userID := "Liza"
 	actual, _ := GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	assert.Empty(t, actual, "Actual and Expected Variation Name mismatch")
 
-	vwoInstance = getInstanceWithStorage("./testData/testVariation.json")
+	vwoInstance = getInstanceWithStorage("./testdata/testVariation.json")
 
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	userID = "user1"

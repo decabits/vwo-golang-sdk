@@ -18,17 +18,17 @@ type TestCase struct {
 }
 
 func TestSegmentEvaluator(t *testing.T) {
-	var testData map[string]map[string]TestCase
-	data, err := ioutil.ReadFile("./testData/testSegment.json")
+	var testdata map[string]map[string]TestCase
+	data, err := ioutil.ReadFile("./testdata/testSegment.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}
 
-	if err = json.Unmarshal(data, &testData); err != nil {
+	if err = json.Unmarshal(data, &testdata); err != nil {
 		logger.Info("Error: " + err.Error())
 	}
 
-	for parent, v := range testData {
+	for parent, v := range testdata {
 		for child, value := range v {
 			options := schema.Options{
 				CustomVariables:             value.CustomVariable,
