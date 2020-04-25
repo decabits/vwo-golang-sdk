@@ -142,7 +142,7 @@
             "variables": {},
             "isFeatureEnabled": true,
             "weight": 0.0,
-            "name": "Control"
+            "name": "Variation-1"
         }],
         "variables": [{
             "value": 302,
@@ -151,5 +151,59 @@
             "id": 5
         }],
         "type": "FEATURE_TEST"
+    }, {
+        "id": 290,
+        "segments": {
+            "or": [{
+                "user": "Varun"
+            }]
+        },
+        "status": "RUNNING",
+        "percentTraffic": 100,
+        "goals": {},
+        "isForcedVariationEnabled": true,
+        "key": "php4",
+        "variations": [{
+            "segments": {
+                "or": [{
+                    "user": "Varun,Kate"
+                }]
+            },
+            "changes": {},
+            "id": 1,
+            "variables": [{
+                "value": 302,
+                "type": "integer",
+                "key": "int3",
+                "id": 1
+            }],
+            "isFeatureEnabled": true,
+            "weight": 50.0,
+            "name": "Control"
+        }, {
+            "segments": {
+                "or": [{
+                    "user": "Varun,Kate"
+                }]
+            },
+            "changes": {},
+            "id": 2,
+            "variables": [{
+                "value": 302,
+                "type": "integer",
+                "key": "int1",
+                "id": 1
+            }],
+            "isFeatureEnabled": false,
+            "weight": 50.0,
+            "name": "Variation-1"
+        }],
+        "variables": [{
+            "value": 301,
+            "type": "integer",
+            "key": "int1",
+            "id": 1
+        }],
+        "type": "FEATURE_ROLLOUT"
     }]
 }

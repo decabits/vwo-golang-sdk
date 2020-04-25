@@ -20,6 +20,13 @@ func TestGetVariableValueForVariation(t *testing.T) {
 	variableKey = "int2"
 	variable = GetVariableValueForVariation(vwoInstance, campaign, variation, variableKey, userID)
 	assert.Equal(t, campaign.Variations[0].Variables[0], variable, "Expected and Actual IDs should be same")
+
+	campaign = vwoInstance.SettingsFile.Campaigns[5]
+	variation = campaign.Variations[1]
+	variableKey = "int3"
+	variable = GetVariableValueForVariation(vwoInstance, campaign, variation, variableKey, userID)
+	assert.Equal(t, campaign.Variations[0].Variables[0], variable, "Expected and Actual IDs should be same")
+
 }
 
 func TestGetVariableForFeature(t *testing.T) {

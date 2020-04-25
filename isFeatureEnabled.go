@@ -12,7 +12,17 @@ import (
 
 const fileIsFeatureEnabled = "isFeatureEnabled.go"
 
-// IsFeatureEnabled ...
+// IsFeatureEnabled function
+/*
+This API method: Whether a feature is enabled or not for the given user
+1. Validates the arguments being passed
+2. Finds the corresponding Campaign
+3. Checks the Campaign Status
+4. Validates the Campaign Type
+5. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
+   If userStorageService is used, it will look into it for the variation and if found, no further processing is done
+6. If feature enabled, sends a call to VWO server for tracking visitor
+*/
 func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
 	options := schema.Options{}
 	return vwo.IsFeatureEnabledWithOptions(campaignKey, userID, options)
@@ -21,14 +31,15 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
 // IsFeatureEnabledWithOptions function
 func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, options schema.Options) bool {
 	if !utils.ValidateIsFeatureEnabled(campaignKey, userID) {
+		message := fmt.Sprintf(constants.ErrorMessagesIsFeatureEnabledAPIMissingParams)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
 		return false
 	}
 
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, campaignKey)
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
-		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, err.Error())
 		return false
 	}
 
@@ -53,9 +64,8 @@ func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, 
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, userID, campaignKey)
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, fileIsFeatureEnabled, message)
-		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, err.Error())
 		return false
 	}
 

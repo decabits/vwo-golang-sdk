@@ -30,16 +30,16 @@ import (
 )
 
 // Get SettingsFile
-settingsFile, err := vwo.GetSettingsFile(config.GetString("accountID"), config.GetString("SDKKey"))
-if err != nil {
-	log.Fatal("Unable to fetch settingsFile: ", err)
-}
+settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
+
+// Get UserStorage 
+storage := &UserStorageData{}
 
 // Initialize VwoInstance
+vwoInstance = vwo.VWOInstance{}
 
-
-
-
+//Create VwoInstance
+vwoInstance.Launch("isDevelopmentMode", settingsFile, storage)
 
 // Activate API
 // With Custom Variables
@@ -207,6 +207,10 @@ Refer [Official VWO Documentation](https://developers.vwo.com/reference#server-s
 ```shell
 ./test.sh
 ```
+
+## Third-party Resources and Credits
+
+Refer [third-party-attributions.txt](third-party-attribution.txt)
 
 
 ## Authors

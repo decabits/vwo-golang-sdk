@@ -11,7 +11,16 @@ import (
 
 const getVariationName = "getVariationName.go"
 
-// GetVariationName ...
+// GetVariationName function
+/*
+This API method: Gets the variation assigned for the user for the campaign
+1. Validates the arguments being passed
+2. Finds the corresponding Campaign
+3. Checks the Campaign Status
+4. Validates the Campaign Type
+5. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
+   If userStorageService is used, it will look into it for the variation and if found, no further processing is done
+*/
 func (vwo *VWOInstance) GetVariationName(campaignKey, userID string) string {
 	options := schema.Options{}
 	return vwo.GetVariationNameWithOptions(campaignKey, userID, options)
@@ -20,14 +29,15 @@ func (vwo *VWOInstance) GetVariationName(campaignKey, userID string) string {
 // GetVariationNameWithOptions ...
 func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, options schema.Options) string {
 	if !utils.ValidateGetVariationName(campaignKey, userID) {
+		message := fmt.Sprintf(constants.ErrorMessagesGetVariationAPIMissingParams)
+		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
 		return ""
 	}
 
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, campaignKey)
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
-		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, err.Error())
 		return ""
 	}
 
@@ -52,9 +62,8 @@ func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, 
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, userID, campaignKey)
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, getVariationName, message)
-		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, err.Error())
 	}
 
 	return variation.Name
