@@ -8,8 +8,11 @@ import (
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/service"
+	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/google/logger"
 )
+
+const fileVWO = "vwo.go"
 
 // VWOInstance struct
 type VWOInstance schema.VwoInstance
@@ -46,6 +49,9 @@ func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile sc
 	vwo.UserStorage = storage
 	vwo.Logger = logger
 	vwo.IsDevelopmentMode = isDevelopmentMode
+
+	message := fmt.Sprintf(constants.DebugMessagesDevelopmentMode, isDevelopmentMode)
+	utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, message)
 }
 
 // GetSettingsFile function to fetch settingsfile
@@ -55,5 +61,6 @@ func GetSettingsFile(accountID, SDKKey string) (schema.SettingsFile, error) {
 		return schema.SettingsFile{}, fmt.Errorf("Error Processing Settings File: %v", err)
 	}
 	settingsFileManager.Process()
+	utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessagesSettingsFileProcessed)
 	return settingsFileManager.GetSettingsFile(), nil
 }

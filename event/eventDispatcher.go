@@ -37,10 +37,10 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 
 		if err != nil {
 			message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
-			utils.LogMessage(vwoInstance, constants.Error, eventDispatcher, message)
+			utils.LogMessage(vwoInstance.Logger, constants.Error, eventDispatcher, message)
 		} else {
 			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, impression)
-			utils.LogMessage(vwoInstance, constants.Info, eventDispatcher, message)
+			utils.LogMessage(vwoInstance.Logger, constants.Info, eventDispatcher, message)
 		}
 	}
 }
@@ -71,7 +71,7 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 		_, err := utils.GetRequest(URL)
 		if err != nil {
 			message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
-			utils.LogMessage(vwoInstance, constants.Error, eventDispatcher, message)
+			utils.LogMessage(vwoInstance.Logger, constants.Error, eventDispatcher, message)
 		}
 	}
 }

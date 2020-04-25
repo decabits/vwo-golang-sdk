@@ -2,11 +2,11 @@ package utils
 
 import (
 	"github.com/decabits/vwo-golang-sdk/constants"
-	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/google/logger"
 )
 
 // LogMessage function generates Log messages and logs them into the logger, logger can be defined by the user itself too
-func LogMessage(vwoInstance schema.VwoInstance, level, file, message string) {
+func LogMessage(log *logger.Logger, level, file, message string) {
 	/*
 		Args:
 			file: Name of file from where the function is called
@@ -14,16 +14,16 @@ func LogMessage(vwoInstance schema.VwoInstance, level, file, message string) {
 			level: level of logging
 	*/
 
-	log := string(file) + " : " + message
+	formattedMessage := string(file) + " : " + message
 
 	switch level {
 	case constants.Info:
-		vwoInstance.Logger.Info(log)
+		log.Info(formattedMessage)
 	case constants.Debug:
-		vwoInstance.Logger.Warning(log)
+		log.Warning(formattedMessage)
 	case constants.Error:
-		vwoInstance.Logger.Error(log)
+		log.Error(formattedMessage)
 	default:
-		vwoInstance.Logger.Error("Invalid Logger Level")
+		log.Error("Invalid Logger Level")
 	}
 }

@@ -9,7 +9,7 @@ This open source library allows you to A/B Test your Website at server-side.
 
 ## Requirements
 
-* Works with Go 1.1x
+* Works with Go 1.11 +
 
 
 ## Installation
@@ -27,25 +27,29 @@ go get "github.com/decabits/vwo-golang-sdk"
 import (
 	vwo "github.com/decabits/vwo-golang-sdk"
     "github.com/decabits/vwo-golang-sdk/schema"
-    "github.com/decabits/vwo-golang-sdk/api"
 )
 
-// Initialize client
-// storage should be of type schema.UserStorage
-VWO := vwo.Default("accountID", "SDKKey", storage)
+// Get SettingsFile
+settingsFile, err := vwo.GetSettingsFile(config.GetString("accountID"), config.GetString("SDKKey"))
+if err != nil {
+	log.Fatal("Unable to fetch settingsFile: ", err)
+}
 
-// Get Settings
-settingsFile = VWO.SettingsFile
+// Initialize VwoInstance
+
+
+
+
 
 // Activate API
 // With Custom Variables
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-variationName = api.ActivateWithOptions(VWO, campaignKey, userID, options)
+variationName = vwoInstance.ActivateWithOptions(campaignKey, userID, options)
 
 // Without Custom Variables
-variationName = api.Activate(VWO, campaignKey, userID)
+variationName = vwoInstance.Activate(campaignKey, userID)
 
 
 // GetVariation
@@ -53,11 +57,11 @@ variationName = api.Activate(VWO, campaignKey, userID)
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-variationName = api.GetVariationName(VWO, campaignKey, userID, options)
+variationName = vwoInstance.GetVariationName(campaignKey, userID, options)
 
 //Without Custom Variables
 options = {}
-variationName = api.GetVariationName(VWO, campaignKey, userID, options)
+variationName = vwoInstance.GetVariationName(campaignKey, userID, options)
 
 
 // Track API
@@ -65,20 +69,20 @@ variationName = api.GetVariationName(VWO, campaignKey, userID, options)
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
+isSuccessful = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 
 // With Revenue Value
 options = schema.Options{
         RevenueGoal => 10.23,
     }
-isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
+isSuccessful = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 
 // With both Custom Variables and Revenue Value
 options = schema.Options{
         CustomVariables : { "a" : "x"},
         RevenueGoal : 10.23,
     }
-isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, options)
+isSuccessful = vwoInstance.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
 
 
 // FeatureEnabled API
@@ -86,11 +90,11 @@ isSuccessful = api.TrackWithOptions(VWO, campaignKey, userID, goalIdentifier, op
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-isSuccessful = api.IsFeatureEnabled(VWO, campaignKey, userID, options)
+isSuccessful = vwoInstance.IsFeatureEnabled(campaignKey, userID, options)
 
 // Without Custom Variables
 options = {}
-isSuccessful = api.IsFeatureEnabled(VWO, campaignKey, userID, options)
+isSuccessful = vwoInstance.IsFeatureEnabled(campaignKey, userID, options)
 
 
 // GetFeatureVariableValue API
@@ -98,14 +102,14 @@ isSuccessful = api.IsFeatureEnabled(VWO, campaignKey, userID, options)
 options = schema.Options{
         CustomVariables : { "a" : "x"},
     }
-variableValue = api.GetFeatureVariableValue(VWO, campaignKey, variableKey, userID, options)
+variableValue = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, options)
 
 // Without Custom Variables
 options = {}
-variableValue = api.GetFeatureVariableValue(VWO, campaignKey, variableKey, userID, options)
+variableValue = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, options)
 
 // Push API
-isSuccessful = api.Push(tagKey, tagValue, userID)
+isSuccessful = vwoInstance.Push(tagKey, tagValue, userID)
 ```
 
 1. `accountID` - Account for which sdk needs to be initialized

@@ -1,11 +1,15 @@
 package vwo
 
 import (
+	"fmt"
+
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/event"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
+
+const push = "push.go"
 
 // Push ...
 func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
@@ -14,11 +18,13 @@ func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
 	}
 
 	if len(tagKey) > constants.PushAPITagKeyLength {
-		vwo.Logger.Error("ERROR_MESSAGES.TAG_KEY_LENGTH_EXCEEDED")
+		message := fmt.Sprintf(constants.ErrorMessagesTagKeyLengthExceeded, tagKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, push, message)
 		return false
 	}
 	if len(tagValue) > constants.PushAPITagValueLength {
-		vwo.Logger.Error("ERROR_MESSAGES.TAG_VALUE_LENGTH_EXCEEDED")
+		message := fmt.Sprintf(constants.ErrorMessagesTagValueLengthExceeded, tagValue, tagKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, push, message)
 		return false
 	}
 

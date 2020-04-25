@@ -1,6 +1,7 @@
 package vwo
 
 import (
+	"fmt"
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/event"
@@ -15,6 +16,8 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
 	options := schema.Options{}
 	return vwo.ActivateWithOptions(campaignKey, userID, options)
 }
+
+const activate = "activate.go"
 
 // ActivateWithOptions ...
 func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options schema.Options) string {
@@ -32,16 +35,20 @@ func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options 
 
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		utils.LogMessage(vwoInstance, constants.Error, activate, "Error getting campaign: "+err.Error())
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
+		utils.LogMessage(vwo.Logger, constants.Error, activate, err.Error())
 		return ""
 	}
 
 	if campaign.Status != constants.StatusRunning {
-		vwo.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
+		message := fmt.Sprintf(constants.ErrorMessagesCampaignNotRunning, "Activate", campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
 		return ""
 	}
 	if !utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
-		vwo.Logger.Error("ERROR_MESSAGES.INVALID_API")
+		message := fmt.Sprintf(constants.ErrorMessagesInvalidAPI, "Activate", campaignKey, campaign.Type, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
 		return ""
 	}
 
@@ -49,7 +56,9 @@ func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options 
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwo.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, userID, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Info, activate, message)
+		utils.LogMessage(vwo.Logger, constants.Error, activate, err.Error())
 		return ""
 	}
 
