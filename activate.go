@@ -1,4 +1,4 @@
-package api
+package vwo
 
 import (
 	"github.com/decabits/vwo-golang-sdk/constants"
@@ -9,31 +9,37 @@ import (
 )
 
 // Activate function
-func Activate(vwoInstance schema.VwoInstance, campaignKey, userID string) string {
+func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
 	options := schema.Options{}
-	return ActivateWithOptions(vwoInstance, campaignKey, userID, options)
+	return vwo.ActivateWithOptions(campaignKey, userID, options)
 }
 
 // ActivateWithOptions ...
-func ActivateWithOptions(vwoInstance schema.VwoInstance, campaignKey, userID string, options schema.Options) string {
-	campaign, err := utils.GetCampaign(vwoInstance.SettingsFile, campaignKey)
+func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options schema.Options) string {
+	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		vwoInstance.Logger.Error("Error geting campaign: ", err)
+		vwo.Logger.Error("Error getting campaign: ", err)
 		return ""
 	}
 
 	if campaign.Status != constants.StatusRunning {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
+		vwo.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
 		return ""
 	}
 	if !utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
-		vwoInstance.Logger.Error("ERROR_MESSAGES.INVALID_API")
+		vwo.Logger.Error("ERROR_MESSAGES.INVALID_API")
 		return ""
 	}
 
+	vwoInstance := schema.VwoInstance{
+		SettingsFile:      vwo.SettingsFile,
+		UserStorage:       vwo.UserStorage,
+		Logger:            vwo.Logger,
+		IsDevelopmentMode: vwo.IsDevelopmentMode,
+	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwoInstance.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
+		vwo.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
 		return ""
 	}
 
