@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/service"
