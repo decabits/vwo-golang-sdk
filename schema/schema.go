@@ -1,8 +1,6 @@
 package schema
 
-import (
-	"github.com/google/logger"
-)
+import "github.com/google/logger"
 
 // VwoInstance struct utils
 type VwoInstance struct {
@@ -107,7 +105,7 @@ type Response struct {
 	StatusCode int
 }
 
-// UserStorage struct
+// UserStorage interface
 type UserStorage interface {
 	Get(userID, campaignKey string) UserData
 	Set(string, string, string)

@@ -1,15 +1,19 @@
 package core
 
 import (
-	"errors"
+	"fmt"
 	"math"
 
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/decabits/vwo-golang-sdk/utils"
 	"github.com/spaolacci/murmur3"
 )
 
-const umax32Bit = 0xFFFFFFFF
+const (
+	umax32Bit = 0xFFFFFFFF
+	bucketer  = "bucketer.go"
+)
 
 // GetBucketerVariation function returns the Variation by checking the Start and End Bucket Allocations of each Variation
 func GetBucketerVariation(variations []schema.Variation, bucketValue int) (schema.Variation, error) {
@@ -28,7 +32,7 @@ func GetBucketerVariation(variations []schema.Variation, bucketValue int) (schem
 			return variation, nil
 		}
 	}
-	return schema.Variation{}, errors.New("variation not found")
+	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationForBucketValue, bucketValue)
 }
 
 // GetBucketValueForUser returns Bucket Value of the user by hashing the userId with murmur hash and scaling it down.
@@ -49,8 +53,10 @@ func GetBucketValueForUser(vwoInstance schema.VwoInstance, userID string, maxVal
 	ratio := float64(hashValue) / math.Pow(2, 32)
 	multipliedValue := (maxValue*ratio + 1) * multiplier
 	bucketValue := int(math.Floor(multipliedValue))
-	vwoInstance.Logger.Info("DEBUG_MESSAGES.VARIATION_HASHV_VALUE: ", hashValue)
-	vwoInstance.Logger.Info("DEBUG_MESSAGES.VARIATION_BUCKETV_VALUE: ", bucketValue)
+
+	message := fmt.Sprintf(constants.InfoMessageUserHashBucketValue, userID, hashValue, bucketValue)
+	utils.LogMessage(vwoInstance, constants.Info, bucketer, message)
+
 	return bucketValue
 }
 
@@ -70,7 +76,10 @@ func IsUserPartOfCampaign(vwoInstance schema.VwoInstance, userID string, campaig
 	}
 	valueAssignedToUser := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)
 	isUserPart := valueAssignedToUser != 0 && valueAssignedToUser <= campaign.PercentTraffic
-	vwoInstance.Logger.Info("INFO_MESSAGES.USER_ELIGIBILITY_FOR_CAMPAIGN: ", isUserPart)
+
+	message := fmt.Sprintf(constants.InfoMessageUserEligibilityForCampaign, userID, isUserPart)
+	utils.LogMessage(vwoInstance, constants.Info, bucketer, message)
+
 	return isUserPart
 }
 
@@ -87,7 +96,7 @@ func BucketUserToVariation(vwoInstance schema.VwoInstance, userID string, campai
 	*/
 
 	if len(campaign.Variations) == 0 {
-		return schema.Variation{}, errors.New("No valid Campaign")
+		return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationInCampaign, campaign.Key)
 	}
 	multiplier := (float64(constants.MaxTrafficValue) / float64(campaign.PercentTraffic)) / 100
 	bucketValue := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, multiplier)

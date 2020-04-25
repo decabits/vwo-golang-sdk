@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"math/rand"
 	"net/url"
 	"strconv"
@@ -9,6 +10,8 @@ import (
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 )
+
+const impressions = "impression.go"
 
 // CreateImpressionForPush creates the impression from the arguments passed to push
 func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, userID string) schema.Impression {
@@ -26,7 +29,10 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	parameters := url.Values{}
 	parameters.Add(tagKey, tagValue)
 	impression.U = parameters.Encode()
-	vwoInstance.Logger.Info("DEBUG_MESSAGES.IMPRESSION_FOR_PUSH ", impression)
+
+	message := fmt.Sprintf(constants.InfoMessageImpressionForPush, impression)
+	LogMessage(vwoInstance, constants.Info, impressions, message)
+
 	return impression
 }
 
@@ -54,7 +60,9 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 		impression.R = revenueGoal
 	}
 
-	vwoInstance.Logger.Info("DEBUG_MESSAGES.IMPRESSION_FOR_GOAL_TRACK ", impression)
+	message := fmt.Sprintf(constants.InfoMessageImpressionForTrackGoal, impression)
+	LogMessage(vwoInstance, constants.Info, impressions, message)
+
 	return impression
 }
 
@@ -77,7 +85,9 @@ func CreateImpressionTrackingUser(vwoInstance schema.VwoInstance, campaignID int
 	impression.ED = `{\"p\":\"` + constants.Platform + `\"}`
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackUser
 
-	vwoInstance.Logger.Info("DEBUG_MESSAGES.IMPRESSION_FOR_TRACK_USER ", impression)
+	message := fmt.Sprintf(constants.InfoMessageImpressionForTrackUser, impression)
+	LogMessage(vwoInstance, constants.Info, impressions, message)
+
 	return impression
 }
 

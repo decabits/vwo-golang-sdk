@@ -1,14 +1,24 @@
 package event
 
 import (
+	"fmt"
 	"strconv"
 
+	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
-// Dispatch ...
+const eventDispatcher = "eventDispatcher.go"
+
+// Dispatch function dispatches the event represented by the impression object to our servers
 func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
+	/*
+		Args:
+			impression: impression to be dispatched
+		Returns:
+	*/
+
 	URL := impression.URL + "?" +
 		"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 64) +
 		"&sdk=" + impression.Sdk +
@@ -23,13 +33,24 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 		"&ed=" + impression.ED
 
 	_, err := utils.GetRequest(URL)
+
 	if err != nil {
-		vwoInstance.Logger.Errorf("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
+		message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
+		utils.LogMessage(vwoInstance,constants.Error, eventDispatcher, message)
+	} else {
+		message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, impression)
+		utils.LogMessage(vwoInstance, constants.Info, eventDispatcher, message)
 	}
 }
 
-// DispatchTrackingGoal function
+// DispatchTrackingGoal function dispatches the event with goal tracking represented by the impression object to our servers
 func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impression) {
+	/*
+		Args:
+			impression: impression to be dispatched
+		Returns:
+	*/
+
 	URL := impression.URL + "?" +
 		"random=" + strconv.FormatFloat(float64(impression.Random), 'f', -1, 64) +
 		"&sdk=" + impression.Sdk +
@@ -46,6 +67,7 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 
 	_, err := utils.GetRequest(URL)
 	if err != nil {
-		vwoInstance.Logger.Errorf("ERROR_MESSAGES.IMPRESSION_FAILED %+v", err)
+		message := fmt.Sprintf(constants.ErrorMessagesImpressionFailed, err)
+		utils.LogMessage(vwoInstance,constants.Error, eventDispatcher, message)
 	}
 }
