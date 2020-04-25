@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetVariableValueForVariation(t *testing.T) {
-	vwoInstance := GetInstance()
+	vwoInstance := getInstance()
 	campaign := vwoInstance.SettingsFile.Campaigns[2]
 
 	variation := campaign.Variations[0]
@@ -22,7 +22,7 @@ func TestGetVariableValueForVariation(t *testing.T) {
 }
 
 func TestGetVariableForFeature(t *testing.T) {
-	vwoInstance := GetInstance()
+	vwoInstance := getInstance()
 
 	variables := vwoInstance.SettingsFile.Campaigns[2].Variables
 	variableKey := "int1"

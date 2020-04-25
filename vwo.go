@@ -16,8 +16,8 @@ type VWOInstance schema.VwoInstance
 
 // VWO interface
 type VWO interface {
-	Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage schema.UserStorage)
-	LaunchWithLogger(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage schema.UserStorage, logger *logger.Logger)
+	Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{})
+	LaunchWithLogger(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logger *logger.Logger)
 	Activate(campaignKey, userID string) string
 	ActivateWithOptions(campaignKey, userID string, options schema.Options) string
 	GetFeatureVariableValue(campaignKey, variableKey, userID string) interface{}
@@ -32,7 +32,7 @@ type VWO interface {
 }
 
 // Launch function
-func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage schema.UserStorage) {
+func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}) {
 	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
 	logger.SetFlags(log.LstdFlags)
 	defer logger.Close()
@@ -41,7 +41,7 @@ func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.Setti
 }
 
 // LaunchWithLogger Function
-func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage schema.UserStorage, logger *logger.Logger) {
+func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logger *logger.Logger) {
 	vwo.SettingsFile = settingsFile
 	vwo.UserStorage = storage
 	vwo.Logger = logger

@@ -47,10 +47,9 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 		options.VariationTargetingVariables = map[string]interface{}{"_vwo_user_id": userID}
 	}
 
-
 	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		utils.LogMessage(vwoInstance,constants.Error, variationDecider, err.Error())
+		utils.LogMessage(vwoInstance, constants.Error, variationDecider, err.Error())
 	} else {
 		message := fmt.Sprintf(constants.InfoMessageGotVariation, userID, campaign.Key, targettedVariation.Name)
 		utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
@@ -59,7 +58,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 
 	variationName, err := GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	if err != nil {
-		utils.LogMessage(vwoInstance,constants.Error, variationDecider, err.Error())
+		utils.LogMessage(vwoInstance, constants.Error, variationDecider, err.Error())
 	}
 	if variationName != "" {
 		message := fmt.Sprintf(constants.InfoMessageGettingStoredVariation, userID, campaign.Key, variationName)
@@ -72,10 +71,12 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 		if err != nil {
 			return schema.Variation{}, fmt.Errorf(constants.InfoMessageNoVariationAllocated, userID, campaign.Key, campaign.Type, err.Error())
 		}
-		if vwoInstance.UserStorage.Exist() {
-			vwoInstance.UserStorage.Set(userID, campaign.Key, variationName)
-			message := fmt.Sprintf(constants.InfoMessageSettingDataUserStorageService, userID)
-			utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
+		if vwoInstance.UserStorage != nil {
+			if storage, ok := vwoInstance.UserStorage.(interface{ Set(a, b, c string) }); ok {
+				storage.Set(userID, campaign.Key, variationName)
+				message := fmt.Sprintf(constants.InfoMessageSettingDataUserStorageService, userID)
+				utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
+			}
 		}
 
 		message := fmt.Sprintf(constants.InfoMessageGotVariationForUser, userID, campaign.Key, variation.Name, "GetVariation")
@@ -137,14 +138,18 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 			error: Error message
 	*/
 
-	if !vwoInstance.UserStorage.Exist() {
+	if vwoInstance.UserStorage == nil {
 		return "", fmt.Errorf(constants.InfoMessageNoUserStorageServiceGet)
 	}
-	userStorageFetch := vwoInstance.UserStorage.Get(userID, campaign.Key)
-
-	message := fmt.Sprintf(constants.InfoMessageGettingDataUserStorageService, userID)
-	utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
-	return userStorageFetch.VariationName, nil
+	if storage, ok := vwoInstance.UserStorage.(interface {
+		Get(a, b string) schema.UserData
+	}); ok {
+		userStorageFetch := storage.Get(userID, campaign.Key)
+		message := fmt.Sprintf(constants.InfoMessageGettingDataUserStorageService, userID)
+		utils.LogMessage(vwoInstance, constants.Info, variationDecider, message)
+		return userStorageFetch.VariationName, nil
+	}
+	return "", fmt.Errorf(constants.InfoMessageNoUserStorageServiceGet)
 }
 
 //GetWhiteListedVariationsList function identifies all forced variations which are targeted by variation_targeting_variables

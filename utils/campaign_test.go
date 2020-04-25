@@ -12,35 +12,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// UserStorage interface for testing
-type UserStorage schema.UserStorage
-
-// UserStorageData struct for testing
-type UserStorageData struct{}
-
-// Get function is used to get the data from user storage
-func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
-	return schema.UserData{
-		UserID:        userID,
-		CampaignKey:   campaignKey,
-		VariationName: "Control",
-	}
-}
-
-// Set function
-func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
-}
-
-// Exist function
-func (us *UserStorageData) Exist() bool {
-	return false
-}
-
-// GetInstance function creates and return a temporary VWO instance for testing
-func GetInstance() schema.VwoInstance {
-	logger := logger.Init(constants.SDKName, true, false, ioutil.Discard)
-	defer logger.Close()
-
+// getInstance function creates and return a temporary VWO instance for testing
+func getInstance() schema.VwoInstance {
 	settingsFile, err := ioutil.ReadFile("./testData/testUtils.json")
 	if err != nil {
 		fmt.Println(err)
@@ -51,37 +24,19 @@ func GetInstance() schema.VwoInstance {
 		fmt.Println(err)
 	}
 
-	storage := &UserStorageData{}
-
-	for i, campaign := range settings.Campaigns {
-		var (
-			currentAllocation         = 0
-			variationAllocationRanges []schema.Variation
-		)
-		for _, variation := range campaign.Variations {
-			stepFactor := GetVariationBucketingRange(variation.Weight)
-			if stepFactor != 0 {
-				variation.StartVariationAllocation = currentAllocation + 1
-				variation.EndVariationAllocation = currentAllocation + stepFactor
-				currentAllocation += stepFactor
-			} else {
-				variation.StartVariationAllocation = -1
-				variation.EndVariationAllocation = -1
-			}
-			variationAllocationRanges = append(variationAllocationRanges, variation)
-		}
-		settings.Campaigns[i].Variations = variationAllocationRanges
-	}
+	logger := logger.Init(constants.SDKName, false, false, ioutil.Discard)
+	defer logger.Close()
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      settings,
-		UserStorage:       storage,
+		UserStorage:       nil,
 		Logger:            logger,
 		IsDevelopmentMode: true,
 	}
 
 	return vwoInstance
 }
+
 func TestGetVariationBucketingRange(t *testing.T) {
 	var weight float64
 
@@ -102,7 +57,7 @@ func TestGetVariationBucketingRange(t *testing.T) {
 }
 
 func TestGetCampaign(t *testing.T) {
-	vwoInstance := GetInstance()
+	vwoInstance := getInstance()
 
 	campaignKey := "phpab1"
 	campaign, _ := GetCampaign(vwoInstance.SettingsFile, campaignKey)
@@ -114,7 +69,7 @@ func TestGetCampaign(t *testing.T) {
 }
 
 func TestGetCampaignVariation(t *testing.T) {
-	vwoInstance := GetInstance()
+	vwoInstance := getInstance()
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
 	variationName := "Control"
@@ -132,7 +87,7 @@ func TestGetCampaignVariation(t *testing.T) {
 }
 
 func TestGetCampaignGoal(t *testing.T) {
-	vwoInstance := GetInstance()
+	vwoInstance := getInstance()
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
 	goalName := "rev"
@@ -145,7 +100,7 @@ func TestGetCampaignGoal(t *testing.T) {
 }
 
 func TestGetControlVariation(t *testing.T) {
-	vwoInstance := GetInstance()
+	vwoInstance := getInstance()
 
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 	variation := GetControlVariation(campaign)
@@ -157,7 +112,7 @@ func TestGetControlVariation(t *testing.T) {
 }
 
 func TestScaleVariations(t *testing.T) {
-	vwoInstance := GetInstance()
+	vwoInstance := getInstance()
 
 	variations := vwoInstance.SettingsFile.Campaigns[3].Variations
 	variations = ScaleVariations(variations)
@@ -170,7 +125,7 @@ func TestScaleVariations(t *testing.T) {
 }
 
 func TestGetVariationAllocationRanges(t *testing.T) {
-	vwoInstance := GetInstance()
+	vwoInstance := getInstance()
 
 	variations := vwoInstance.SettingsFile.Campaigns[3].Variations
 	assert.NotEmpty(t, variations, "No Variations recieved")

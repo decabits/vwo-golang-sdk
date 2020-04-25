@@ -12,32 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// UserStorage interface for testing
-type UserStorage schema.UserStorage
-
-// UserStorageData struct for testing
-type UserStorageData struct{}
-
-// Get function is used to get the data from user storage
-func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
-	return schema.UserData{
-		UserID:        userID,
-		CampaignKey:   campaignKey,
-		VariationName: "Control",
-	}
-}
-
-// Set function
-func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
-}
-
-// Exist function
-func (us *UserStorageData) Exist() bool {
-	return false
-}
-
-// GetInstance function creates and return a temporary VWO instance for testing
-func GetInstance(path string) schema.VwoInstance {
+func getInstance(path string) schema.VwoInstance {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.ProcessSettingsFile(path); err != nil {
 		log.Println("Error Processing Settings File: ", err)
@@ -45,22 +20,21 @@ func GetInstance(path string) schema.VwoInstance {
 	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 
-	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logs := logger.Init(constants.SDKName, false, false, ioutil.Discard)
 	logger.SetFlags(log.LstdFlags)
 	defer logger.Close()
 
-	storage := &UserStorageData{}
-
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      settingsFile,
-		UserStorage:       storage,
+		UserStorage:       nil,
 		Logger:            logs,
 		IsDevelopmentMode: true,
 	}
 	return vwoInstance
 }
+
 func TestBucketUserToVariation(t *testing.T) {
-	vwoInstance := GetInstance("./testData/testBucket.json")
+	vwoInstance := getInstance("./testData/testBucket.json")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 	userID := "Linda"
@@ -75,7 +49,7 @@ func TestBucketUserToVariation(t *testing.T) {
 }
 
 func TestGetBucketerVariation(t *testing.T) {
-	vwoInstance := GetInstance("./testData/testBucket.json")
+	vwoInstance := getInstance("./testData/testBucket.json")
 
 	variations := vwoInstance.SettingsFile.Campaigns[1].Variations
 	bucketValue := 2345
@@ -93,7 +67,7 @@ func TestGetBucketerVariation(t *testing.T) {
 }
 
 func TestIsUserPartOfCampaign(t *testing.T) {
-	vwoInstance := GetInstance("./testData/testBucket.json")
+	vwoInstance := getInstance("./testData/testBucket.json")
 
 	userID := "James"
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
@@ -107,7 +81,7 @@ func TestIsUserPartOfCampaign(t *testing.T) {
 }
 
 func TestGetBucketValueForUser(t *testing.T) {
-	vwoInstance := GetInstance("./testData/testBucket.json")
+	vwoInstance := getInstance("./testData/testBucket.json")
 
 	userID := "Chris"
 	actual := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)
