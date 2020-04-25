@@ -1,13 +1,13 @@
 package schema
 
-import "github.com/google/logger"
-
 // VwoInstance struct utils
 type VwoInstance struct {
 	SettingsFile      SettingsFile
-	UserStorage       UserStorage
-	Logger            *logger.Logger
+	UserStorage       interface{}
+	Logger            interface{}
 	IsDevelopmentMode bool
+	UserID            string
+	Campaign          Campaign
 }
 
 // SettingsFile struct
@@ -97,17 +97,4 @@ type Impression struct {
 	ED           string  `json:"ed"`
 	GoalID       int     `json:"goal_id"`
 	R            int     `json:"r"`
-}
-
-// Response struct
-type Response struct {
-	Text       string
-	StatusCode int
-}
-
-// UserStorage interface
-type UserStorage interface {
-	Get(userID, campaignKey string) UserData
-	Set(string, string, string)
-	Exist() bool
 }

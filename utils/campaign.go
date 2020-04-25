@@ -35,7 +35,7 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 		}
 
 		message := fmt.Sprintf(constants.InfoMessageVariationRageAllocation, variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
-		LogMessage(vwoInstance, constants.Info, campaign, message)
+		LogMessage(vwoInstance.Logger, constants.Info, campaign, message)
 		variationAllocationRanges = append(variationAllocationRanges, variation)
 	}
 	return variationAllocationRanges

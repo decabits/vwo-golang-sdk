@@ -2,127 +2,147 @@
     "sdkKey": "",
     "accountId": 12345,
     "version": 1,
-    "campaigns": [{
-        "id": 201,
-        "segments": {},
-        "status": "NOT_RUNNING",
-        "percentTraffic": 100,
-        "goals": {},
-        "isForcedVariationEnabled": false,
-        "key": "php1",
-        "variations": {},
-        "type": "FEATURE_ROLLOUT"
-    }, {
-        "id": 202,
-        "segments": {},
-        "status": "RUNNING",
-        "percentTraffic": 100,
-        "goals": {},
-        "isForcedVariationEnabled": false,
-        "key": "phpab1",
-        "variations": {},
-        "type": "VISUAL_AB"
-    }, {
-        "id": 201,
-        "segments": {},
-        "status": "RUNNING",
-        "percentTraffic": 100,
-        "goals": {},
-        "isForcedVariationEnabled": false,
-        "key": "php2",
-        "variations": {},
-        "type": "FEATURE_TEST"
-    }, {
-        "id": 201,
-        "segments": {},
-        "status": "RUNNING",
-        "percentTraffic": 100,
-        "goals": {},
-        "isForcedVariationEnabled": false,
-        "key": "php3",
-        "variations": [{
-            "segments": {
-                "or": [{
-                    "user": "Varun,Kate"
-                }]
-            },
-            "changes": {},
-            "id": 1,
-            "variables": [{
-                    "value": 302,
-                    "type": "integer",
-                    "key": "int2",
-                    "id": 1
-                },
+    "campaigns": [
+        {
+            "id": 201,
+            "segments": {},
+            "status": "NOT_RUNNING",
+            "percentTraffic": 100,
+            "goals": {},
+            "isForcedVariationEnabled": false,
+            "key": "php1",
+            "variations": {},
+            "type": "FEATURE_ROLLOUT"
+        },
+        {
+            "id": 202,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": {},
+            "isForcedVariationEnabled": false,
+            "key": "phpab1",
+            "variations": {},
+            "type": "VISUAL_AB"
+        },
+        {
+            "id": 201,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": {},
+            "isForcedVariationEnabled": false,
+            "key": "php2",
+            "variations": {},
+            "type": "FEATURE_TEST"
+        },
+        {
+            "id": 201,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": {},
+            "isForcedVariationEnabled": false,
+            "key": "php3",
+            "variations": [
                 {
-                    "value": false,
-                    "type": "boolean",
-                    "key": "bool2",
-                    "id": 4
+                    "segments": {
+                        "or": [
+                            {
+                                "user": "Varun,Kate"
+                            }
+                        ]
+                    },
+                    "changes": {},
+                    "id": 1,
+                    "variables": [
+                        {
+                            "value": 302,
+                            "type": "integer",
+                            "key": "int2",
+                            "id": 1
+                        },
+                        {
+                            "value": false,
+                            "type": "boolean",
+                            "key": "bool2",
+                            "id": 4
+                        }
+                    ],
+                    "isFeatureEnabled": true,
+                    "weight": 100,
+                    "name": "Control"
                 }
             ],
-            "isFeatureEnabled": true,
-            "weight": 100,
-            "name": "Control"
-        }],
-        "type": "FEATURE_ROLLOUT"
-    }, {
-        "id": 201,
-        "segments": {},
-        "status": "RUNNING",
-        "percentTraffic": 100,
-        "goals": {},
-        "isForcedVariationEnabled": false,
-        "key": "php4",
-        "variations": [{
-            "segments": {
-                "or": [{
-                    "user": "Varun,Kate"
-                }]
-            },
-            "changes": {},
-            "id": 1,
-            "variables": [{
-                    "value": 302,
-                    "type": "integer",
-                    "key": "int2",
-                    "id": 1
+            "type": "FEATURE_ROLLOUT"
+        },
+        {
+            "id": 201,
+            "segments": {},
+            "status": "RUNNING",
+            "percentTraffic": 100,
+            "goals": {},
+            "isForcedVariationEnabled": false,
+            "key": "php4",
+            "variations": [
+                {
+                    "segments": {
+                        "or": [
+                            {
+                                "user": "Varun,Kate"
+                            }
+                        ]
+                    },
+                    "changes": {},
+                    "id": 1,
+                    "variables": [
+                        {
+                            "value": 302,
+                            "type": "integer",
+                            "key": "int2",
+                            "id": 1
+                        },
+                        {
+                            "value": false,
+                            "type": "boolean",
+                            "key": "bool2",
+                            "id": 4
+                        }
+                    ],
+                    "isFeatureEnabled": true,
+                    "weight": 50.0,
+                    "name": "Control"
                 },
                 {
-                    "value": false,
-                    "type": "boolean",
-                    "key": "bool2",
-                    "id": 4
+                    "segments": {
+                        "or": [
+                            {
+                                "user": "Varun,Kate"
+                            }
+                        ]
+                    },
+                    "changes": {},
+                    "id": 2,
+                    "variables": [
+                        {
+                            "value": 302,
+                            "type": "integer",
+                            "key": "int2",
+                            "id": 1
+                        },
+                        {
+                            "value": false,
+                            "type": "boolean",
+                            "key": "bool2",
+                            "id": 4
+                        }
+                    ],
+                    "isFeatureEnabled": false,
+                    "weight": 50.0,
+                    "name": "Variation-1"
                 }
             ],
-            "isFeatureEnabled": true,
-            "weight": 50.0,
-            "name": "Control"
-        }, {
-            "segments": {
-                "or": [{
-                    "user": "Varun,Kate"
-                }]
-            },
-            "changes": {},
-            "id": 2,
-            "variables": [{
-                    "value": 302,
-                    "type": "integer",
-                    "key": "int2",
-                    "id": 1
-                },
-                {
-                    "value": false,
-                    "type": "boolean",
-                    "key": "bool2",
-                    "id": 4
-                }
-            ],
-            "isFeatureEnabled": false,
-            "weight": 50.0,
-            "name": "Variation-1"
-        }],
-        "type": "FEATURE_TEST"
-    }]
+            "type": "FEATURE_TEST"
+        }
+    ]
 }

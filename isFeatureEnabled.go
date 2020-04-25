@@ -1,6 +1,8 @@
 package vwo
 
 import (
+	"fmt"
+
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/event"
@@ -8,26 +10,65 @@ import (
 	"github.com/decabits/vwo-golang-sdk/utils"
 )
 
-// IsFeatureEnabled ...
+const fileIsFeatureEnabled = "isFeatureEnabled.go"
+
+// IsFeatureEnabled function
+/*
+This API method: Whether a feature is enabled or not for the given user
+1. Validates the arguments being passed
+2. Finds the corresponding Campaign
+3. Checks the Campaign Status
+4. Validates the Campaign Type
+5. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
+   If userStorageService is used, it will look into it for the variation and if found, no further processing is done
+6. If feature enabled, sends a call to VWO server for tracking visitor
+*/
 func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+		Returns:
+			bool: True if the user the feature is enambled for the user, else false
+	*/
 	options := schema.Options{}
 	return vwo.IsFeatureEnabledWithOptions(campaignKey, userID, options)
 }
 
 // IsFeatureEnabledWithOptions function
 func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, options schema.Options) bool {
+	/*
+		Args:
+			campaignKey: Key of the running campaign 
+			userID: Unique identification of user
+			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
+			customVariables = {}
+			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
+			variationTargetingVariables = {}
+		Returns:
+			bool: True if the user the feature is enambled for the user, else false
+	*/
+	if !utils.ValidateIsFeatureEnabled(campaignKey, userID) {
+		message := fmt.Sprintf(constants.ErrorMessagesIsFeatureEnabledAPIMissingParams)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
+		return false
+	}
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		vwo.Logger.Error("Error geting campaign: ", err)
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
 		return false
 	}
 
 	if campaign.Status != constants.StatusRunning {
-		vwo.Logger.Error("ERROR_MESSAGES.CAMPAIGN_NOT_RUNNING")
+		message := fmt.Sprintf(constants.ErrorMessagesCampaignNotRunning, "IsFeatureEnabled", campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
 		return false
 	}
 	if utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
-		vwo.Logger.Error("ERROR_MESSAGES.INVALID_API")
+		message := fmt.Sprintf(constants.ErrorMessagesInvalidAPI, "IsFeatureEnabled", campaignKey, campaign.Type, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
 		return false
 	}
 
@@ -36,10 +77,13 @@ func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, 
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
+		UserID:            userID,
+		Campaign:          campaign,
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		vwo.Logger.Error("INFO_MESSAGES.INVALID_VARIATION_KEY")
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
+		utils.LogMessage(vwo.Logger, constants.Info, fileIsFeatureEnabled, message)
 		return false
 	}
 
@@ -53,9 +97,11 @@ func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, 
 	}
 
 	if isFeatureEnabled {
-		vwo.Logger.Info("INFO_MESSAGES.FEATURE_ENABLED_FOR_USER")
+		message := fmt.Sprintf(constants.InfoMessageFeatureEnabledForUser, campaignKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Info, fileIsFeatureEnabled, message)
 	} else {
-		vwo.Logger.Info("INFO_MESSAGES.FEATURE_NOT_ENABLED_FOR_USER")
+		message := fmt.Sprintf(constants.InfoMessageFeatureNotEnabledForUser, campaignKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Info, fileIsFeatureEnabled, message)
 	}
 
 	return isFeatureEnabled
