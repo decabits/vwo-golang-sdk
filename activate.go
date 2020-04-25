@@ -12,6 +12,16 @@ import (
 const activate = "activate.go"
 
 // Activate function
+/*
+This API method: Gets the variation assigned for the user for the campaign and send the metrics to VWO server
+1. Validates the arguments being passed
+2. Finds the corresponding Campaign
+3. Checks the Campaign Status
+4. Validates the Campaign Type
+5. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
+   If userStorageService is used, it will look into it for the variation and if found, no further processing is done
+6. Sends an impression call to VWO server to track user
+*/
 func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
 	options := schema.Options{}
 	return vwo.ActivateWithOptions(campaignKey, userID, options)
@@ -19,9 +29,6 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
 
 // ActivateWithOptions ...
 func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options schema.Options) string {
-	if !utils.ValidateActivate(campaignKey, userID) {
-		return ""
-	}
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      vwo.SettingsFile,
@@ -31,11 +38,16 @@ func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options 
 		UserID:            userID,
 	}
 
+	if !utils.ValidateActivate(campaignKey, userID) {
+		message := fmt.Sprintf(constants.ErrorMessagesActivateAPIMissingParams)
+		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
+		return ""
+	}
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, campaignKey)
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
-		utils.LogMessage(vwo.Logger, constants.Error, activate, err.Error())
 		return ""
 	}
 
@@ -54,9 +66,8 @@ func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options 
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, userID, campaignKey)
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, activate, message)
-		utils.LogMessage(vwo.Logger, constants.Error, activate, err.Error())
 		return ""
 	}
 

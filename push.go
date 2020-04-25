@@ -11,9 +11,17 @@ import (
 
 const push = "push.go"
 
-// Push ...
+// Push function
+/*
+This API method: Pushes the key-value tag pair for a particular user
+1. Validates the arguments being passed
+2. Checks the length of tag Key and Value
+3. Sends a call to VWO push api
+*/
 func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
 	if !utils.ValidatePush(tagKey, tagValue, userID) {
+		message := fmt.Sprintf(constants.ErrorMessagesPushAPIMissingParams)
+		utils.LogMessage(vwo.Logger, constants.Error, push, message)
 		return false
 	}
 

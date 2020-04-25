@@ -13,6 +13,18 @@ import (
 const track = "track.go"
 
 // Track function
+/*
+This API method: Marks the conversion of the campaign for a particular goal
+1. Validates the arguments being passed
+2. Finds the corresponding Campaign
+3. Checks the Campaign Status
+4. Validates the Campaign Type
+5. Gets passed Goal
+6. Validates Revenue and Goal type
+7. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
+   If userStorageService is used, it will look into it for the variation and if found, no further processing is done
+8. If feature enabled, sends a call to VWO server for tracking visitor
+*/
 func (vwo *VWOInstance) Track(campaignKey, userID string, goalIdentifier string) bool {
 	options := schema.Options{}
 	return vwo.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
@@ -21,14 +33,15 @@ func (vwo *VWOInstance) Track(campaignKey, userID string, goalIdentifier string)
 // TrackWithOptions function
 func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID, goalIdentifier string, options schema.Options) bool {
 	if !utils.ValidateTrack(campaignKey, userID, goalIdentifier) {
+		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIMissingParams)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
 	}
 
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, campaignKey)
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
-		utils.LogMessage(vwo.Logger, constants.Error, track, err.Error())
 		return false
 	}
 
@@ -45,9 +58,8 @@ func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID, goalIdentifier str
 
 	goal, err := utils.GetCampaignGoal(campaign, goalIdentifier)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIGoalNotFound, goalIdentifier, campaignKey, userID)
+		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIGoalNotFound+" \n %v", goalIdentifier, campaignKey, userID, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
-		utils.LogMessage(vwo.Logger, constants.Error, track, err.Error())
 		return false
 	}
 
@@ -67,9 +79,8 @@ func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID, goalIdentifier str
 	}
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, userID, campaignKey)
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, track, message)
-		utils.LogMessage(vwo.Logger, constants.Error, track, err.Error())
 		return false
 	}
 
