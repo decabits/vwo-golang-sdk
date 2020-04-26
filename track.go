@@ -31,9 +31,10 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 			campaignKey: Key of the running campaign 
 			userID: Unique identification of user
 			goalIdentifier: Unique identification of corresponding goal
-			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
-			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			customVariables(In option): variables for pre-segmentation
+			variationTargetingVariables(In option): variables for variation targeting
 			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			
 		Returns:
 			bool: True if the track is successfull else false
 	*/

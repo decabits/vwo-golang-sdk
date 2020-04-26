@@ -19,8 +19,17 @@ type SettingsFileManager struct {
 	SettingsFile schema.SettingsFile
 }
 
-// FetchSettingsFile function
+// FetchSettingsFile function makes call to VWO server to fetch the settings file
 func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) error {
+	/*
+		Args:
+			accountID: Config account ID
+			SDKKey: Config SDK Key
+
+		Returns: 
+			error: nil if the settings file id fetched else the error
+	*/
+
 	if accountID == "" {
 		return fmt.Errorf(constants.ErrorMessagesInvalidAccountID)
 	}
@@ -53,6 +62,14 @@ func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) erro
 
 // ProcessSettingsFile Processes the settings_file, assigns variation allocation range
 func (sfm *SettingsFileManager) ProcessSettingsFile(settingsFileLocation string) error {
+	/*
+		Args:
+			settingsFileLocation: Location of the settings file on system
+
+		Returns: 
+			error: nil if the settings file id fetched else the error
+	*/
+
 	settingsFile, err := ioutil.ReadFile(settingsFileLocation)
 	if err != nil {
 		return fmt.Errorf(constants.ErrorMessagesCannotReadSettingsFile, err.Error())
@@ -65,7 +82,7 @@ func (sfm *SettingsFileManager) ProcessSettingsFile(settingsFileLocation string)
 	return nil
 }
 
-//Process function
+//Process function processes campaigns in the settings file and sets the variation allocation ranges to all variations 
 func (sfm *SettingsFileManager) Process() {
 	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
 	logger.SetFlags(log.LstdFlags)
@@ -92,7 +109,7 @@ func (sfm *SettingsFileManager) Process() {
 	}
 }
 
-// GetSettingsFile ...
+// GetSettingsFile returns the settings file 
 func (sfm *SettingsFileManager) GetSettingsFile() schema.SettingsFile {
 	return sfm.SettingsFile
 }

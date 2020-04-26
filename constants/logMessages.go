@@ -2,6 +2,9 @@ package constants
 
 // constants for logger
 const (
+	DebugMessageNoCustomLoggerFound      = "No custom logger found, using pre-defined google logger "
+	DebugMessageCustomLoggerFound        = "Custom logger found"
+	DebugMessagesSDKInitialized          = "SDK properly initialized"
 	DebugMessageNoWhitelistedVariation   = "No whitelisting variation found in campaign: %v"
 	DebugMessageNoTargettedVariation     = "No targetted variation found : %v"
 	DebugMessageUUIDForUser              = "Uuid generated for User ID: %v and accountId: %v is %v"
@@ -51,6 +54,8 @@ const (
 	ErrorMessagesPushAPIMissingParams                   = "push API got bad parameters. It expects tagKey(String) as first, tagKey(String) as second and userID(String) as third argument"
 	ErrorMessagesTrackAPIMissingParams                  = "track API got bad parameters. It expects campaignKey(String) as first, userId(String) as second, goalIdentifier(String) as third argument and options(Optional) as fourth parameter"
 	ErrorMessagesGetUserStorageServiceFailed            = "Getting data from UserStorageService failed for User ID:{userId}"
+	ErrorMessageInvalidLoggerStorage                    = "Invalid storage object/Logger given. Refer documentation on how to pass custom storage."
+	ErrorMessageCannotProcessSettingsFile               = "Error processing settings file err: "
 
 	InfoMessageNewVariation                  = "New Variation : %v for user"
 	InfoMessageImpressionSuccess             = "Impression event was successfully received by VWO having keys: %v"

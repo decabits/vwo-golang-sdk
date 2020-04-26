@@ -16,7 +16,6 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 	/*
 		Args:
 			impression: impression to be dispatched
-		Returns:
 	*/
 
 	if !vwoInstance.IsDevelopmentMode {
@@ -45,12 +44,12 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 	}
 }
 
-// DispatchTrackingGoal function dispatches the event with goal tracking represented by the impression object to our servers
+// DispatchTrackingGoal function dispatches the event with goal tracking represented by 
+// the impression object to our servers
 func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impression) {
 	/*
 		Args:
 			impression: impression to be dispatched
-		Returns:
 	*/
 
 	if !vwoInstance.IsDevelopmentMode {

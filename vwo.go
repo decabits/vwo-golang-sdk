@@ -1,7 +1,6 @@
 package vwo
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -29,7 +28,7 @@ type VWO interface {
 	Track(campaignKey, userID string, goalIdentifier string, options interface{}) bool
 }
 
-// Launch function to launch sdk
+// Launch function to launch SDK
 func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logs interface{}) error {
 	/*
 		Args:
@@ -37,11 +36,19 @@ func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.Setti
 			settingsFile: settings file fetched from getsettingsfile
 			storage: custom storage functions
 			logs: custom logger if any
+
+		Returns:
+			error: nil if SDK is launched, else error encountered
 	*/
 	if logs == nil {
+		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessageNoCustomLoggerFound)
 		logs = logger.Init(constants.SDKName, true, false, ioutil.Discard)
 		logger.SetFlags(log.LstdFlags)
 		defer logger.Close()
+	}
+
+	if logs != nil {
+		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessageCustomLoggerFound)
 	}
 
 	if utils.ValidateStorage(storage) && utils.ValidateLogger(logs) {
@@ -49,18 +56,26 @@ func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.Setti
 		vwo.UserStorage = storage
 		vwo.Logger = logs
 		vwo.IsDevelopmentMode = isDevelopmentMode
-		message := fmt.Sprintf(constants.DebugMessagesDevelopmentMode, isDevelopmentMode)
+		message := fmt.Sprintf(constants.DebugMessagesDevelopmentMode+constants.DebugMessagesSDKInitialized, isDevelopmentMode)
 		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, message)
 		return nil
 	}
-	return errors.New("Invalid storage object/Logger given. Refer documentation on how to pass custom storage.")
+	return fmt.Errorf(constants.ErrorMessageInvalidLoggerStorage)
 }
 
 // GetSettingsFile function to fetch and parse settingsfile
 func GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
+	/*
+		Args:
+			accountID: Config account ID
+			SDKKey: Config SDK Key
+
+		Returns:
+			schema.SettingsFile: settings file fetched
+	*/
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {
-		logger.Warning("Error Processing Settings File: " + err.Error())
+		logger.Warning(constants.ErrorMessageCannotProcessSettingsFile + err.Error())
 	}
 	settingsFileManager.Process()
 	logger.Warning(fileVWO + " : " + constants.DebugMessagesSettingsFileProcessed)

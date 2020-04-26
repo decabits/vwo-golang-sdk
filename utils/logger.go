@@ -24,6 +24,7 @@ func LogMessage(logs interface{}, level, file, message string) {
 	}
 
 	log := logs.(*logger.Logger)
+	
 	switch level {
 	case constants.Info:
 		log.Info(formattedMessage)
