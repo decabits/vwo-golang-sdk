@@ -20,16 +20,16 @@ func TestFetchSettingsFile(t *testing.T) {
 
 func TestProcessSettingsFile(t *testing.T) {
 	settingsFileManager := SettingsFileManager{}
-	err := settingsFileManager.ProcessSettingsFile("testData/settingsFile2.json")
+	err := settingsFileManager.ProcessSettingsFile("./testData/settingsFile2.json")
 	assert.NoError(t, err, "No settingsFile processed")
 
 	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 	assert.NotEmpty(t, settingsFile, "No settingsFile processed")
 
-	err = settingsFileManager.ProcessSettingsFile("testData/settingsFile.json")
+	err = settingsFileManager.ProcessSettingsFile("./testData/settingsFile.json")
 	assert.Error(t, err, "No settingsFile processed")
 
-	err = settingsFileManager.ProcessSettingsFile("testData/settingsFile3.json")
+	err = settingsFileManager.ProcessSettingsFile("./testData/settingsFile3.json")
 	assert.Error(t, err, "No settingsFile processed")
 }

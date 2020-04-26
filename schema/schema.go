@@ -1,12 +1,10 @@
 package schema
 
-import "github.com/google/logger"
-
 // VwoInstance struct utils
 type VwoInstance struct {
 	SettingsFile      SettingsFile
 	UserStorage       interface{}
-	Logger            *logger.Logger
+	Logger            interface{}
 	IsDevelopmentMode bool
 	UserID            string
 	Campaign          Campaign

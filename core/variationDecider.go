@@ -203,7 +203,6 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 	if len(segments) == 0 {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, segments, options.CustomVariables)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
-		vwoInstance.Logger.Info()
 
 		return true
 	}
@@ -224,7 +223,6 @@ func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]inte
 	if len(segments) == 0 {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, segments, options.CustomVariables)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
-		vwoInstance.Logger.Info()
 
 		return false
 	}

@@ -8,7 +8,8 @@ import (
 
 func TestIsFeatureEnabled(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	vwoInstance.getInstance("./testData/testIsFeatureEnabled.json")
+	err := vwoInstance.getInstance("./testdata/testIsFeatureEnabled.json")
+	assert.Nil(t, err, "error fetching instance")
 
 	userID := ""
 	campaignKey := ""
