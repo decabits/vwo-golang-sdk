@@ -21,20 +21,7 @@ This API method: Gets the variation assigned for the user for the campaign
 5. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 */
-func (vwo *VWOInstance) GetVariationName(campaignKey, userID string) string {
-	/*
-		Args:
-			campaignKey: Key of the running campaign 
-			userID: Unique identification of user
-		Returns:
-			string: Variation Name for user to corresponding camapign
-	*/
-	options := schema.Options{}
-	return vwo.GetVariationNameWithOptions(campaignKey, userID, options)
-}
-
-// GetVariationNameWithOptions ...
-func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, options schema.Options) string {
+func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option interface{}) string {
 	/*
 		Args:
 			campaignKey: Key of the running campaign 
@@ -52,6 +39,8 @@ func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, 
 		return ""
 	}
 
+	options := utils.ParseOptions(option)
+	
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
 		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())

@@ -18,23 +18,10 @@ func (vwo *VWOInstance) getInstance(path string) error {
 	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 
-	if err := vwo.Launch(true, settingsFile, nil); err != nil {
+	if err := vwo.Launch(true, settingsFile, nil, nil); err != nil {
 		return err
 	}
 	return nil
-}
-
-func TestLaunchWithLogger(t *testing.T) {
-	settingsFileManager := service.SettingsFileManager{}
-	if err := settingsFileManager.ProcessSettingsFile("./testdata/testdata.json"); err != nil {
-		log.Println("Error Processing Settings File: ", err)
-	}
-	settingsFileManager.Process()
-	settingsFile := settingsFileManager.GetSettingsFile()
-
-	vwoInstance := VWOInstance{}
-	err := vwoInstance.LaunchWithLogger(true, settingsFile, nil, nil)
-	assert.NotNil(t, err)
 }
 
 type WUserStorage interface {
@@ -56,8 +43,12 @@ func TestLaunch(t *testing.T) {
 	settingsFileManager.Process()
 	settingsFile := settingsFileManager.GetSettingsFile()
 
-	vwoInstance := &VWOInstance{}
+	vwoInstance := VWOInstance{}
 	storage := &WUserStorageData{}
-	err := vwoInstance.Launch(true, settingsFile, storage)
+	err := vwoInstance.Launch(true, settingsFile, storage, nil)
 	assert.NotNil(t, err)
+
+	vwoInstance = VWOInstance{}
+	err = vwoInstance.Launch(true, settingsFile, nil, nil)
+	assert.Nil(t, err)
 }

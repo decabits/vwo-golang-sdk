@@ -2,6 +2,7 @@ package vwo
 
 import (
 	"fmt"
+
 	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/core"
 	"github.com/decabits/vwo-golang-sdk/event"
@@ -22,23 +23,10 @@ This API method: Gets the variation assigned for the user for the campaign and s
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 6. Sends an impression call to VWO server to track user
 */
-func (vwo *VWOInstance) Activate(campaignKey, userID string) string {
+func (vwo *VWOInstance) Activate(campaignKey, userID string, option interface{}) string {
 	/*
 		Args:
-			campaignKey: Key of the running campaign 
-			userID: Unique identification of user
-		Returns:
-			string: Variation Name for user to corresponding camapign
-	*/
-	options := schema.Options{}
-	return vwo.ActivateWithOptions(campaignKey, userID, options)
-}
-
-// ActivateWithOptions ...
-func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options schema.Options) string {
-	/*
-		Args:
-			campaignKey: Key of the running campaign 
+			campaignKey: Key of the running campaign
 			userID: Unique identification of user
 			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
 			customVariables = {}
@@ -47,6 +35,8 @@ func (vwo *VWOInstance) ActivateWithOptions(campaignKey, userID string, options 
 		Returns:
 			string: Variation Name for user to corresponding camapign
 	*/
+
+	options := utils.ParseOptions(option)
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      vwo.SettingsFile,

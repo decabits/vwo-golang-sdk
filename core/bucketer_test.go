@@ -109,36 +109,43 @@ func getInstanceWithoutStorage(path string) schema.VwoInstance {
 }
 
 func TestBucketUserToVariation(t *testing.T) {
+	assertOutput := assert.New(t)
 	vwoInstance := getInstanceWithoutStorage("./testData/testBucket.json")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 	userID := "Linda"
-	actual, _ := BucketUserToVariation(vwoInstance, userID, campaign)
 	expected := campaign.Variations[2]
-	assert.Equal(t, expected, actual, "Variations did not match")
+	actual, err := BucketUserToVariation(vwoInstance, userID, campaign)
+	assertOutput.Nil(err, "Variations did not match")
+	assertOutput.Equal(expected, actual, "Variations did not match")
 
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	userID = "Linda"
-	actual, _ = BucketUserToVariation(vwoInstance, userID, campaign)
-	assert.Empty(t, actual, "Variation expected to be empty")
+	actual, err = BucketUserToVariation(vwoInstance, userID, campaign)
+	assertOutput.NotNil(err, "Variation expected to be empty")
+	assertOutput.Empty(actual, "Variation expected to be empty")
 }
 
 func TestGetBucketerVariation(t *testing.T) {
+	assertOutput := assert.New(t)
 	vwoInstance := getInstanceWithoutStorage("./testData/testBucket.json")
 
 	variations := vwoInstance.SettingsFile.Campaigns[1].Variations
 	bucketValue := 2345
-	actual, _ := GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
+	actual, err := GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
 	expected := variations[0]
-	assert.Equal(t, expected, actual, "Expected Variation do not match with Actual")
+	assertOutput.Nil(err, "Expected Variation do not match with Actual")
+	assertOutput.Equal(expected, actual, "Expected Variation do not match with Actual")
 
 	bucketValue = 0
-	actual, _ = GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
-	assert.Empty(t, actual, "Variation should be empty")
+	actual, err = GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
+	assertOutput.NotNil(err, "Variation should be empty")
+	assertOutput.Empty(actual, "Variation should be empty")
 
 	bucketValue = 12345
-	actual, _ = GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
-	assert.Empty(t, actual, "Variation should be empty")
+	actual, err = GetBucketerVariation(vwoInstance, variations, bucketValue, "", "")
+	assertOutput.NotNil(err, "Variation should be empty")
+	assertOutput.Empty(actual, "Variation should be empty")
 }
 
 func TestIsUserPartOfCampaign(t *testing.T) {

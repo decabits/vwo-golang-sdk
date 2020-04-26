@@ -25,21 +25,7 @@ This API method: Marks the conversion of the campaign for a particular goal
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 8. If feature enabled, sends a call to VWO server for tracking visitor
 */
-func (vwo *VWOInstance) Track(campaignKey, userID string, goalIdentifier string) bool {
-	/*
-		Args:
-			campaignKey: Key of the running campaign 
-			userID: Unique identification of user
-			goalIdentifier: Unique identification of corresponding goal
-		Returns:
-			bool: True if the track is successfull else false
-	*/
-	options := schema.Options{}
-	return vwo.TrackWithOptions(campaignKey, userID, goalIdentifier, options)
-}
-
-// TrackWithOptions function
-func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID, goalIdentifier string, options schema.Options) bool {
+func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option interface{}) bool {
 	/*
 		Args:
 			campaignKey: Key of the running campaign 
@@ -58,6 +44,8 @@ func (vwo *VWOInstance) TrackWithOptions(campaignKey, userID, goalIdentifier str
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
 	}
+
+	options := utils.ParseOptions(option)
 
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {

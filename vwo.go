@@ -21,35 +21,23 @@ type VWOInstance schema.VwoInstance
 // VWO interface
 type VWO interface {
 	Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}) error
-	LaunchWithLogger(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logger *logger.Logger) error
-	Activate(campaignKey, userID string) string
-	ActivateWithOptions(campaignKey, userID string, options schema.Options) string
-	GetFeatureVariableValue(campaignKey, variableKey, userID string) interface{}
-	GetFeatureVariableValueWithOptions(campaignKey, variableKey, userID string, options schema.Options) interface{}
-	GetVariationName(campaignKey, userID string) string
-	GetVariationNameWithOptions(campaignKey, userID string, options schema.Options) string
-	IsFeatureEnabled(campaignKey, userID string) bool
-	IsFeatureEnabledWithOptions(campaignKey, userID string, options schema.Options) bool
+	Activate(campaignKey, userID string, options interface{}) string
+	GetFeatureVariableValue(campaignKey, variableKey, userID string, options interface{}) interface{}
+	GetVariationName(campaignKey, userID string, options interface{}) string
+	IsFeatureEnabled(campaignKey, userID string, options interface{}) bool
 	Push(tagKey, tagValue, userID string) bool
-	Track(campaignKey, userID string, goalIdentifier string) bool
-	TrackWithOptions(campaignKey, userID string, goalIdentifier string, options schema.Options) bool
+	Track(campaignKey, userID string, goalIdentifier string, options interface{}) bool
 }
 
 // Launch function to launch sdk
-func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}) error {
-	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
-	logger.SetFlags(log.LstdFlags)
-	defer logger.Close()
-
-	if utils.ValidateStorage(storage) {
-		return vwo.LaunchWithLogger(isDevelopmentMode, settingsFile, storage, logs)
+func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logs interface{}) error {
+	if logs == nil {
+		logs = logger.Init(constants.SDKName, true, false, ioutil.Discard)
+		logger.SetFlags(log.LstdFlags)
+		defer logger.Close()
 	}
-	return errors.New("Invalid storage object given. Refer documentation on how to pass custom storage.")
-}
 
-// LaunchWithLogger function to launch sdk with custom logger
-func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logs interface{}) error {
-	if utils.ValidateLogger(logs) {
+	if utils.ValidateStorage(storage) && utils.ValidateLogger(logs) {
 		vwo.SettingsFile = settingsFile
 		vwo.UserStorage = storage
 		vwo.Logger = logs
@@ -58,7 +46,7 @@ func (vwo *VWOInstance) LaunchWithLogger(isDevelopmentMode bool, settingsFile sc
 		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, message)
 		return nil
 	}
-	return errors.New("Invalid storage object given. Refer documentation on how to pass custom storage.")
+	return errors.New("Invalid storage object/Logger given. Refer documentation on how to pass custom storage.")
 }
 
 // GetSettingsFile function to fetch settingsfile

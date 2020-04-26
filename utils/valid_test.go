@@ -50,7 +50,7 @@ type CUserStorageData struct{}
 func (us *CUserStorageData) Get(userID, campaignKey string) schema.UserData {
 	return schema.UserData{}
 }
-func (us *CUserStorageData) Set(userID, campaignKey, variationName string)  {}
+func (us *CUserStorageData) Set(userID, campaignKey, variationName string) {}
 
 type WUserStorage interface {
 	Getter(userID, campaignKey string) schema.UserData
@@ -61,7 +61,7 @@ type WUserStorageData struct{}
 func (us *WUserStorageData) Getter(userID, campaignKey string) schema.UserData {
 	return schema.UserData{}
 }
-func (us *WUserStorageData) Setter(userID, campaignKey, variationName string)  {}
+func (us *WUserStorageData) Setter(userID, campaignKey, variationName string) {}
 
 func TestValidateStorage(t *testing.T) {
 	actual := ValidateStorage(nil)
@@ -74,6 +74,24 @@ func TestValidateStorage(t *testing.T) {
 	wrongStorage := &WUserStorageData{}
 	actual = ValidateStorage(wrongStorage)
 	assert.False(t, actual)
+}
+
+func TestParseOptions(t *testing.T) {
+	expected := schema.Options{}
+	actual := ParseOptions(nil)
+	assert.Equal(t, expected, actual)
+
+	data := make(map[string]interface{})
+	data["customVariables"] = map[string]interface{}{"a": "x"}
+	data["variationTargetingVariables"] = map[string]interface{}{"a": "x"}
+	data["revenueGoal"] = 12
+	expected = schema.Options{
+		CustomVariables:             map[string]interface{}{"a": "x"},
+		VariationTargetingVariables: map[string]interface{}{"a": "x"},
+		RevenueGoal:                 12,
+	}
+	actual = ParseOptions(data)
+	assert.Equal(t, expected, actual)
 }
 
 func TestValidateActivate(t *testing.T) {
