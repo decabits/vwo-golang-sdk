@@ -109,7 +109,7 @@ func getInstanceWithoutStorage(path string) schema.VwoInstance {
 }
 
 func TestBucketUserToVariation(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testdata/testbucket.json")
+	vwoInstance := getInstanceWithoutStorage("./testData/testbucket.json")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 	userID := "Linda"
@@ -124,7 +124,7 @@ func TestBucketUserToVariation(t *testing.T) {
 }
 
 func TestGetBucketerVariation(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testdata/testbucket.json")
+	vwoInstance := getInstanceWithoutStorage("./testData/testbucket.json")
 
 	variations := vwoInstance.SettingsFile.Campaigns[1].Variations
 	bucketValue := 2345
@@ -142,7 +142,7 @@ func TestGetBucketerVariation(t *testing.T) {
 }
 
 func TestIsUserPartOfCampaign(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testdata/testbucket.json")
+	vwoInstance := getInstanceWithoutStorage("./testData/testbucket.json")
 
 	userID := "James"
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
@@ -156,7 +156,7 @@ func TestIsUserPartOfCampaign(t *testing.T) {
 }
 
 func TestGetBucketValueForUser(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testdata/testbucket.json")
+	vwoInstance := getInstanceWithoutStorage("./testData/testbucket.json")
 
 	userID := "Chris"
 	actual := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)
