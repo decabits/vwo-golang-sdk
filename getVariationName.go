@@ -24,12 +24,11 @@ This API method: Gets the variation assigned for the user for the campaign
 func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option interface{}) string {
 	/*
 		Args:
-			campaignKey: Key of the running campaign 
+			campaignKey: Key of the running campaign
 			userID: Unique identification of user
-			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
-			customVariables = {}
-			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
-			variationTargetingVariables = {}
+			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
+			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
 		Returns:
 			string: Variation Name for user to corresponding camapign
 	*/
@@ -40,7 +39,7 @@ func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option inte
 	}
 
 	options := utils.ParseOptions(option)
-	
+
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
 		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())

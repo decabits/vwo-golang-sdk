@@ -28,10 +28,9 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string, option inte
 		Args:
 			campaignKey: Key of the running campaign
 			userID: Unique identification of user
-			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
-			customVariables = {}
-			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
-			variationTargetingVariables = {}
+			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
+			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
 		Returns:
 			bool: True if the user the feature is enambled for the user, else false
 	*/

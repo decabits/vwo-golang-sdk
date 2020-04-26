@@ -31,6 +31,13 @@ type VWO interface {
 
 // Launch function to launch sdk
 func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logs interface{}) error {
+	/*
+		Args:
+			isDevelopmentMode: turn this true to stop API calls to server
+			settingsFile: settings file fetched from getsettingsfile
+			storage: custom storage functions
+			logs: custom logger if any
+	*/
 	if logs == nil {
 		logs = logger.Init(constants.SDKName, true, false, ioutil.Discard)
 		logger.SetFlags(log.LstdFlags)
@@ -49,7 +56,7 @@ func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.Setti
 	return errors.New("Invalid storage object/Logger given. Refer documentation on how to pass custom storage.")
 }
 
-// GetSettingsFile function to fetch settingsfile
+// GetSettingsFile function to fetch and parse settingsfile
 func GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {
