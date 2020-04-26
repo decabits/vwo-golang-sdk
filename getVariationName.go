@@ -21,28 +21,14 @@ This API method: Gets the variation assigned for the user for the campaign
 5. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 */
-func (vwo *VWOInstance) GetVariationName(campaignKey, userID string) string {
+func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option interface{}) string {
 	/*
 		Args:
-			campaignKey: Key of the running campaign 
+			campaignKey: Key of the running campaign
 			userID: Unique identification of user
-		Returns:
-			string: Variation Name for user to corresponding camapign
-	*/
-	options := schema.Options{}
-	return vwo.GetVariationNameWithOptions(campaignKey, userID, options)
-}
-
-// GetVariationNameWithOptions ...
-func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, options schema.Options) string {
-	/*
-		Args:
-			campaignKey: Key of the running campaign 
-			userID: Unique identification of user
-			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
-			customVariables = {}
-			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
-			variationTargetingVariables = {}
+			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
+			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
 		Returns:
 			string: Variation Name for user to corresponding camapign
 	*/
@@ -51,6 +37,8 @@ func (vwo *VWOInstance) GetVariationNameWithOptions(campaignKey, userID string, 
 		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
 		return ""
 	}
+
+	options := utils.ParseOptions(option)
 
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {

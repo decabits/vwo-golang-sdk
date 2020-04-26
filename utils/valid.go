@@ -5,11 +5,31 @@ import (
 	"github.com/google/logger"
 )
 
+// ParseOptions - parses custom options
+func ParseOptions(option interface{}) (options schema.Options) {
+	if option == nil {
+		return
+	}
+	optionMap, okMap := option.(map[string]interface{})
+	if okMap {
+		customVariables, okCustomVariables := optionMap["customVariables"]
+		if okCustomVariables {
+			options.CustomVariables = customVariables.(map[string]interface{})
+		}
+		variationTargetingVariables, okVariationTargetingVariables := optionMap["variationTargetingVariables"]
+		if okVariationTargetingVariables {
+			options.VariationTargetingVariables = variationTargetingVariables.(map[string]interface{})
+		}
+		revenueGoal, okRevenueGoal := optionMap["revenueGoal"]
+		if okRevenueGoal {
+			options.RevenueGoal = revenueGoal.(int)
+		}
+	}
+	return
+}
+
 // ValidateLogger - validates Custom logger
 func ValidateLogger(logs interface{}) bool {
-	if logs == nil {
-		return false
-	}
 	_, ok := logs.(interface {
 		CustomLog(a, b string)
 	})
@@ -19,6 +39,7 @@ func ValidateLogger(logs interface{}) bool {
 	return ok
 }
 
+// ValidateStorage - validates Custom Storage
 func ValidateStorage(storage interface{}) bool {
 	_, okGet := storage.(interface {
 		Get(a, b string) schema.UserData

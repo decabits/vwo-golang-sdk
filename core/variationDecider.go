@@ -33,10 +33,9 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 		Args:
 			userId (string): the unique ID assigned to User
 			campaign (dischema.Campaignct): campaign in which user is participating
-			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
-			customVariables = {}
-			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
-			variationTargetingVariables = {}
+			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
+			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
 		Returns:
 			variation (schema.Variation): Dict object containing the information regarding variation
 			assigned else empty object
@@ -94,10 +93,9 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 		Args:
 			userId (string): the unique ID assigned to User
 			campaign (dischema.Campaignct): campaign in which user is participating
-			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
-			customVariables = {}
-			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
-			variationTargetingVariables = {}
+			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
+			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
 		Returns:
 			variation (schema.Variation): Dict object containing the information regarding variation
 			assigned else empty object
@@ -163,10 +161,9 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 		Args:
 			userId (string): the unique ID assigned to User
 			campaign (schema.Campaign): campaign in which user is participating
-			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
-			customVariables = {}
-			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
-			variationTargetingVariables = {}
+			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
+			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
 		Returns:
 			variation (schema.Variation): Dict object containing the information regarding variation
 			assigned else empty object

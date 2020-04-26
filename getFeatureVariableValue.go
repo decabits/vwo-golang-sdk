@@ -13,7 +13,7 @@ const getFeatureVariableValue = "getFeatureVariableValue.go"
 
 // GetFeatureVariableValue function
 /*
-This API method: Gets the value of the variable whose key is passed 
+This API method: Gets the value of the variable whose key is passed
 1. Validates the arguments being passed
 2. Finds the corresponding Campaign
 3. Checks the Campaign Status
@@ -23,30 +23,15 @@ This API method: Gets the value of the variable whose key is passed
 6. Gets the value of the variable depeneding upon the type of the campaign
 7. Logs and returns the value
 */
-func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID string) interface{} {
+func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID string, option interface{}) interface{} {
 	/*
 		Args:
-			campaignKey: Key of the running campaign 
+			campaignKey: Key of the running campaign
 			variableKey: Key of variable whose value is to be found
 			userID: Unique identification of user
-		Returns:
-			interrface{}: Value of the variable
-	*/
-	options := schema.Options{}
-	return vwo.GetFeatureVariableValueWithOptions(campaignKey, variableKey, userID, options)
-}
-
-// GetFeatureVariableValueWithOptions function
-func (vwo *VWOInstance) GetFeatureVariableValueWithOptions(campaignKey, variableKey, userID string, options schema.Options) interface{} {
-	/*
-		Args:
-			campaignKey: Key of the running campaign 
-			variableKey: Key of variable whose value is to be found
-			userID: Unique identification of user
-			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
-			customVariables = {}
-			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
-			variationTargetingVariables = {}
+			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
+			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
 		Returns:
 			interrface{}: Value of the variable
 	*/
@@ -55,6 +40,8 @@ func (vwo *VWOInstance) GetFeatureVariableValueWithOptions(campaignKey, variable
 		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
 		return nil
 	}
+
+	options := utils.ParseOptions(option)
 
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {

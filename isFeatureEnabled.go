@@ -23,28 +23,14 @@ This API method: Whether a feature is enabled or not for the given user
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 6. If feature enabled, sends a call to VWO server for tracking visitor
 */
-func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string) bool {
+func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string, option interface{}) bool {
 	/*
 		Args:
-			campaignKey: Key of the running campaign 
+			campaignKey: Key of the running campaign
 			userID: Unique identification of user
-		Returns:
-			bool: True if the user the feature is enambled for the user, else false
-	*/
-	options := schema.Options{}
-	return vwo.IsFeatureEnabledWithOptions(campaignKey, userID, options)
-}
-
-// IsFeatureEnabledWithOptions function
-func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, options schema.Options) bool {
-	/*
-		Args:
-			campaignKey: Key of the running campaign 
-			userID: Unique identification of user
-			customVariables(In schema.Options): variables for pre-segmentation, pass it through **kwargs as
-			customVariables = {}
-			variationTargetingVariables(In schema.Options): variables for variation targeting, pass it through **kwargs as
-			variationTargetingVariables = {}
+			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
+			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
 		Returns:
 			bool: True if the user the feature is enambled for the user, else false
 	*/
@@ -53,6 +39,8 @@ func (vwo *VWOInstance) IsFeatureEnabledWithOptions(campaignKey, userID string, 
 		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
 		return false
 	}
+
+	options := utils.ParseOptions(option)
 
 	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
 	if err != nil {
