@@ -8,7 +8,7 @@ import (
 
 func TestPush(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	err := vwoInstance.getInstance("./testData/testdata.json")
+	err := vwoInstance.getInstance("./testdata/testdata.json")
 	assert.Nil(t, err, "error fetching instance")
 	userID := "Ash"
 

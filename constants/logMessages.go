@@ -30,7 +30,7 @@ const (
 	ErrorMessagesInvalidAccountID                       = "AccountId is required for fetching account settings. Aborting"
 	ErrorMessagesInvalidSDKKey                          = "SDKKey is required for fetching account settings. Aborting"
 	ErrorMessagesSettingsFileCorrupted                  = "Settings file is corrupted. Please contact VWO Support for help : %v"
-	ErrorMessagesCannotReadSettingsFile                 = "Settings file could not be readed and processed. Please contact VWO Support for help : %v"
+	ErrorMessagesCannotReadSettingsFile                 = "Settings file could not be read and processed. Please contact VWO Support for help : %v"
 	ErrorMessagesInvalidSettingsFile                    = "Settings-file fetched is not proper : %v"
 	ErrorMessagesCampaignNotRunning                     = "API used: %v - Campaign: %v is not RUNNING. Please verify from VWO App"
 	ErrorMessagesInvalidAPI                             = "%v API is not valid for Campaign: %v of type: %v for User ID: %v"
