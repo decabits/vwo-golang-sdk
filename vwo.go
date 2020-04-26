@@ -41,14 +41,14 @@ func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.Setti
 			error: nil if SDK is launched, else error encountered
 	*/
 	if logs == nil {
-		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessageNoCustomLoggerFound)
 		logs = logger.Init(constants.SDKName, true, false, ioutil.Discard)
 		logger.SetFlags(log.LstdFlags)
+		utils.LogMessage(logs, constants.Debug, fileVWO, constants.DebugMessageNoCustomLoggerFound)
 		defer logger.Close()
 	}
 
 	if logs != nil {
-		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessageCustomLoggerFound)
+		utils.LogMessage(logs, constants.Debug, fileVWO, constants.DebugMessageCustomLoggerFound)
 	}
 
 	if utils.ValidateStorage(storage) && utils.ValidateLogger(logs) {
