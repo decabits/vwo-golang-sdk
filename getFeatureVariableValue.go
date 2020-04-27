@@ -29,9 +29,10 @@ func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID
 			campaignKey: Key of the running campaign
 			variableKey: Key of variable whose value is to be found
 			userID: Unique identification of user
-			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
-			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			customVariables(In option): variables for pre-segmentation
+			variationTargetingVariables(In option): variables for variation targeting
 			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			
 		Returns:
 			interrface{}: Value of the variable
 	*/

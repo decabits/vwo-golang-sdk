@@ -31,16 +31,17 @@ type VariationDecider struct {
 func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
 	/*
 		Args:
-			userId (string): the unique ID assigned to User
-			campaign (dischema.Campaignct): campaign in which user is participating
-			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
-			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			userId: the unique ID assigned to User
+			campaign: campaign in which user is participating
+			customVariables(In option): variables for pre-segmentation
+			variationTargetingVariables(In option): variables for variation targeting
 			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+
 		Returns:
-			variation (schema.Variation): Dict object containing the information regarding variation
-			assigned else empty object
-			error(error): Error message
+			schema.Variation: Struct object containing the information regarding variation assigned else empty object
+			error: Error message
 	*/
+
 	_, ok := options.VariationTargetingVariables["_vwo_user_id"]
 	if !ok {
 		options.VariationTargetingVariables = map[string]interface{}{"_vwo_user_id": userID}
@@ -87,19 +88,20 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationAlloted, userID, campaign.Key, campaign.Type)
 }
 
-// FindTargetedVariation function Identifies and retrives if there exists any targeted variation in the given campaign for given userID
+// FindTargetedVariation function Identifies and retrives if there exists any targeted 
+// variation in the given campaign for given userID
 func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
 	/*
 		Args:
-			userId (string): the unique ID assigned to User
-			campaign (dischema.Campaignct): campaign in which user is participating
-			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
-			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			userId: the unique ID assigned to User
+			campaign: campaign in which user is participating
+			customVariables(In option): variables for pre-segmentation
+			variationTargetingVariables(In option): variables for variation targeting
 			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+
 		Returns:
-			variation (schema.Variation): Dict object containing the information regarding variation
-			assigned else empty object
-			error(error): Error message
+			schema.Variation: Struct object containing the information regarding variation assigned else empty object
+			error: Error message
 	*/
 
 	if campaign.IsForcedVariation == false {
@@ -129,8 +131,8 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) (string, error) {
 	/*
 		Args:
-			userId (string): the unique ID assigned to User
-			campaign (dischema.Campaignct): campaign in which user is participating
+			userId: the unique ID assigned to User
+			campaign: campaign in which user is participating
 
 		Returns:
 			variationName: Name of the found varaition in the user storage
@@ -159,14 +161,14 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) []schema.Variation {
 	/*
 		Args:
-			userId (string): the unique ID assigned to User
-			campaign (schema.Campaign): campaign in which user is participating
-			customVariables(In option): variables for pre-segmentation, pass it through **kwargs as
-			variationTargetingVariables(In option): variables for variation targeting, pass it through **kwargs as
+			userId: the unique ID assigned to User
+			campaign: campaign in which user is participating
+			customVariables(In option): variables for pre-segmentation
+			variationTargetingVariables(In option): variables for variation targeting
 			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+
 		Returns:
-			variation (schema.Variation): Dict object containing the information regarding variation
-			assigned else empty object
+			schema.Variation: Struct object containing the information regarding variation assigned else empty object
 	*/
 
 	var whiteListedVariationsList []schema.Variation

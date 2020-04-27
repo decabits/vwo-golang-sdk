@@ -10,13 +10,14 @@ import (
 
 const campaign = "campaign.go"
 
-// GetVariationAllocationRanges returns a list of variation with set allocation ranges.
+// GetVariationAllocationRanges returns list of variation with set allocation ranges.
 func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
-			variations: list of variations(schema.Variation)
+			variations: List of variations(schema.Variation)
+
 		Returns:
-			variations: list of variations(schema.Variation)
+			variations: List of variations(schema.Variation)
 	*/
 
 	var (
@@ -41,11 +42,12 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 	return variationAllocationRanges
 }
 
-// GetVariationBucketingRange Returns the bucket size of variation.
+// GetVariationBucketingRange returns the bucket size of variation.
 func GetVariationBucketingRange(weight float64) int {
 	/*
 		Args:
-			weight: weight of variation
+			weight: Weight of variation
+
 		Returns:
 			int: Bucket start range of Variation
 	*/
@@ -63,6 +65,7 @@ func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.C
 		Args:
 			settingsFile  : Settings file for the project
 			campaignKey: Campaign identifier key
+
 		Returns:
 			schema.Campaign: Campaign object
 	*/
@@ -74,14 +77,15 @@ func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.C
 	return schema.Campaign{}, fmt.Errorf(constants.ErrorMessageCampaignNotFound, campaignKey)
 }
 
-// ScaleVariations function It extracts the weights from all the variations inside the campaign and scales them so that the total sum of eligible variations' weights become 100%
+// ScaleVariations function It extracts the weights from all the variations inside the 
+// campaign and scales them so that the total sum of eligible variations weights become 100%
 func ScaleVariations(variations []schema.Variation) []schema.Variation {
 	/*
 		Args:
-			variations: list of variations(schema.Variartion) having weight as a property
+			variations: List of variations(schema.Variartion) having weight as a property
 
 		Return:
-			variations: list of variations(schema.Variartion)
+			variations: List of variations(schema.Variartion)
 	*/
 	weightSum := 0.0
 	for _, variation := range variations {
@@ -100,12 +104,13 @@ func ScaleVariations(variations []schema.Variation) []schema.Variation {
 	return variations
 }
 
-// GetCampaignGoal returns goal from given campaign and Goal_identifier.
+// GetCampaignGoal returns goal from given campaign and goal identifier.
 func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) (schema.Goal, error) {
 	/*
 		 Args:
 			campaign: The running campaign
 			goalIdentifier: Goal identifier
+
 		Returns:
 			schema.Goal: Goal corresponding to goal_identifer in respective campaign
 	*/
@@ -118,14 +123,15 @@ func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) (schema.Go
 	return schema.Goal{}, fmt.Errorf(constants.ErrorMessageGoalNotFound, goalIdentifier)
 }
 
-// GetCampaignVariation returns variation from given campaign and variation_name.
+// GetCampaignVariation returns variation from given campaign and variationName.
 func GetCampaignVariation(campaign schema.Campaign, variationName string) (schema.Variation, error) {
 	/*
 		 Args:
-			campaign (dict): The running campaign
-			variationName (string): Variation identifier
+			campaign: The running campaign
+			variationName: Variation identifier
+
 		Returns:
-			schema.Variation: Variation corresponding to variation_name in respective campaign
+			schema.Variation: Variation corresponding to variationName in respective campaign
 	*/
 	if len(campaign.Variations) == 0 {
 		return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationInCampaign, campaign.Key)
@@ -138,11 +144,12 @@ func GetCampaignVariation(campaign schema.Campaign, variationName string) (schem
 	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageVariationNotFound, variationName, campaign.Key)
 }
 
-// GetControlVariation Returns control variation from a given campaign
+// GetControlVariation returns control variation from a given campaign
 func GetControlVariation(campaign schema.Campaign) schema.Variation {
 	/*
 		Args:
 			campaign: Running campaign
+			
 		Returns:
 			schema.Variation: Control variation from the campaign, ie having id = 1
 	*/

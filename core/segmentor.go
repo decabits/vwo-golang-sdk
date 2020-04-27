@@ -107,6 +107,16 @@ func evaluateCustomVariables(custom map[string]interface{}, options schema.Optio
 
 // extractResult function compares the operand value and tag value on the basis of operand type
 func extractResult(operandType int, operandValue, tagValue string) bool {
+	/*
+		Args: 
+			operandType: Stores the type of the operand and is used to decide the checks between the operandValue and tagValue
+			operandValue: Value of the Operand from customVariables
+			tagValue: Value from CustomVariables in the options
+
+		Returns: 
+			bool: Bool value acter comparison of operandValue and tagValue
+	*/
+
 	result := false
 	switch operandType {
 	case constants.LowerValue:
@@ -155,6 +165,14 @@ func operandUserParser(operand string, options schema.Options) bool {
 
 // processCustomVariablesValue function converts interface value of customVariables to string
 func processCustomVariablesValue(value interface{}) string {
+	/*
+		Args:
+			value: interface value that is to be typecasted
+
+		Returns:
+			string: final typecasted value
+	*/
+
 	switch value.(type) {
 	// handle cases
 	case bool:
@@ -167,8 +185,17 @@ func processCustomVariablesValue(value interface{}) string {
 	return value.(string)
 }
 
-// preProcessOperandValue
+// preProcessOperandValue function processes and simplifies the interface type operand as operandType and operandValue
 func preProcessOperandValue(operand interface{}) (operandType int, operandValue string) {
+	/*
+		Args: 
+			operand: interface type operand that is to be simplified and preprocessed 
+
+		Returns:
+			operandType: final type of the processed operand
+			operandValue: final value of the processed operand
+	*/
+
 	if matchWithRegex(operand.(string), constants.LowerMatch) {
 		operandType = constants.LowerValue
 		operandValue = extractOperandValue(operand.(string), constants.LowerMatch)
@@ -198,7 +225,17 @@ func preProcessOperandValue(operand interface{}) (operandType int, operandValue 
 	return
 }
 
+// processValues function simplifies operand and tag values
 func processValues(operandValue string, tagValue interface{}) (newProcessedOperandValue string, newProcessedTagValue string) {
+	/*
+		Args: 
+			operandValue: Value of the Operand from customVariables
+			tagValue: Value from CustomVariables in the options
+			
+		Returns: 	
+			newProcessedOperandValue: Processed operand value
+			newProcessedTagValue: Processed tag value
+	*/
 	processedOperandValue, err := strconv.ParseFloat(operandValue, 64)
 	if err != nil {
 		return operandValue, tagValue.(string)

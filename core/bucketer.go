@@ -47,8 +47,7 @@ func GetBucketValueForUser(vwoInstance schema.VwoInstance, userID string, maxVal
 			multiplier: value for distributing ranges slightly
 
 		Returns:
-			int: the bucket value allotted to User
-			(between 1 to MAX_TRAFFIC_PERCENT)
+			int: the bucket value allotted to User (between 1 to MAX_TRAFFIC_PERCENT)
 	*/
 
 	hashValue := hash(userID) & umax32Bit
