@@ -1,8 +1,9 @@
 # VWO-Golang-SDK
 
-![Build Status](https://img.shields.io/travis/decabits/vwo-golang-sdk)
+[![Build Status](https://img.shields.io/travis/decabits/vwo-golang-sdk)](http://travis-ci.org/decabits/vwo-golang-sdk)
 ![Size in Bytes](https://img.shields.io/github/languages/code-size/decabits/vwo-golang-sdk)
-![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Coverage Status](https://coveralls.io/repos/github/decabits/vwo-golang-sdk/badge.svg)](https://coveralls.io/github/decabits/vwo-golang-sdk)
 
 This open source library allows you to A/B Test your Website at server-side.
 
