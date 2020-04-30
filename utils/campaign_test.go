@@ -75,7 +75,7 @@ func TestGetVariationBucketingRange(t *testing.T) {
 func TestGetCampaign(t *testing.T) {
 	vwoInstance := getInstance()
 
-	campaignKey := "phpab1"
+	campaignKey := "CAMPAIGN_8"
 	campaign, err := GetCampaign(vwoInstance.SettingsFile, campaignKey)
 	assert.Nil(t, err)
 	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[0], campaign, "Expected and Actual Campaign IDs should be same")
@@ -111,7 +111,7 @@ func TestGetCampaignGoal(t *testing.T) {
 	vwoInstance := getInstance()
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
-	goalName := "rev"
+	goalName := "GOAL_1"
 	goal, err:= GetCampaignGoal(campaign, goalName)
 	assert.Nil(t, err)
 	assert.Equal(t, campaign.Goals[0], goal, "Expected and Actual Goal IDs should be same")

@@ -85,7 +85,7 @@ func TestCreateImpressionTrackingGoal(t *testing.T) {
 }
 
 func TestGetCommonProperties(t *testing.T) {
-	userID := "Gimmy"
+	userID := "USER_8"
 	vwoInstance := getInstance()
 	impression := getCommonProperties(vwoInstance, userID)
 

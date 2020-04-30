@@ -60,7 +60,7 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 	}
 }
 
-// DispatchTrackingGoal function dispatches the event with goal tracking represented by 
+// DispatchTrackingGoal function dispatches the event with goal tracking represented by
 // the impression object to our servers
 func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impression) {
 	/*

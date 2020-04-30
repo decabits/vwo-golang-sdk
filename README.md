@@ -28,7 +28,7 @@ import vwo "github.com/decabits/vwo-golang-sdk"
 settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
 
 // Declaration of VwoInstance
-vwoInstance = vwo.VWOInstance{}
+vwoInstance := vwo.VWOInstance{}
 
 // Create VwoInstance and handle error if any
 err := vwoInstance.Launch("isDevelopmentMode", settingsFile, nil, nil)

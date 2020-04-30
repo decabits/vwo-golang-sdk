@@ -17,11 +17,14 @@
 package vwo
 
 import (
+	"io/ioutil"
 	"log"
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/constants"
 	"github.com/decabits/vwo-golang-sdk/schema"
 	"github.com/decabits/vwo-golang-sdk/service"
+	"github.com/google/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -62,6 +65,15 @@ func TestLaunch(t *testing.T) {
 	vwoInstance := VWOInstance{}
 	storage := &WUserStorageData{}
 	err := vwoInstance.Launch(true, settingsFile, storage, nil)
+	assert.NotNil(t, err)
+
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
+
+	vwoInstance = VWOInstance{}
+	storage = &WUserStorageData{}
+	err = vwoInstance.Launch(true, settingsFile, storage, logs)
 	assert.NotNil(t, err)
 
 	vwoInstance = VWOInstance{}

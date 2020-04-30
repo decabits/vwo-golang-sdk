@@ -42,7 +42,7 @@ func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) erro
 			accountID: Config account ID
 			SDKKey: Config SDK Key
 
-		Returns: 
+		Returns:
 			error: nil if the settings file id fetched else the error
 	*/
 
@@ -82,7 +82,7 @@ func (sfm *SettingsFileManager) ProcessSettingsFile(settingsFileLocation string)
 		Args:
 			settingsFileLocation: Location of the settings file on system
 
-		Returns: 
+		Returns:
 			error: nil if the settings file id fetched else the error
 	*/
 
@@ -98,7 +98,7 @@ func (sfm *SettingsFileManager) ProcessSettingsFile(settingsFileLocation string)
 	return nil
 }
 
-//Process function processes campaigns in the settings file and sets the variation allocation ranges to all variations 
+//Process function processes campaigns in the settings file and sets the variation allocation ranges to all variations
 func (sfm *SettingsFileManager) Process() {
 	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
 	logger.SetFlags(log.LstdFlags)
@@ -125,7 +125,7 @@ func (sfm *SettingsFileManager) Process() {
 	}
 }
 
-// GetSettingsFile returns the settings file 
+// GetSettingsFile returns the settings file
 func (sfm *SettingsFileManager) GetSettingsFile() schema.SettingsFile {
 	return sfm.SettingsFile
 }

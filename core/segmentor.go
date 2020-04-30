@@ -33,8 +33,8 @@ func SegmentEvaluator(segments map[string]interface{}, options schema.Options) b
 		Args:
 			segments: segments from campaign or variation
 			options: options object containing CustomVariables, VariationTargertting variables and Revenue Goal
-		
-		Returns: 
+
+		Returns:
 			bool: if the options falls in the segments criteria
 	*/
 
@@ -68,8 +68,8 @@ func evaluate(operator string, res []bool) bool {
 		Args:
 			operator: AND or OR operator
 			res: array of bool values
-		
-		Returns: 
+
+		Returns:
 			bool: final computed value of OR or AND
 	*/
 
@@ -97,8 +97,8 @@ func evaluateCustomVariables(custom map[string]interface{}, options schema.Optio
 		Args:
 			segments: segments from campaign or variation
 			options: options object containing CustomVariables, VariationTargertting variables and Revenue Goal
-		
-		Returns: 
+
+		Returns:
 			bool: if the options falls in the segments criteria
 	*/
 
@@ -124,12 +124,12 @@ func evaluateCustomVariables(custom map[string]interface{}, options schema.Optio
 // extractResult function compares the operand value and tag value on the basis of operand type
 func extractResult(operandType int, operandValue, tagValue string) bool {
 	/*
-		Args: 
+		Args:
 			operandType: Stores the type of the operand and is used to decide the checks between the operandValue and tagValue
 			operandValue: Value of the Operand from customVariables
 			tagValue: Value from CustomVariables in the options
 
-		Returns: 
+		Returns:
 			bool: Bool value acter comparison of operandValue and tagValue
 	*/
 
@@ -204,8 +204,8 @@ func processCustomVariablesValue(value interface{}) string {
 // preProcessOperandValue function processes and simplifies the interface type operand as operandType and operandValue
 func preProcessOperandValue(operand interface{}) (operandType int, operandValue string) {
 	/*
-		Args: 
-			operand: interface type operand that is to be simplified and preprocessed 
+		Args:
+			operand: interface type operand that is to be simplified and preprocessed
 
 		Returns:
 			operandType: final type of the processed operand
@@ -244,11 +244,11 @@ func preProcessOperandValue(operand interface{}) (operandType int, operandValue 
 // processValues function simplifies operand and tag values
 func processValues(operandValue string, tagValue interface{}) (newProcessedOperandValue string, newProcessedTagValue string) {
 	/*
-		Args: 
+		Args:
 			operandValue: Value of the Operand from customVariables
 			tagValue: Value from CustomVariables in the options
-			
-		Returns: 	
+
+		Returns:
 			newProcessedOperandValue: Processed operand value
 			newProcessedTagValue: Processed tag value
 	*/

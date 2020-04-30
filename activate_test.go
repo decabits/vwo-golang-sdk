@@ -34,28 +34,28 @@ func TestActivate(t *testing.T) {
 	value := vwoInstance.Activate(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Invalid params")
 
-	userID = "Varun"
+	userID = "USER_1"
 	campaignKey = "notPresent"
 	value = vwoInstance.Activate(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Campaign does not exist")
 
-	userID = "Varun"
-	campaignKey = "phpab1"
+	userID = "USER_1"
+	campaignKey = "CAMPAIGN_8"
 	value = vwoInstance.Activate(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Campaign Not running")
 
-	userID = "Liza"
-	campaignKey = "php1"
+	userID = "USER_3"
+	campaignKey = "CAMPAIGN_1"
 	value = vwoInstance.Activate(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Campaign Not Valid")
 
-	userID = "Liza"
-	campaignKey = "phpab2"
+	userID = "USER_3"
+	campaignKey = "CAMPAIGN_9"
 	value = vwoInstance.Activate(campaignKey, userID, nil)
 	assertOutput.Empty(value, "No Variation in Campaign")
 
-	userID = "Liza"
-	campaignKey = "phpab3"
+	userID = "USER_3"
+	campaignKey = "CAMPAIGN_10"
 	actual := vwoInstance.Activate(campaignKey, userID, nil)
 	assertOutput.NotEmpty(actual, "Variation should be found")
 }

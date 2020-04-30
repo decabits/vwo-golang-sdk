@@ -104,7 +104,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationAlloted, userID, campaign.Key, campaign.Type)
 }
 
-// FindTargetedVariation function Identifies and retrives if there exists any targeted 
+// FindTargetedVariation function Identifies and retrives if there exists any targeted
 // variation in the given campaign for given userID
 func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
 	/*

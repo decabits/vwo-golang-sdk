@@ -35,59 +35,59 @@ func TestGetFeatureVariableValue(t *testing.T) {
 	value := vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	assertOutput.Nil(value, "Invalid params")
 
-	userID = "Varun"
+	userID = "USER_1"
 	campaignKey = "notPresent"
 	variableKey = "float2"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	assertOutput.Nil(value, "Campaign does not exist")
 
-	userID = "Varun"
-	campaignKey = "php1"
+	userID = "USER_1"
+	campaignKey = "CAMPAIGN_1"
 	variableKey = "float2"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	assertOutput.Nil(value, "Campaign Not running")
 
-	userID = "Liza"
-	campaignKey = "phpab1"
+	userID = "USER_3"
+	campaignKey = "CAMPAIGN_8"
 	variableKey = "float2"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	assertOutput.Nil(value, "Campaign Not Valid")
 
-	userID = "Liza"
-	campaignKey = "php2"
+	userID = "USER_3"
+	campaignKey = "CAMPAIGN_2"
 	variableKey = "float2"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	assertOutput.Nil(value, "Variation Not alloted as none exist")
 
-	userID = "Gimmy"
-	campaignKey = "php3"
+	userID = "USER_1"
+	campaignKey = "CAMPAIGN_3"
 	variableKey = "string1"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	assertOutput.Nil(value, "No variable with name found")
 
-	userID = "Kate"
-	campaignKey = "php3"
+	userID = "USER_2"
+	campaignKey = "CAMPAIGN_3"
 	variableKey = "float2"
 	actual := vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	expected := 10.67
 	assertOutput.Equal(expected, actual, "Value mismatch for variable")
 
-	userID = "Kate"
-	campaignKey = "php4"
+	userID = "USER_2"
+	campaignKey = "CAMPAIGN_4"
 	variableKey = "bool1"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	expected1 := true
 	assertOutput.Equal(expected1, value, "Value mismatch for variable")
 
-	userID = "Kate"
-	campaignKey = "php4"
+	userID = "USER_2"
+	campaignKey = "CAMPAIGN_4"
 	variableKey = "int1"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	expected2 := 301
 	assertOutput.Equal(float64(expected2), value, "Value mismatch for variable")
 
-	userID = "Kate"
-	campaignKey = "php4"
+	userID = "USER_2"
+	campaignKey = "CAMPAIGN_4"
 	variableKey = "string2"
 	value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
 	expected4 := "abcd"

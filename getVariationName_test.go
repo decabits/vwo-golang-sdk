@@ -17,16 +17,72 @@
 package vwo
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/constants"
+	"github.com/decabits/vwo-golang-sdk/schema"
+	"github.com/decabits/vwo-golang-sdk/utils"
+	"github.com/google/logger"
 	"github.com/stretchr/testify/assert"
 )
+
+type TestCase struct {
+	User      string `json:"user"`
+	Variation string `json:"variation"`
+}
 
 func TestGetVariationName(t *testing.T) {
 	assertOutput := assert.New(t)
 
+	var userExpectation map[string][]TestCase
+	data, err := ioutil.ReadFile("./testData/userExpectations1.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	if err = json.Unmarshal(data, &userExpectation); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	var settingsFiles map[string]schema.SettingsFile
+	data, err = ioutil.ReadFile("./testData/settings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	if err = json.Unmarshal(data, &settingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
+
+	for settingsFileName, settingsFile := range settingsFiles {
+		vwoInstance := schema.VwoInstance{
+			Logger: logs,
+		}
+		settingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, settingsFile.Campaigns[0].Variations)
+
+		instance := VWOInstance{}
+		instance.SettingsFile = GetSettingsFile("", "")
+		instance.SettingsFile = settingsFile
+		instance.Logger = logs
+
+		testCases := userExpectation[settingsFileName]
+		for i := range testCases {
+			actual := instance.GetVariationName(settingsFile.Campaigns[0].Key, testCases[i].User, nil)
+			expected := testCases[i].Variation
+			assert.Equal(t, expected, actual, settingsFileName+" "+testCases[i].User)
+		}
+	}
+
+	// CORNER CASES
 	vwoInstance := VWOInstance{}
-	err := vwoInstance.getInstance("./testdata/testdata.json")
+	err = vwoInstance.getInstance("./testdata/testdata.json")
 	assertOutput.Nil(err, "error fetching instance")
 
 	userID := ""
@@ -34,28 +90,23 @@ func TestGetVariationName(t *testing.T) {
 	value := vwoInstance.GetVariationName(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Invalid params")
 
-	userID = "Varun"
+	userID = "USER_1"
 	campaignKey = "notPresent"
 	value = vwoInstance.GetVariationName(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Campaign does not exist")
 
-	userID = "Varun"
-	campaignKey = "phpab1"
+	userID = "USER_1"
+	campaignKey = "CAMPAIGN_8"
 	value = vwoInstance.GetVariationName(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Campaign Not running")
 
-	userID = "Liza"
-	campaignKey = "php1"
+	userID = "USER_3"
+	campaignKey = "CAMPAIGN_1"
 	value = vwoInstance.GetVariationName(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Campaign Not Valid")
 
-	userID = "Liza"
-	campaignKey = "phpab2"
+	userID = "USER_3"
+	campaignKey = "CAMPAIGN_9"
 	value = vwoInstance.GetVariationName(campaignKey, userID, nil)
 	assertOutput.Empty(value, "Variation Not found")
-
-	userID = "Liza"
-	campaignKey = "phpab3"
-	actual := vwoInstance.GetVariationName(campaignKey, userID, nil)
-	assertOutput.NotEmpty(actual, "Variation Name does not match")
 }

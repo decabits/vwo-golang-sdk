@@ -39,16 +39,22 @@ type UserStorage interface {
 // UserStorageData struct
 type UserStorageData struct{}
 
+// BucketTestCase struct
+type BucketTestCase struct {
+	User        string `json:"user"`
+	BucketValue int    `json:"bucket_value"`
+}
+
 // data is an example of how data is stored
 var data = `{
-    "php1": [{
+    "CAMPAIGN_1": [{
             "UserID": "user1",
-            "CampaignKey": "php1",
+            "CampaignKey": "CAMPAIGN_1",
             "VariationName": "Control"
         },
         {
             "UserID": "user2",
-            "CampaignKey": "php1",
+            "CampaignKey": "CAMPAIGN_1",
             "VariationName": "Variation-1"
         }
     ]
@@ -179,27 +185,31 @@ func TestIsUserPartOfCampaign(t *testing.T) {
 }
 
 func TestGetBucketValueForUser(t *testing.T) {
-	vwoInstance := getInstanceWithoutStorage("./testData/testBucket.json")
+	var settings map[string][]BucketTestCase
+	data, err := ioutil.ReadFile("./testData/bucketValueExpectations.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	userID := "Chris"
-	actual := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 1)
-	expected := 93
-	assert.Equal(t, expected, actual, "Bucket Values do not match")
+	if err = json.Unmarshal(data, &settings); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	userID = "Chris"
-	actual = GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficPercent, 0.5)
-	expected = 46
-	assert.Equal(t, expected, actual, "Bucket Values do not match")
+	TestCases := settings["USER_AND_BUCKET_VALUES"]
 
-	userID = "Liza"
-	actual = GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, 1)
-	expected = 3379
-	assert.Equal(t, expected, actual, "Bucket Values do not match")
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
 
-	userID = "Gimmy"
-	actual = GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, 1)
-	expected = 9572
-	assert.Equal(t, expected, actual, "Bucket Values do not match")
+	vwoInstance := schema.VwoInstance{
+		Logger: logs,
+	}
+
+	for _, testCase := range TestCases {
+		expected := testCase.BucketValue
+		actual := GetBucketValueForUser(vwoInstance, testCase.User, 10000, 1)
+		assert.Equal(t, expected, actual, "Failed for: "+ testCase.User)
+	}
 }
 
 func TestHash(t *testing.T) {

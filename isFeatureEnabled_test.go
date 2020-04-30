@@ -34,38 +34,38 @@ func TestIsFeatureEnabled(t *testing.T) {
 	value := vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.False(value, "Invalid params")
 
-	userID = "Varun"
+	userID = "USER_1"
 	campaignKey = "notPresent"
 	value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.False(value, "Campaign does not exist")
 
-	userID = "Varun"
-	campaignKey = "php1"
+	userID = "USER_1"
+	campaignKey = "CAMPAIGN_1"
 	value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.False(value, "Campaign Not running")
 
-	userID = "Liza"
-	campaignKey = "phpab1"
+	userID = "USER_3"
+	campaignKey = "CAMPAIGN_8"
 	value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.False(value, "Campaign Not Valid")
 
 	userID = "Robbie"
-	campaignKey = "php2"
+	campaignKey = "CAMPAIGN_2"
 	value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.False(value, "No Variation from campaign Not alloted")
 
-	userID = "Gimmy"
-	campaignKey = "php3"
+	userID = "USER_8"
+	campaignKey = "CAMPAIGN_3"
 	value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.True(value, "Campaign Feature Rollout")
 
-	userID = "Kate"
-	campaignKey = "php4"
+	userID = "USER_2"
+	campaignKey = "CAMPAIGN_4"
 	value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.True(value, "Campaign Feature Test")
 
-	userID = "Gimmy"
-	campaignKey = "php4"
+	userID = "USER_8"
+	campaignKey = "CAMPAIGN_4"
 	value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.False(value, "Campaign Feature Rollout")
 }
