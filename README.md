@@ -107,7 +107,7 @@ isSuccessful = vwoInstance.Push(tagKey, tagValue, userID)
 **User Storage**
 
 ```go
-import "github.com/decabits/vwo-golang-sdk/schema"
+import "github.com/decabits/vwo-golang-sdk/pkg/schema"
 
 // declare UserStorage interface with the following Get & Set function signature
 type UserStorage interface{
