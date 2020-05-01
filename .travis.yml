@@ -1,5 +1,7 @@
 language: go
 go:
+  - 1.05
+  - 1.08
   - 1.11
   - 1.14.2
 before_install:
