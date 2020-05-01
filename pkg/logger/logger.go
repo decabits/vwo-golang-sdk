@@ -38,8 +38,8 @@ const (
 const (
 	tagInfo    = "INFO : "
 	tagWarning = "DEBUG : "
-	tagError   = "ERROR: "
-	tagFatal   = "FATAL: "
+	tagError   = "ERROR : "
+	tagFatal   = "FATAL : "
 )
 
 const (
