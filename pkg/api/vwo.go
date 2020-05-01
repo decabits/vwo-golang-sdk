@@ -29,24 +29,15 @@ import (
 
 const fileVWO = "vwo.go"
 
-// VWOInstance struct
+// VWOInstance is used to customize and construct an instance of VWO
 type VWOInstance schema.VwoInstance
 
+// VWOOption is used to provide custom instance configuration.
 type VWOOption func(*VWOInstance)
 
-// Launch function to launch SDK
+// Launch instantiates instance with the given options
 func (vwo VWOInstance) Launch(vwoOption ...VWOOption) (*VWOInstance, error) {
-	/*
-		Args:
-			isDevelopmentMode: turn this true to stop API calls to server
-			settingsFile: settings file fetched from getsettingsfile
-			storage: custom storage functions
-			logs: custom logger if any
-
-		Returns:
-			error: nil if SDK is launched, else error encountered
-	*/
-
+	// extracting options
 	for _, option := range vwoOption {
 		option(&vwo)
 	}
@@ -79,14 +70,14 @@ func WithStorage(storage interface{}) VWOOption {
 	}
 }
 
-// WithLogger sets user storage
+// WithLogger sets user custom logger
 func WithLogger(logger interface{}) VWOOption {
 	return func(vwo *VWOInstance) {
 		vwo.Logger = logger
 	}
 }
 
-// WithDevelopmentMode sets user storage
+// WithDevelopmentMode sets development mode true
 func WithDevelopmentMode() VWOOption {
 	return func(vwo *VWOInstance) {
 		vwo.IsDevelopmentMode = true
