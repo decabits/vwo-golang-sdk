@@ -25,9 +25,9 @@ import (
 	"strconv"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/decabits/vwo-golang-sdk/pkg/utils"
-	"github.com/google/logger"
 )
 
 // SettingsFileManager struct to implement SettingsFileM

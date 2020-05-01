@@ -22,9 +22,9 @@ import (
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/decabits/vwo-golang-sdk/pkg/service"
-	"github.com/google/logger"
 	"github.com/stretchr/testify/assert"
 )
 

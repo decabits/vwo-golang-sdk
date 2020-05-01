@@ -19,9 +19,9 @@ package vwo
 import (
 	"github.com/decabits/vwo-golang-sdk/pkg/api"
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/decabits/vwo-golang-sdk/pkg/service"
-	"github.com/google/logger"
 )
 
 // VWOInstance struct to store params

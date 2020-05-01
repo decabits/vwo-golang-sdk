@@ -21,7 +21,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/google/logger"
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/stretchr/testify/assert"
 )
 

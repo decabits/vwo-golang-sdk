@@ -17,8 +17,8 @@
 package utils
 
 import (
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
-	"github.com/google/logger"
 )
 
 // ParseOptions - parses custom options
