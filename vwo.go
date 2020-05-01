@@ -13,7 +13,7 @@ type VWOInstance schema.VwoInstance
 
 const fileVWO = "vwo.go"
 
-func Init(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logs interface{}) (*api.VWOInstance, error) {
+func Init(settingsFile schema.SettingsFile, vwoOption ...api.VWOOption) (*api.VWOInstance, error) {
 	/*
 		Args:
 			isDevelopmentMode: turn this true to stop API calls to server
@@ -25,8 +25,10 @@ func Init(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage inte
 			error: nil if SDK is launched, else error encountered
 	*/
 
-	vwo := &api.VWOInstance{}
-	return vwo.Launch(isDevelopmentMode, settingsFile, storage, logs)
+	vwo := &api.VWOInstance{
+		SettingsFile: settingsFile,
+	}
+	return vwo.Launch(vwoOption...)
 }
 
 // GetSettingsFile function to fetch and parse settingsfile

@@ -221,7 +221,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 
 		return true
 	}
-	return SegmentEvaluator(segments, options)
+	return SegmentEvaluator(segments, options.CustomVariables)
 }
 
 // PreEvaluateSegment function evaluates segmentation for the userID against the segments found inside the campaign.
@@ -241,5 +241,5 @@ func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]inte
 
 		return false
 	}
-	return SegmentEvaluator(segments, options)
+	return SegmentEvaluator(segments, options.VariationTargetingVariables)
 }

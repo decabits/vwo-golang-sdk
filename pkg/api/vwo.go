@@ -32,19 +32,10 @@ const fileVWO = "vwo.go"
 // VWOInstance struct
 type VWOInstance schema.VwoInstance
 
-// VWO interface
-type VWO interface {
-	Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}) (*VWOInstance, error)
-	Activate(campaignKey, userID string, options interface{}) string
-	GetFeatureVariableValue(campaignKey, variableKey, userID string, options interface{}) interface{}
-	GetVariationName(campaignKey, userID string, options interface{}) string
-	IsFeatureEnabled(campaignKey, userID string, options interface{}) bool
-	Push(tagKey, tagValue, userID string) bool
-	Track(campaignKey, userID string, goalIdentifier string, options interface{}) bool
-}
+type VWOOption func(*VWOInstance)
 
 // Launch function to launch SDK
-func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.SettingsFile, storage interface{}, logs interface{}) (*VWOInstance, error) {
+func (vwo VWOInstance) Launch(vwoOption ...VWOOption) (*VWOInstance, error) {
 	/*
 		Args:
 			isDevelopmentMode: turn this true to stop API calls to server
@@ -56,25 +47,48 @@ func (vwo *VWOInstance) Launch(isDevelopmentMode bool, settingsFile schema.Setti
 			error: nil if SDK is launched, else error encountered
 	*/
 
-	if logs != nil {
-		utils.LogMessage(logs, constants.Debug, fileVWO, constants.DebugMessageCustomLoggerFound)
+	for _, option := range vwoOption {
+		option(&vwo)
 	}
 
-	if logs == nil {
-		logs = logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	if vwo.Logger != nil {
+		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessageCustomLoggerFound)
+	}
+
+	if vwo.Logger == nil {
+		logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
 		logger.SetFlags(log.LstdFlags)
 		utils.LogMessage(logs, constants.Debug, fileVWO, constants.DebugMessageNoCustomLoggerFound)
+		vwo.Logger = logs
 		defer logger.Close()
 	}
 
-	if utils.ValidateStorage(storage) && utils.ValidateLogger(logs) {
-		vwo.SettingsFile = settingsFile
-		vwo.UserStorage = storage
-		vwo.Logger = logs
-		vwo.IsDevelopmentMode = isDevelopmentMode
-		message := fmt.Sprintf(constants.DebugMessagesDevelopmentMode+constants.DebugMessagesSDKInitialized, isDevelopmentMode)
-		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, message)
-		return vwo, nil
+	message := fmt.Sprintf(constants.DebugMessagesDevelopmentMode+constants.DebugMessagesSDKInitialized, vwo.IsDevelopmentMode)
+	utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, message)
+
+	if !utils.ValidateStorage(vwo.UserStorage) || !utils.ValidateLogger(vwo.Logger) {
+		return &vwo, fmt.Errorf(constants.ErrorMessageInvalidLoggerStorage)
 	}
-	return vwo, fmt.Errorf(constants.ErrorMessageInvalidLoggerStorage)
+	return &vwo, nil
+}
+
+// WithStorage sets user storage
+func WithStorage(storage interface{}) VWOOption {
+	return func(vwo *VWOInstance) {
+		vwo.UserStorage = storage
+	}
+}
+
+// WithLogger sets user storage
+func WithLogger(logger interface{}) VWOOption {
+	return func(vwo *VWOInstance) {
+		vwo.Logger = logger
+	}
+}
+
+// WithDevelopmentMode sets user storage
+func WithDevelopmentMode() VWOOption {
+	return func(vwo *VWOInstance) {
+		vwo.IsDevelopmentMode = true
+	}
 }

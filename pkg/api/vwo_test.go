@@ -38,8 +38,9 @@ func getInstance(path string) (*VWOInstance, error) {
 	settingsFile := settingsFileManager.GetSettingsFile()
 
 	var vwo VWOInstance
+	vwo.SettingsFile = settingsFile
 
-	return vwo.Launch(true, settingsFile, nil, nil)
+	return vwo.Launch(WithDevelopmentMode())
 }
 
 type WUserStorage interface {
@@ -55,28 +56,20 @@ func (us *WUserStorageData) Getter(userID, campaignKey string) schema.UserData {
 func (us *WUserStorageData) Setter(userID, campaignKey, variationName string) {}
 
 func TestLaunch(t *testing.T) {
-	settingsFileManager := service.SettingsFileManager{}
-	if err := settingsFileManager.ProcessSettingsFile("./testdata/testdata.json"); err != nil {
-		log.Println("Error Processing Settings File: ", err)
-	}
-	settingsFileManager.Process()
-	settingsFile := settingsFileManager.GetSettingsFile()
+	vwoInstance := VWOInstance{}
+	_, err := vwoInstance.Launch(WithDevelopmentMode())
+	assert.Nil(t, err)
 
-	vwoInstance := &VWOInstance{}
+	vwoInstance = VWOInstance{}
 	storage := &WUserStorageData{}
-	_, err := vwoInstance.Launch(true, settingsFile, storage, nil)
+	_, err = vwoInstance.Launch(WithStorage(storage))
 	assert.NotNil(t, err)
 
 	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
 	logger.SetFlags(log.LstdFlags)
 	defer logger.Close()
 
-	vwoInstance = &VWOInstance{}
-	storage = &WUserStorageData{}
-	_, err = vwoInstance.Launch(true, settingsFile, storage, logs)
-	assert.NotNil(t, err)
-
-	vwoInstance = &VWOInstance{}
-	_, err = vwoInstance.Launch(true, settingsFile, nil, nil)
+	vwoInstance = VWOInstance{}
+	_, err = vwoInstance.Launch(WithLogger(logs))
 	assert.Nil(t, err)
 }

@@ -23,12 +23,11 @@ import (
 	"strings"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
-	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/decabits/vwo-golang-sdk/pkg/utils"
 )
 
 // SegmentEvaluator function evaluates segments to get the keys and values and perform appropriate functions
-func SegmentEvaluator(segments map[string]interface{}, options schema.Options) bool {
+func SegmentEvaluator(segments map[string]interface{}, customVariables map[string]interface{}) bool {
 	/*
 		Args:
 			segments: segments from campaign or variation
@@ -41,23 +40,23 @@ func SegmentEvaluator(segments map[string]interface{}, options schema.Options) b
 	operator, subSegments := utils.GetKeyValue(segments)
 
 	if operator == constants.OperatorTypeNot {
-		return SegmentEvaluator(subSegments.(map[string]interface{}), options) == false
+		return SegmentEvaluator(subSegments.(map[string]interface{}), customVariables) == false
 	} else if operator == constants.OperatorTypeAnd {
 		var res []bool
 		for _, v := range subSegments.([]interface{}) {
-			res = append(res, SegmentEvaluator(v.(map[string]interface{}), options))
+			res = append(res, SegmentEvaluator(v.(map[string]interface{}), customVariables))
 		}
 		return evaluate(operator, res)
 	} else if operator == constants.OperatorTypeOr {
 		var res []bool
 		for _, v := range subSegments.([]interface{}) {
-			res = append(res, SegmentEvaluator(v.(map[string]interface{}), options))
+			res = append(res, SegmentEvaluator(v.(map[string]interface{}), customVariables))
 		}
 		return evaluate(operator, res)
 	} else if operator == constants.OperandTypesCustomVariable {
-		return evaluateCustomVariables(subSegments.(map[string]interface{}), options)
+		return evaluateCustomVariables(subSegments.(map[string]interface{}), customVariables)
 	} else if operator == constants.OperandTypesUser {
-		return operandUserParser(subSegments.(string), options)
+		return operandUserParser(subSegments.(string), customVariables)
 	}
 	return true
 }
@@ -92,7 +91,7 @@ func evaluate(operator string, res []bool) bool {
 }
 
 //evaluateCustomVariables function processes the custom variables in the segments
-func evaluateCustomVariables(custom map[string]interface{}, options schema.Options) bool {
+func evaluateCustomVariables(custom map[string]interface{}, customVariables map[string]interface{}) bool {
 	/*
 		Args:
 			segments: segments from campaign or variation
@@ -103,17 +102,11 @@ func evaluateCustomVariables(custom map[string]interface{}, options schema.Optio
 	*/
 
 	operandKey, operand := utils.GetKeyValue(custom)
-	_, okCustomVar := options.CustomVariables[operandKey]
-	_, okVariationTar := options.VariationTargetingVariables[operandKey]
-	if !okCustomVar && !okVariationTar {
+	_, okCustomVar := customVariables[operandKey]
+	if !okCustomVar {
 		return false
 	}
-	var tag interface{}
-	if okCustomVar {
-		tag = options.CustomVariables[operandKey]
-	} else if okVariationTar {
-		tag = options.VariationTargetingVariables[operandKey]
-	}
+	tag := customVariables[operandKey]
 
 	operandType, operandValue := preProcessOperandValue(operand)
 	tagValue := processCustomVariablesValue(tag)
@@ -160,7 +153,7 @@ func extractResult(operandType int, operandValue, tagValue string) bool {
 }
 
 //operandUserParser function checks if the VWO user lies in the list of users in the segments
-func operandUserParser(operand string, options schema.Options) bool {
+func operandUserParser(operand string, customVariables map[string]interface{}) bool {
 	/*
 		Args:
 			operand: list of users
@@ -172,7 +165,7 @@ func operandUserParser(operand string, options schema.Options) bool {
 
 	users := strings.Split(operand, ",")
 	for _, user := range users {
-		if strings.TrimSpace(user) == options.CustomVariables["_vwo_user_id"] || strings.TrimSpace(user) == options.VariationTargetingVariables["_vwo_user_id"] {
+		if strings.TrimSpace(user) == customVariables["_vwo_user_id"] {
 			return true
 		}
 	}

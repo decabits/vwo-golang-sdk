@@ -57,6 +57,9 @@ func ValidateLogger(logs interface{}) bool {
 
 // ValidateStorage - validates Custom Storage
 func ValidateStorage(storage interface{}) bool {
+	if storage == nil {
+		return true
+	}
 	_, okGet := storage.(interface {
 		Get(a, b string) schema.UserData
 	})

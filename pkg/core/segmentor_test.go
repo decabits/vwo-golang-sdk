@@ -21,7 +21,6 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/google/logger"
 	"github.com/stretchr/testify/assert"
 )
@@ -46,11 +45,12 @@ func TestSegmentEvaluator(t *testing.T) {
 
 	for parent, v := range testdata {
 		for child, value := range v {
-			options := schema.Options{
-				CustomVariables:             value.CustomVariable,
-				VariationTargetingVariables: value.VariationTargetingVariables,
+			var actual bool
+			if value.CustomVariable != nil {
+				actual = SegmentEvaluator(value.DSL, value.CustomVariable)
+			} else {
+				actual = SegmentEvaluator(value.DSL, value.VariationTargetingVariables)
 			}
-			actual := SegmentEvaluator(value.DSL, options)
 			expected := value.Expected
 			assert.Equal(t, expected, actual, parent+" "+child)
 		}
