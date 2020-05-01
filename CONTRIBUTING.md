@@ -34,7 +34,7 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 - Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
 
 ### Use a Consistent Coding Style
-<!-- We use [flake8](https://pypi.org/project/flake8/) for enforcing consistent coding style among developers. -->
+We use [Effective Go](https://golang.org/doc/effective_go.html) for enforcing consistent coding style among developers.
 
 ### License
 By contributing, you agree that your contributions will be licensed under its Apache 2.0 License.

@@ -1,0 +1,148 @@
+{
+	"sdkKey": "someuniquestuff1234567",
+	"accountId": 12345,
+	"version": 1,
+	"campaigns": [{
+			"id": 201,
+			"segments": {},
+			"status": "NOT_RUNNING",
+			"percentTraffic": 100,
+			"goals": {},
+			"isForcedVariationEnabled": false,
+			"key": "CAMPAIGN_1",
+			"variations": {},
+			"type": "FEATURE_ROLLOUT"
+		},
+		{
+			"id": 202,
+			"segments": {},
+			"status": "RUNNING",
+			"percentTraffic": 100,
+			"goals": {},
+			"isForcedVariationEnabled": false,
+			"key": "CAMPAIGN_8",
+			"variations": {},
+			"type": "VISUAL_AB"
+		},
+		{
+			"id": 201,
+			"segments": {},
+			"status": "RUNNING",
+			"percentTraffic": 100,
+			"goals": {},
+			"isForcedVariationEnabled": false,
+			"key": "CAMPAIGN_2",
+			"variations": {},
+			"type": "FEATURE_TEST"
+		},
+		{
+			"id": 290,
+			"segments": {
+				"or": [{
+					"user": "USER_1"
+				}]
+			},
+			"status": "RUNNING",
+			"percentTraffic": 100,
+			"goals": {},
+			"isForcedVariationEnabled": true,
+			"key": "CAMPAIGN_3",
+			"variations": [{
+				"segments": {
+					"or": [{
+						"user": "USER_1,USER_2"
+					}]
+				},
+				"changes": {},
+				"id": 1,
+				"variables": [{
+						"value": 302,
+						"type": "integer",
+						"key": "int2",
+						"id": 1
+					},
+					{
+						"value": false,
+						"type": "boolean",
+						"key": "bool2",
+						"id": 4
+					}
+				],
+				"isFeatureEnabled": true,
+				"weight": 100,
+				"name": "Control"
+			}],
+			"variables": [{
+					"value": 301,
+					"type": "integer",
+					"key": "int1",
+					"id": 1
+				},
+				{
+					"value": 10.67,
+					"type": "double",
+					"key": "float2",
+					"id": 2
+				}
+			],
+			"type": "FEATURE_ROLLOUT"
+		},
+		{
+			"id": 290,
+			"segments": {
+				"or": [{
+					"user": "USER_1,USER_2"
+				}]
+			},
+			"status": "RUNNING",
+			"percentTraffic": 100,
+			"goals": {},
+			"isForcedVariationEnabled": true,
+			"key": "CAMPAIGN_4",
+			"variations": [{
+				"segments": {
+					"or": [{
+						"user": "USER_1,USER_2"
+					}]
+				},
+				"changes": {},
+				"id": 1,
+				"variables": [{
+						"value": 301,
+						"type": "integer",
+						"key": "int1",
+						"id": 1
+					},
+					{
+						"value": 10.67,
+						"type": "double",
+						"key": "float2",
+						"id": 2
+					},
+					{
+						"value": "abcd",
+						"type": "string",
+						"key": "string2",
+						"id": 3
+					},
+					{
+						"value": true,
+						"type": "boolean",
+						"key": "bool1",
+						"id": 4
+					}
+				],
+				"isFeatureEnabled": true,
+				"weight": 100,
+				"name": "Control"
+			}],
+			"variables": [{
+				"value": 302,
+				"type": "integer",
+				"key": "int2",
+				"id": 5
+			}],
+			"type": "FEATURE_TEST"
+		}
+	]
+}

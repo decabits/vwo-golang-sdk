@@ -1,0 +1,78 @@
+{
+  "sdkKey": "someuniquestuff1234567",
+  "accountId": 12345,
+  "version": 1,
+  "campaigns": [{
+      "id": 201,
+      "segments": {},
+      "status": "NOT_RUNNING",
+      "percentTraffic": 100,
+      "goals": {},
+      "isForcedVariationEnabled": false,
+      "key": "CAMPAIGN_8",
+      "variations": {},
+      "type": "VISUAL_AB"
+    },
+    {
+      "id": 202,
+      "segments": {},
+      "status": "RUNNING",
+      "percentTraffic": 100,
+      "goals": {},
+      "isForcedVariationEnabled": false,
+      "key": "CAMPAIGN_1",
+      "variations": {},
+      "type": "FEATURE_TEST"
+    },
+    {
+      "id": 203,
+      "segments": {},
+      "status": "RUNNING",
+      "percentTraffic": 100,
+      "goals": {},
+      "isForcedVariationEnabled": false,
+      "key": "CAMPAIGN_9",
+      "variations": {},
+      "type": "VISUAL_AB"
+    },
+    {
+      "id": 287,
+      "segments": {},
+      "status": "RUNNING",
+      "percentTraffic": 100,
+      "goals": [{
+          "identifier": "GOAL_1",
+          "id": 2,
+          "type": "REVENUE_TRACKING"
+        },
+        {
+          "identifier": "GOAL_2",
+          "id": 285,
+          "type": "CUSTOM_GOAL"
+        }
+      ],
+      "isForcedVariationEnabled": false,
+      "key": "CAMPAIGN_10",
+      "variations": [{
+          "id": 1,
+          "name": "Control",
+          "changes": {},
+          "weight": 33.3333
+        },
+        {
+          "id": 2,
+          "name": "Variation-1",
+          "changes": {},
+          "weight": 33.3333
+        },
+        {
+          "id": 3,
+          "name": "Variation-2",
+          "changes": {},
+          "weight": 33.3333
+        }
+      ],
+      "type": "VISUAL_AB"
+    }
+  ]
+}

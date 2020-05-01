@@ -1,8 +1,9 @@
 # VWO-Golang-SDK
 
-![Build Status](https://img.shields.io/travis/decabits/vwo-golang-sdk)
+[![Build Status](https://img.shields.io/travis/decabits/vwo-golang-sdk)](http://travis-ci.org/decabits/vwo-golang-sdk)
 ![Size in Bytes](https://img.shields.io/github/languages/code-size/decabits/vwo-golang-sdk)
-![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Coverage Status](https://coveralls.io/repos/github/decabits/vwo-golang-sdk/badge.svg)](https://coveralls.io/github/decabits/vwo-golang-sdk)
 
 This open source library allows you to A/B Test your Website at server-side.
 
@@ -22,15 +23,22 @@ go get "github.com/decabits/vwo-golang-sdk"
 
 ```go
 import vwo "github.com/decabits/vwo-golang-sdk"
+import "github.com/decabits/vwo-golang-sdk/pkg/api"
 
 // Get SettingsFile
 settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
 
-// Declaration of VwoInstance
-vwoInstance = vwo.VWOInstance{}
+// Default instance of VwoInstance
+instance, err := vwo.Init(settingsFile)
+if err != nil {
+	//handle err
+}
 
-// Create VwoInstance and handle error if any
-err := vwoInstance.Launch("isDevelopmentMode", settingsFile, nil, nil)
+// Instance with custom options
+instance, err := vwo.Init(settingsFile, api.WithDevelopmentMode())
+if err != nil {
+	//handle err
+}
 
 // Activate API
 // With Custom Variables
@@ -96,17 +104,12 @@ variableValue = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, us
 isSuccessful = vwoInstance.Push(tagKey, tagValue, userID)
 ```
 
-1. `accountID` - Account for which sdk needs to be initialized
-2. `SDKKey` - SDK key for that account
-3. `logger` - If you need to pass your own logger. Check documentation below
-4. `UserStorage.new` - An object allowing `get` and `set` for maintaining user storage
-5. `developmentMode` - on/off (true/false). Default - false
-6. `settingsFile` - Settings file if already present during initialization. Its stringified JSON format.
-
 **User Storage**
 
 ```go
-import "github.com/decabits/vwo-golang-sdk/schema"
+import vwo "github.com/decabits/vwo-golang-sdk/"
+import "github.com/decabits/vwo-golang-sdk/pkg/api"
+import "github.com/decabits/vwo-golang-sdk/pkg/schema"
 
 // declare UserStorage interface with the following Get & Set function signature
 type UserStorage interface{
@@ -169,10 +172,10 @@ func main() {
 	settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
 	// create UserStorageData object
 	storage := &UserStorageData{}
-	v.vwoInstance = vwo.VWOInstance{}
-	err := v.vwoInstance.Launch(config.GetBool("isDevelopmentMode"), settingsFile, storage)
+
+	instance, err := vwo.Init(settingsFile, api.WithStorage(storage))
 	if err != nil {
-		fmt.Println("error intialising sdk")
+		//handle err
 	}
 }
 
@@ -182,6 +185,7 @@ func main() {
 
 ```go
 import vwo "github.com/decabits/vwo-golang-sdk"
+import "github.com/decabits/vwo-golang-sdk/pkg/api"
 
 // declare Log interface with the following CustomLog function signature
 type Log interface {
@@ -198,10 +202,10 @@ func main() {
 	settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
 	// create LogS object
 	logger := &LogS{}
-	v.vwoInstance = vwo.VWOInstance{}
-	err := v.vwoInstance.LaunchWithLogger(config.GetBool("isDevelopmentMode"), settingsFile, nil, logger)
+
+	instance, err := vwo.Init(settingsFile, api.WithLogger(logger))
 	if err != nil {
-		fmt.Println("error intialising sdk")
+		//handle err
 	}
 }
 ```
