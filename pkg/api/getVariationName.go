@@ -68,7 +68,7 @@ func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option inte
 
 	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", vwoInstance.API, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n ", vwoInstance.API, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
 		return ""
 	}
@@ -86,7 +86,7 @@ func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option inte
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", vwoInstance.API, userID, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n ", vwoInstance.API, userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, getVariationName, message)
 	}
 

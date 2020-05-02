@@ -90,7 +90,7 @@ func GetCampaign(API string, settingsFile schema.SettingsFile, campaignKey strin
 			return campaign, nil
 		}
 	}
-	return schema.Campaign{}, fmt.Errorf(constants.ErrorMessageCampaignNotFound, API, campaignKey)
+	return schema.Campaign{}, fmt.Errorf(constants.ErrorMessageCampaignNotFound, API, campaignKey, "")
 }
 
 // ScaleVariations function It extracts the weights from all the variations inside the

@@ -61,7 +61,7 @@ const (
 	ErrorMessageIsFeatureEnabledAPIMissingParams       = "[%v] isFeatureEnabled API got bad parameters. It expects Campaign(String) as first, User ID(String) as second and options(Optional) as third argument"
 	ErrorMessageGetUserStorageServiceFailed            = "[%v] Getting data from UserStorageService failed for User ID: %v"
 	ErrorMessageInvalidAPI                             = "[%v] API is not valid for Campaign: %v of type: %v for User ID: %v"
-	ErrorMessageTrackAPIGoalNotFound                   = "[%v] Goal: %v not found for Campaign: %v and User ID: %v"
+	ErrorMessageTrackAPIGoalNotFound                   = "[%v] Goal: %v not found for Campaign: %v and User ID: %v : %v"
 	ErrorMessageTrackAPIRevenueNotPassedForRevenueGoal = "[%v] Revenue value should be passed for revenue goal: %v for Campaign: %v and User ID: %v"
 	ErrorMessageTagKeyLengthExceeded                   = "[%v] Length of tagKey: %v for User ID: %v can not be greater than 255"
 	ErrorMessageTagValueLengthExceeded                 = "[%v] Length of value: %v of tagKey: %v for User ID: %v can not be greater than 255"
@@ -69,7 +69,7 @@ const (
 
 	/*Extras*/
 	ErrorMessageNoVariationAlloted        = "[%v] User ID: %v of CampaignKey: %v type: %v did not get any variation "
-	ErrorMessageCampaignNotFound          = "[%v] Campaign key: %v not found"
+	ErrorMessageCampaignNotFound          = "[%v] Campaign key: %v not found : %v"
 	ErrorMessageGoalNotFound              = "[%v] Goal: %v not found"
 	ErrorMessageNoVariationForBucketValue = "[%v] No variation found for user ID %v in campaignKey: %v having bucket value: %v"
 	ErrorMessageInvalidLoggerStorage      = "[%v] Invalid storage object/Logger given. Refer documentation on how to pass custom storage."
@@ -89,8 +89,8 @@ const (
 	InfoMessageGettingDataUserStorageService  = "[%v] Getting data into UserStorageService for User ID: %v successful"
 	InfoMessageGotStoredVariation             = "[%v] Got stored variation:%v of CampaignKey:%v for User ID:%v from UserStorage"
 	InfoMessageSettingDataUserStorageService  = "[%v] Setting data into UserStorageService for User ID: %v successful"
-	InfoMessageInvalidVariationKey            = "[%v] Variation was not assigned to User ID: %v for Campaign: %v"
-	InfoMessageVariationRangeAllocation       = "[%v] Variation: %v with weight: %v got range as: ( %v - %v ))"
+	InfoMessageInvalidVariationKey            = "[%v] Variation was not assigned to User ID: %v for Campaign: %v : %v"
+	InfoMessageVariationRangeAllocation       = "[%v] Variation: %v with weight: %v got range as: ( %v - %v )"
 	InfoMessageFeatureEnabledForUser          = "[%v] Campaign: %v for user ID: %v is enabled"
 	InfoMessageFeatureNotEnabledForUser       = "[%v] Campaign: %v for user ID: %v is not enabled"
 	InfoMessageUserEligibilityForCampaign     = "[%v] Is User ID: %v part of campaign ? %v"
