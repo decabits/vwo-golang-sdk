@@ -44,7 +44,7 @@ func (vwo VWOInstance) Launch(vwoOption ...VWOOption) (*VWOInstance, error) {
 
 	if vwo.Logger != nil {
 		logger.Warning(constants.DebugMessageCustomLoggerFound)
-		
+
 		if !utils.ValidateLogger(vwo.Logger) {
 			return &vwo, fmt.Errorf(constants.ErrorMessageCustomLoggerMisconfigured)
 		}
@@ -63,7 +63,6 @@ func (vwo VWOInstance) Launch(vwoOption ...VWOOption) (*VWOInstance, error) {
 
 	if !utils.ValidateStorage(vwo.UserStorage) {
 		return &vwo, fmt.Errorf(constants.ErrorMessageInvalidLoggerStorage, "")
-		
 	}
 
 	message := fmt.Sprintf(constants.DebugMessageDevelopmentMode+constants.DebugMessageSDKInitialized, vwo.IsDevelopmentMode)

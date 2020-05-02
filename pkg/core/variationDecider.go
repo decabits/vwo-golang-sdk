@@ -87,7 +87,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 	if !IsUserPartOfCampaign(vwoInstance, userID, campaign) {
 		return schema.Variation{}, fmt.Errorf(constants.DebugMessageUserNotPartOfCampaign, vwoInstance.API, userID, campaign.Key, campaign.Type, "IsUserPartOfCampaign")
 	}
-	
+
 	if EvaluateSegment(vwoInstance, campaign.Segments, options) {
 		variation, err := BucketUserToVariation(vwoInstance, userID, campaign)
 		if err != nil {
@@ -232,7 +232,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 			bool: if the options falls in the segments criteria
 	*/
 
-	if len(segments) == 0 {
+	if options.CustomVariables == nil {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
@@ -240,7 +240,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 	}
 
 	status := SegmentEvaluator(segments, options.CustomVariables)
-	
+
 	message := fmt.Sprintf(constants.InfoMessageSegmentationStatus, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, segments, strconv.FormatBool(status), "PreEvaluation")
 	utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
@@ -258,7 +258,7 @@ func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]inte
 			bool: if the options falls in the segments criteria
 	*/
 
-	if len(segments) == 0 {
+	if options.VariationTargetingVariables == nil {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkippedForVariation, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, variationName)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
