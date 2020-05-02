@@ -47,7 +47,7 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string, option interface{})
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
 			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
-			
+
 		Returns:
 			string: Variation Name for user to corresponding camapign
 	*/
@@ -59,29 +59,29 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string, option interface{})
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
-		UserID:            userID,
+		API:               "Activate",
 	}
 
 	if !utils.ValidateActivate(campaignKey, userID) {
-		message := fmt.Sprintf(constants.ErrorMessagesActivateAPIMissingParams)
+		message := fmt.Sprintf(constants.ErrorMessageActivateAPIMissingParams, vwoInstance.API)
 		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
 		return ""
 	}
 
-	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
+	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", vwoInstance.API, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
 		return ""
 	}
 
 	if campaign.Status != constants.StatusRunning {
-		message := fmt.Sprintf(constants.ErrorMessagesCampaignNotRunning, "Activate", campaignKey)
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotRunning, vwoInstance.API, campaignKey)
 		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
 		return ""
 	}
 	if !utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
-		message := fmt.Sprintf(constants.ErrorMessagesInvalidAPI, "Activate", campaignKey, campaign.Type, userID)
+		message := fmt.Sprintf(constants.ErrorMessageInvalidAPI, vwoInstance.API, campaignKey, campaign.Type, userID)
 		utils.LogMessage(vwo.Logger, constants.Error, activate, message)
 		return ""
 	}
@@ -90,13 +90,16 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string, option interface{})
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", vwoInstance.API, userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, activate, message)
 		return ""
 	}
 
 	impression := utils.CreateImpressionTrackingUser(vwoInstance, campaign.ID, variation.ID, userID)
 	event.Dispatch(vwoInstance, impression)
+
+	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
+	utils.LogMessage(vwo.Logger, constants.Info, activate, message)
 
 	return variation.Name
 }

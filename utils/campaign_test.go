@@ -76,12 +76,12 @@ func TestGetCampaign(t *testing.T) {
 	vwoInstance := getInstance()
 
 	campaignKey := "CAMPAIGN_8"
-	campaign, err := GetCampaign(vwoInstance.SettingsFile, campaignKey)
+	campaign, err := GetCampaign("", vwoInstance.SettingsFile, campaignKey)
 	assert.Nil(t, err)
 	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[0], campaign, "Expected and Actual Campaign IDs should be same")
 
 	campaignKey = "notAvailable"
-	campaign, err = GetCampaign(vwoInstance.SettingsFile, campaignKey)
+	campaign, err = GetCampaign("", vwoInstance.SettingsFile, campaignKey)
 	assert.NotNil(t, err)
 	assert.Empty(t, campaign, "Expected campaign should be empty")
 }
@@ -91,18 +91,18 @@ func TestGetCampaignVariation(t *testing.T) {
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
 	variationName := "Control"
-	variation, err:= GetCampaignVariation(campaign, variationName)
+	variation, err:= GetCampaignVariation("", campaign, variationName)
 	assert.Nil(t, err)
 	assert.Equal(t, campaign.Variations[0], variation, "Expected and Actual Variation IDs should be same")
 
 	variationName = "Variation-3"
-	variation, err= GetCampaignVariation(campaign, variationName)
+	variation, err= GetCampaignVariation("", campaign, variationName)
 	assert.NotNil(t, err)
 	assert.Empty(t, variation, "Expected Variation should be empty")
 
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	variationName = "Control"
-	variation, err= GetCampaignVariation(campaign, variationName)
+	variation, err= GetCampaignVariation("", campaign, variationName)
 	assert.NotNil(t, err)
 	assert.Empty(t, variation, "Expected and Actual Variation IDs should be same")
 }
@@ -112,12 +112,12 @@ func TestGetCampaignGoal(t *testing.T) {
 	campaign := vwoInstance.SettingsFile.Campaigns[1]
 
 	goalName := "GOAL_1"
-	goal, err:= GetCampaignGoal(campaign, goalName)
+	goal, err:= GetCampaignGoal("", campaign, goalName)
 	assert.Nil(t, err)
 	assert.Equal(t, campaign.Goals[0], goal, "Expected and Actual Goal IDs should be same")
 
 	goalName = "demo"
-	goal, err= GetCampaignGoal(campaign, goalName)
+	goal, err= GetCampaignGoal("", campaign, goalName)
 	assert.NotNil(t, err)
 	assert.Empty(t, goal, "Expected Goal should be empty")
 }

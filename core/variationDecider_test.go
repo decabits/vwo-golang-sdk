@@ -28,7 +28,7 @@ func TestPreEvaluateSegment(t *testing.T) {
 
 	segments := vwoInstance.SettingsFile.Campaigns[0].Segments
 	options := schema.Options{}
-	value := PreEvaluateSegment(vwoInstance, segments, options)
+	value := PreEvaluateSegment(vwoInstance, segments, options, "")
 	assert.False(t, value, "Expected False as no segments")
 
 	segments = vwoInstance.SettingsFile.Campaigns[0].Variations[0].Segments
@@ -36,14 +36,14 @@ func TestPreEvaluateSegment(t *testing.T) {
 		CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_2"},
 		RevenueGoal:     12,
 	}
-	value = PreEvaluateSegment(vwoInstance, segments, options)
+	value = PreEvaluateSegment(vwoInstance, segments, options, "")
 	assert.True(t, value, "Expected True")
 
 	options = schema.Options{
 		CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_9"},
 		RevenueGoal:     12,
 	}
-	value = PreEvaluateSegment(vwoInstance, segments, options)
+	value = PreEvaluateSegment(vwoInstance, segments, options, "")
 	assert.False(t, value, "Expected True")
 }
 

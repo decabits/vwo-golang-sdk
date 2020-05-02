@@ -44,72 +44,76 @@ This API method: Marks the conversion of the campaign for a particular goal
 func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option interface{}) bool {
 	/*
 		Args:
-			campaignKey: Key of the running campaign 
+			campaignKey: Key of the running campaign
 			userID: Unique identification of user
 			goalIdentifier: Unique identification of corresponding goal
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
 			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
-			
+
 		Returns:
 			bool: True if the track is successfull else false
 	*/
-	if !utils.ValidateTrack(campaignKey, userID, goalIdentifier) {
-		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIMissingParams)
-		utils.LogMessage(vwo.Logger, constants.Error, track, message)
-		return false
-	}
-
-	options := utils.ParseOptions(option)
-
-	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
-	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
-		utils.LogMessage(vwo.Logger, constants.Error, track, message)
-		return false
-	}
-
-	if campaign.Status != constants.StatusRunning {
-		message := fmt.Sprintf(constants.ErrorMessagesCampaignNotRunning, "Track", campaignKey)
-		utils.LogMessage(vwo.Logger, constants.Error, track, message)
-		return false
-	}
-	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
-		message := fmt.Sprintf(constants.ErrorMessagesInvalidAPI, "Track", campaignKey, campaign.Type, userID)
-		utils.LogMessage(vwo.Logger, constants.Error, track, message)
-		return false
-	}
-
-	goal, err := utils.GetCampaignGoal(campaign, goalIdentifier)
-	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIGoalNotFound+" \n %v", goalIdentifier, campaignKey, userID, err.Error())
-		utils.LogMessage(vwo.Logger, constants.Error, track, message)
-		return false
-	}
-
-	if goal.Type == constants.GoalTypeRevenue && options.RevenueGoal == 0 {
-		message := fmt.Sprintf(constants.ErrorMessagesTrackAPIRevenueNotPassedForRevenueGoal, options.RevenueGoal, campaignKey, userID)
-		utils.LogMessage(vwo.Logger, constants.Error, track, message)
-		return false
-	}
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      vwo.SettingsFile,
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
-		UserID:            userID,
-		Campaign:          campaign,
+		API:               "Track",
 	}
+
+	if !utils.ValidateTrack(campaignKey, userID, goalIdentifier) {
+		message := fmt.Sprintf(constants.ErrorMessageTrackAPIMissingParams, vwoInstance.API)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		return false
+	}
+
+	options := utils.ParseOptions(option)
+
+	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
+	if err != nil {
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", vwoInstance.API, campaignKey, err.Error())
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		return false
+	}
+
+	if campaign.Status != constants.StatusRunning {
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotRunning, vwoInstance.API, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		return false
+	}
+	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
+		message := fmt.Sprintf(constants.ErrorMessageInvalidAPI, vwoInstance.API, campaignKey, campaign.Type, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		return false
+	}
+
+	goal, err := utils.GetCampaignGoal(vwoInstance.API, campaign, goalIdentifier)
+	if err != nil {
+		message := fmt.Sprintf(constants.ErrorMessageTrackAPIGoalNotFound+" \n %v", vwoInstance.API, goalIdentifier, campaignKey, userID, err.Error())
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		return false
+	}
+
+	if goal.Type == constants.GoalTypeRevenue && options.RevenueGoal == 0 {
+		message := fmt.Sprintf(constants.ErrorMessageTrackAPIRevenueNotPassedForRevenueGoal, vwoInstance.API, options.RevenueGoal, campaignKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		return false
+	}
+
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", vwoInstance.API, userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, track, message)
 		return false
 	}
 
 	impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, campaign.ID, goal.ID, 5) // revenueValue = 5
 	event.DispatchTrackingGoal(vwoInstance, impression)
+
+	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
+	utils.LogMessage(vwo.Logger, constants.Info, activate, message)
 
 	return true
 }

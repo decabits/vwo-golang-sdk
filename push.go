@@ -40,36 +40,41 @@ func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
 			tagKey: Key of the corresponding tag
 			tagValue: Value of the corresponding tag
 			userID: Unique identification of user
-			
+
 		Returns:
 			bool: true if the push api call is done, else false
 	*/
-	if !utils.ValidatePush(tagKey, tagValue, userID) {
-		message := fmt.Sprintf(constants.ErrorMessagesPushAPIMissingParams)
-		utils.LogMessage(vwo.Logger, constants.Error, push, message)
-		return false
-	}
-
-	if len(tagKey) > constants.PushAPITagKeyLength {
-		message := fmt.Sprintf(constants.ErrorMessagesTagKeyLengthExceeded, tagKey, userID)
-		utils.LogMessage(vwo.Logger, constants.Error, push, message)
-		return false
-	}
-	if len(tagValue) > constants.PushAPITagValueLength {
-		message := fmt.Sprintf(constants.ErrorMessagesTagValueLengthExceeded, tagValue, tagKey, userID)
-		utils.LogMessage(vwo.Logger, constants.Error, push, message)
-		return false
-	}
-
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      vwo.SettingsFile,
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
 		UserID:            userID,
+		API:               "Push",
 	}
+
+	if !utils.ValidatePush(tagKey, tagValue, userID) {
+		message := fmt.Sprintf(constants.ErrorMessagePushAPIMissingParams, vwoInstance.API)
+		utils.LogMessage(vwo.Logger, constants.Error, push, message)
+		return false
+	}
+
+	if len(tagKey) > constants.PushAPITagKeyLength {
+		message := fmt.Sprintf(constants.ErrorMessageTagKeyLengthExceeded, vwoInstance.API, tagKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, push, message)
+		return false
+	}
+	if len(tagValue) > constants.PushAPITagValueLength {
+		message := fmt.Sprintf(constants.ErrorMessageTagValueLengthExceeded, vwoInstance.API, tagValue, tagKey, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, push, message)
+		return false
+	}
+
 	impression := utils.CreateImpressionForPush(vwoInstance, tagKey, tagValue, userID)
 	event.Dispatch(vwoInstance, impression)
+
+	message := fmt.Sprintf(constants.InfoMessageMainKeysForPushAPI, vwoInstance.API, vwoInstance.SettingsFile.AccountID, userID, impression.U, impression.URL)
+	utils.LogMessage(vwo.Logger, constants.Info, push, message)
 
 	return true
 }

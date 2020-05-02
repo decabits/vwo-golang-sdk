@@ -46,7 +46,7 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	parameters.Add(tagKey, tagValue)
 	impression.U = parameters.Encode()
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, impression)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression
@@ -76,7 +76,7 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 		impression.R = revenueGoal
 	}
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackGoal, impression)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackGoal, vwoInstance.API, impression)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression
@@ -101,7 +101,7 @@ func CreateImpressionTrackingUser(vwoInstance schema.VwoInstance, campaignID int
 	impression.ED = `{\"p\":\"` + constants.Platform + `\"}`
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackUser
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackUser, impression)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackUser, vwoInstance.API, impression)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression
