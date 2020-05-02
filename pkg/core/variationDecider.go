@@ -209,7 +209,13 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 		if len(variation.Segments) == 0 {
 			message := fmt.Sprintf(constants.DebugMessageNoSegmentsInVariation, vwoInstance.API, userID, campaign.Key, variation.Name)
 			utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
+
+			message = fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.CustomVariables, "False", "WhiteListing", variation.Name)
+			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
+			
+			continue;
 		}
+
 		status := PreEvaluateSegment(vwoInstance, variation.Segments, options, variation.Name)
 		if status {
 			whiteListedVariationsList = append(whiteListedVariationsList, variation)

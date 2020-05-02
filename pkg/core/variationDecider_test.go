@@ -162,7 +162,7 @@ func TestGetVariation(t *testing.T) {
 	assertOutput.NotNil(err, "Variation not in campaign")
 	assertOutput.Empty(actual, "Variation not in campaign")
 
-	userID = "USER_8"
+	userID = "Dummy_USER_8"
 	campaign = vwoInstance.SettingsFile.Campaigns[3]
 	actual, err = GetVariation(vwoInstance, userID, campaign, options)
 	assertOutput.NotNil(err, "User not eligible for campaign")
