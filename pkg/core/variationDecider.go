@@ -62,7 +62,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 
 	_, ok := options.VariationTargetingVariables["_vwo_user_id"]
 	if !ok {
-		options.VariationTargetingVariables = map[string]interface{}{"_vwo_user_id": userID}
+		options.VariationTargetingVariables["_vwo_user_id"] = userID
 	}
 
 	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
