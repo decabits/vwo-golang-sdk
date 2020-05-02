@@ -19,10 +19,10 @@ package constants
 // constants for logger
 const (
 	//Debug Messages
-	DebugMessageDevelopmentMode                 = "[%v] Development mode is : %v"
-	DebugMessageSDKInitialized                  = "[%v] SDK properly initialized"
-	DebugMessageNoCustomLoggerFound             = "[%v] No custom logger found, using pre-defined google logger "
-	DebugMessageCustomLoggerUsed                = "[%v] Custom logger used"
+	DebugMessageDevelopmentMode                 = "Development mode is : %v"
+	DebugMessageSDKInitialized                  = "SDK properly initialized"
+	DebugMessageNoCustomLoggerFound             = "No custom logger found, using pre-defined google logger "
+	DebugMessageCustomLoggerUsed                = "Custom logger used"
 	DebugMessageSegmentationSkipped             = "[%v] For User ID:%v of CampaignKey: %v segments are missing, hence skipping segmentation"
 	DebugMessageNoUserStorageServiceGet         = "[%v] No UserStorageService to get stored data"
 	DebugMessageGettingStoredVariation          = "[%v] Got stored variation for User ID: %v of Campaign: %v as Variation: %v, found in UserStorageService"
@@ -49,7 +49,7 @@ const (
 	DebugMessageNoSegmentsInVariation  = "[%v] For User ID: %v of Campaign: %v, segment was missing, hence skipping segmentation %v"
 
 	//Error Messages
-	ErrorMessageCustomLoggerMisconfigured              = "[%v] Custom logger is provided but seems to have misconfigured. Please check the API Docs. Using default logger."
+	ErrorMessageCustomLoggerMisconfigured              = "Custom logger is provided but seems to have misconfigured. Please check the API Docs. Using default logger."
 	ErrorMessageSettingsFileCorrupted                  = "[%v] Settings file is corrupted. Please contact VWO Support for help : %v"
 	ErrorMessageImpressionFailed                       = "[%v] Impression event could not be sent to VWO endpoint: %v"
 	ErrorMessageSetUserStorageServiceFailed            = "[%v] Error while saving data into UserStorage for User ID:%v."

@@ -43,23 +43,32 @@ func (vwo VWOInstance) Launch(vwoOption ...VWOOption) (*VWOInstance, error) {
 	}
 
 	if vwo.Logger != nil {
-		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessageCustomLoggerFound)
+		logger.Warning(constants.DebugMessageCustomLoggerFound)
+		
+		if !utils.ValidateLogger(vwo.Logger) {
+			return &vwo, fmt.Errorf(constants.ErrorMessageCustomLoggerMisconfigured)
+		}
+
+		utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, constants.DebugMessageCustomLoggerUsed)
 	}
 
 	if vwo.Logger == nil {
 		logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
 		logger.SetFlags(log.LstdFlags)
-		utils.LogMessage(logs, constants.Debug, fileVWO, constants.DebugMessageNoCustomLoggerFound)
+		message := fmt.Sprintf(constants.DebugMessageNoCustomLoggerFound)
+		utils.LogMessage(logs, constants.Debug, fileVWO, message)
 		vwo.Logger = logs
 		defer logger.Close()
 	}
 
-	message := fmt.Sprintf(constants.DebugMessagesDevelopmentMode+constants.DebugMessagesSDKInitialized, vwo.IsDevelopmentMode)
+	if !utils.ValidateStorage(vwo.UserStorage) {
+		return &vwo, fmt.Errorf(constants.ErrorMessageInvalidLoggerStorage, "")
+		
+	}
+
+	message := fmt.Sprintf(constants.DebugMessageDevelopmentMode+constants.DebugMessageSDKInitialized, vwo.IsDevelopmentMode)
 	utils.LogMessage(vwo.Logger, constants.Debug, fileVWO, message)
 
-	if !utils.ValidateStorage(vwo.UserStorage) || !utils.ValidateLogger(vwo.Logger) {
-		return &vwo, fmt.Errorf(constants.ErrorMessageInvalidLoggerStorage)
-	}
 	return &vwo, nil
 }
 

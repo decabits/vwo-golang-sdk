@@ -239,7 +239,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 		return true
 	}
 
-	status := SegmentEvaluator(segments, options)
+	status := SegmentEvaluator(segments, options.CustomVariables)
 	
 	message := fmt.Sprintf(constants.InfoMessageSegmentationStatus, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, segments, strconv.FormatBool(status), "PreEvaluation")
 	utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
