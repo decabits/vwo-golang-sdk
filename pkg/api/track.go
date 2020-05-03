@@ -70,8 +70,6 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 	}
 
 	options := utils.ParseOptions(option)
-	fmt.Println("-----------------")
-	fmt.Println(options)
 
 	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
 	if err != nil {
