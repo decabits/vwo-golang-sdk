@@ -51,7 +51,7 @@ func GetVariationAllocationRanges(vwoInstance schema.VwoInstance, variations []s
 			variation.EndVariationAllocation = -1
 		}
 
-		message := fmt.Sprintf(constants.InfoMessageVariationRageAllocation, variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
+		message := fmt.Sprintf(constants.InfoMessageVariationRangeAllocation, vwoInstance.API, variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
 		LogMessage(vwoInstance.Logger, constants.Info, campaign, message)
 		variationAllocationRanges = append(variationAllocationRanges, variation)
 	}
@@ -76,7 +76,7 @@ func GetVariationBucketingRange(weight float64) int {
 }
 
 // GetCampaign function finds and returns campaign from given campaign_key.
-func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.Campaign, error) {
+func GetCampaign(API string, settingsFile schema.SettingsFile, campaignKey string) (schema.Campaign, error) {
 	/*
 		Args:
 			settingsFile  : Settings file for the project
@@ -90,7 +90,7 @@ func GetCampaign(settingsFile schema.SettingsFile, campaignKey string) (schema.C
 			return campaign, nil
 		}
 	}
-	return schema.Campaign{}, fmt.Errorf(constants.ErrorMessageCampaignNotFound, campaignKey)
+	return schema.Campaign{}, fmt.Errorf(constants.ErrorMessageCampaignNotFound, API, campaignKey, "")
 }
 
 // ScaleVariations function It extracts the weights from all the variations inside the
@@ -121,7 +121,7 @@ func ScaleVariations(variations []schema.Variation) []schema.Variation {
 }
 
 // GetCampaignGoal returns goal from given campaign and goal identifier.
-func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) (schema.Goal, error) {
+func GetCampaignGoal(API string, campaign schema.Campaign, goalIdentifier string) (schema.Goal, error) {
 	/*
 		 Args:
 			campaign: The running campaign
@@ -136,11 +136,11 @@ func GetCampaignGoal(campaign schema.Campaign, goalIdentifier string) (schema.Go
 			return goal, nil
 		}
 	}
-	return schema.Goal{}, fmt.Errorf(constants.ErrorMessageGoalNotFound, goalIdentifier)
+	return schema.Goal{}, fmt.Errorf(constants.ErrorMessageGoalNotFound, API, goalIdentifier)
 }
 
 // GetCampaignVariation returns variation from given campaign and variationName.
-func GetCampaignVariation(campaign schema.Campaign, variationName string) (schema.Variation, error) {
+func GetCampaignVariation(API string, campaign schema.Campaign, variationName string) (schema.Variation, error) {
 	/*
 		 Args:
 			campaign: The running campaign
@@ -150,14 +150,14 @@ func GetCampaignVariation(campaign schema.Campaign, variationName string) (schem
 			schema.Variation: Variation corresponding to variationName in respective campaign
 	*/
 	if len(campaign.Variations) == 0 {
-		return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationInCampaign, campaign.Key)
+		return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationInCampaign, API, campaign.Key)
 	}
 	for _, variation := range campaign.Variations {
 		if variation.Name == variationName {
 			return variation, nil
 		}
 	}
-	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageVariationNotFound, variationName, campaign.Key)
+	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageVariationNotFound, API, variationName, campaign.Key)
 }
 
 // GetControlVariation returns control variation from a given campaign

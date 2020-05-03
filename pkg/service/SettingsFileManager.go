@@ -47,10 +47,10 @@ func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) erro
 	*/
 
 	if accountID == "" {
-		return fmt.Errorf(constants.ErrorMessagesInvalidAccountID)
+		return fmt.Errorf(constants.ErrorMessageInvalidAccountID, "")
 	}
 	if SDKKey == "" {
-		return fmt.Errorf(constants.ErrorMessagesInvalidSDKKey)
+		return fmt.Errorf(constants.ErrorMessageInvalidSDKKey, "")
 	}
 
 	protocol := constants.HTTPSProtocol
@@ -66,13 +66,14 @@ func (sfm *SettingsFileManager) FetchSettingsFile(accountID, SDKKey string) erro
 
 	resp, err := utils.GetRequest(protocol + hostname + path)
 	if err != nil {
-		return fmt.Errorf(constants.ErrorMessagesSettingsFileCorrupted, err.Error())
+		return fmt.Errorf(constants.ErrorMessageSettingsFileCorrupted, "", err.Error())
 	}
 
 	if err = json.Unmarshal([]byte(resp), &sfm.SettingsFile); err != nil {
-		return fmt.Errorf(constants.ErrorMessagesInvalidSettingsFile, err.Error())
+		return fmt.Errorf(constants.ErrorMessageInvalidSettingsFile, "", err.Error())
 	}
-	logger.Warning(constants.DebugMessagesValidConfiguration)
+
+	logger.Warningf(constants.DebugMessageValidConfiguration, "")
 	return nil
 }
 
@@ -88,11 +89,11 @@ func (sfm *SettingsFileManager) ProcessSettingsFile(settingsFileLocation string)
 
 	settingsFile, err := ioutil.ReadFile(settingsFileLocation)
 	if err != nil {
-		return fmt.Errorf(constants.ErrorMessagesCannotReadSettingsFile, err.Error())
+		return fmt.Errorf(constants.ErrorMessageCannotReadSettingsFile, "", err.Error())
 	}
 
 	if err = json.Unmarshal(settingsFile, &sfm.SettingsFile); err != nil {
-		return fmt.Errorf(constants.ErrorMessagesInvalidSettingsFile, err.Error())
+		return fmt.Errorf(constants.ErrorMessageInvalidSettingsFile, "", err.Error())
 	}
 
 	return nil
@@ -118,7 +119,7 @@ func (sfm *SettingsFileManager) Process() {
 				variation.StartVariationAllocation = -1
 				variation.EndVariationAllocation = -1
 			}
-			logs.Infof(constants.InfoMessageVariationRageAllocation, variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
+			logs.Infof(constants.InfoMessageVariationRangeAllocation, "", variation.Name, variation.Weight, variation.StartVariationAllocation, variation.EndVariationAllocation)
 			variationAllocationRanges = append(variationAllocationRanges, variation)
 		}
 		sfm.SettingsFile.Campaigns[i].Variations = variationAllocationRanges

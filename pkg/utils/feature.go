@@ -56,13 +56,11 @@ func GetVariableValueForVariation(vwoInstance schema.VwoInstance, campaign schem
 	*/
 
 	if !variation.IsFeatureEnabled {
-		message := fmt.Sprintf(constants.InfoMessageFeatureEnabledForUser, campaign.Key, userID)
+		message := fmt.Sprintf(constants.InfoMessageFeatureNotEnabledForUser, vwoInstance.API, campaign.Key, userID)
 		LogMessage(vwoInstance.Logger, constants.Info, feature, message)
 		variation = GetControlVariation(campaign)
-		message = fmt.Sprintf(constants.InfoMessageNewVariation, variation)
-		LogMessage(vwoInstance.Logger, constants.Info, feature, message)
 	}
-	message := fmt.Sprintf(constants.InfoMessageFeatureEnabledForUser, campaign.Key, userID)
+	message := fmt.Sprintf(constants.InfoMessageFeatureEnabledForUser, vwoInstance.API, campaign.Key, userID)
 	LogMessage(vwoInstance.Logger, constants.Info, feature, message)
 	return GetVariableForFeature(variation.Variables, variableKey)
 }

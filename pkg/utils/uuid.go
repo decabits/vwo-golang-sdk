@@ -45,7 +45,7 @@ func generateFor(vwoInstance schema.VwoInstance, userID string, accountID int) s
 	uuidForAccountUserID := suuid.NewV5(userIDNamespace, userID)
 	desiredUUID := strings.ToUpper(strings.Replace(uuidForAccountUserID.String(), "-", "", -1))
 
-	message := fmt.Sprintf(constants.DebugMessageUUIDForUser, userID, accountID, desiredUUID)
+	message := fmt.Sprintf(constants.DebugMessageUUIDForUser, vwoInstance.API, userID, accountID, desiredUUID)
 	LogMessage(vwoInstance.Logger, constants.Debug, uuid, message)
 
 	return desiredUUID

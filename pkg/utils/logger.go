@@ -43,12 +43,12 @@ func LogMessage(logs interface{}, level, file, message string) {
 
 	switch level {
 	case constants.Info:
-		log.Info(formattedMessage)
+		log.Infoln(formattedMessage)
 	case constants.Debug:
-		log.Warning(formattedMessage)
+		log.Warningln(formattedMessage)
 	case constants.Error:
-		log.Error(formattedMessage)
+		log.Errorln(formattedMessage)
 	default:
-		log.Error("Invalid Logger Level")
+		log.Fatalln("Invalid Logger Level")
 	}
 }

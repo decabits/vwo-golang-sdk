@@ -24,6 +24,7 @@ type VwoInstance struct {
 	IsDevelopmentMode bool
 	UserID            string
 	Campaign          Campaign
+	API 							string
 }
 
 // SettingsFile struct

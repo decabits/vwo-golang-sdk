@@ -52,43 +52,44 @@ func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID
 		Returns:
 			interrface{}: Value of the variable
 	*/
-	if !utils.ValidateGetFeatureVariableValue(campaignKey, variableKey, userID) {
-		message := fmt.Sprintf(constants.ErrorMessagesGetFeatureVariableMissingParams)
-		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
-		return nil
-	}
-
-	options := utils.ParseOptions(option)
-
-	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
-	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
-		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
-		return nil
-	}
-
-	if campaign.Status != constants.StatusRunning {
-		message := fmt.Sprintf(constants.ErrorMessagesCampaignNotRunning, "GetFeatureVariableValue", campaignKey)
-		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
-		return nil
-	}
-	if utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
-		message := fmt.Sprintf(constants.ErrorMessagesInvalidAPI, "GetFeatureVariableValue", campaignKey, campaign.Type, userID)
-		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
-		return nil
-	}
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      vwo.SettingsFile,
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
-		UserID:            userID,
-		Campaign:          campaign,
+		API:               "GetFeatureVariableValue",
 	}
+
+	if !utils.ValidateGetFeatureVariableValue(campaignKey, variableKey, userID) {
+		message := fmt.Sprintf(constants.ErrorMessageGetFeatureVariableMissingParams, vwoInstance.API)
+		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
+		return nil
+	}
+
+	options := utils.ParseOptions(option)
+
+	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
+	if err != nil {
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, vwoInstance.API, campaignKey, err.Error())
+		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
+		return nil
+	}
+
+	if campaign.Status != constants.StatusRunning {
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotRunning, vwoInstance.API, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
+		return nil
+	}
+	if utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
+		message := fmt.Sprintf(constants.ErrorMessageInvalidAPI, vwoInstance.API, campaignKey, campaign.Type, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
+		return nil
+	}
+
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, vwoInstance.API, userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, getFeatureVariableValue, message)
 		return nil
 	}
@@ -101,10 +102,10 @@ func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID
 	}
 
 	if variable.Key == "" {
-		message := fmt.Sprintf(constants.ErrorMessagesvariableNotFound, variable.Key, userID)
+		message := fmt.Sprintf(constants.ErrorMessageVariableNotFound, vwoInstance.API, variable.Key, userID, campaign.Key, campaign.Type)
 		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
 	} else {
-		message := fmt.Sprintf(constants.InfoMessageUserRecievedVariableValue, variable.Key, campaignKey, variable, userID)
+		message := fmt.Sprintf(constants.InfoMessageUserRecievedVariableValue, vwoInstance.API, variable.Key, campaignKey, variable, userID)
 		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
 	}
 

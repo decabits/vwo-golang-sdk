@@ -49,9 +49,9 @@ func GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
 	*/
 	settingsFileManager := service.SettingsFileManager{}
 	if err := settingsFileManager.FetchSettingsFile(accountID, SDKKey); err != nil {
-		logger.Warning(constants.ErrorMessageCannotProcessSettingsFile + err.Error())
+		logger.Warningf(fileVWO + " : " + constants.ErrorMessageCannotProcessSettingsFile, "", err.Error())
 	}
 	settingsFileManager.Process()
-	logger.Warning(fileVWO + " : " + constants.DebugMessagesSettingsFileProcessed)
+	logger.Warningf(fileVWO + " : " + constants.DebugMessageSettingsFileProcessed, "")
 	return settingsFileManager.GetSettingsFile()
 }

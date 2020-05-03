@@ -49,43 +49,44 @@ func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option inte
 		Returns:
 			string: Variation Name for user to corresponding camapign
 	*/
-	if !utils.ValidateGetVariationName(campaignKey, userID) {
-		message := fmt.Sprintf(constants.ErrorMessagesGetVariationAPIMissingParams)
-		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
-		return ""
-	}
-
-	options := utils.ParseOptions(option)
-
-	campaign, err := utils.GetCampaign(vwo.SettingsFile, campaignKey)
-	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n %v", campaignKey, err.Error())
-		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
-		return ""
-	}
-
-	if campaign.Status != constants.StatusRunning {
-		message := fmt.Sprintf(constants.ErrorMessagesCampaignNotRunning, "GetVariationName", campaignKey)
-		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
-		return ""
-	}
-	if !utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
-		message := fmt.Sprintf(constants.ErrorMessagesInvalidAPI, "GetVariationName", campaignKey, campaign.Type, userID)
-		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
-		return ""
-	}
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      vwo.SettingsFile,
 		UserStorage:       vwo.UserStorage,
 		Logger:            vwo.Logger,
 		IsDevelopmentMode: vwo.IsDevelopmentMode,
-		UserID:            userID,
-		Campaign:          campaign,
+		API:               "GetVariationName",
 	}
+
+	if !utils.ValidateGetVariationName(campaignKey, userID) {
+		message := fmt.Sprintf(constants.ErrorMessageGetVariationAPIMissingParams, vwoInstance.API)
+		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
+		return ""
+	}
+
+	options := utils.ParseOptions(option)
+
+	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
+	if err != nil {
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, vwoInstance.API, campaignKey, err.Error())
+		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
+		return ""
+	}
+
+	if campaign.Status != constants.StatusRunning {
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotRunning, vwoInstance.API, campaignKey)
+		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
+		return ""
+	}
+	if !utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
+		message := fmt.Sprintf(constants.ErrorMessageInvalidAPI, vwoInstance.API, campaignKey, campaign.Type, userID)
+		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
+		return ""
+	}
+
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n %v", userID, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, vwoInstance.API, userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, getVariationName, message)
 	}
 

@@ -186,6 +186,8 @@ func processCustomVariablesValue(value interface{}) string {
 	// handle cases
 	case bool:
 		return strconv.FormatBool(value.(bool))
+	case int:
+		return strconv.Itoa(value.(int))
 	case float64:
 		return strconv.FormatFloat(value.(float64), 'f', -1, 64)
 	case nil:

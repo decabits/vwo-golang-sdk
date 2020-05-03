@@ -57,17 +57,22 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 			schema.Variation: Struct object containing the information regarding variation assigned else empty object
 			error: Error message
 	*/
+	vwoInstance.UserID = userID
+	vwoInstance.Campaign = campaign
 
 	_, ok := options.VariationTargetingVariables["_vwo_user_id"]
 	if !ok {
-		options.VariationTargetingVariables = map[string]interface{}{"_vwo_user_id": userID}
+		if options.VariationTargetingVariables == nil {
+			options.VariationTargetingVariables = make(map[string]interface{})
+		}
+		options.VariationTargetingVariables["_vwo_user_id"] = userID
 	}
 
 	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
 		utils.LogMessage(vwoInstance.Logger, constants.Error, variationDecider, err.Error())
 	} else {
-		message := fmt.Sprintf(constants.DebugMessageGotVariation, userID, campaign.Key, targettedVariation.Name)
+		message := fmt.Sprintf(constants.InfoMessageGotVariationForUser, vwoInstance.API, userID, campaign.Key, campaign.Type, targettedVariation.Name)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 		return targettedVariation, nil
 	}
@@ -77,31 +82,40 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 		utils.LogMessage(vwoInstance.Logger, constants.Error, variationDecider, err.Error())
 	}
 	if variationName != "" {
-		message := fmt.Sprintf(constants.DebugMessageGettingStoredVariation, userID, campaign.Key, variationName)
-		utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
-		return utils.GetCampaignVariation(campaign, variationName)
+		message := fmt.Sprintf(constants.InfoMessageGotStoredVariation, vwoInstance.API, variationName, campaign.Key, userID)
+		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
+		return utils.GetCampaignVariation(vwoInstance.API, campaign, variationName)
 	}
 
-	if EvaluateSegment(vwoInstance, campaign.Segments, options) && IsUserPartOfCampaign(vwoInstance, userID, campaign) {
+	if !IsUserPartOfCampaign(vwoInstance, userID, campaign) {
+		return schema.Variation{}, fmt.Errorf(constants.DebugMessageUserNotPartOfCampaign, vwoInstance.API, userID, campaign.Key, campaign.Type, "IsUserPartOfCampaign")
+	}
+
+	if EvaluateSegment(vwoInstance, campaign.Segments, options) {
 		variation, err := BucketUserToVariation(vwoInstance, userID, campaign)
 		if err != nil {
-			return schema.Variation{}, fmt.Errorf(constants.DebugMessageNoVariationAllocated, userID, campaign.Key, campaign.Type, err.Error())
-		}
-		if vwoInstance.UserStorage != nil {
-			if storage, ok := vwoInstance.UserStorage.(interface{ Set(a, b, c string) }); ok {
-				storage.Set(userID, campaign.Key, variationName)
-				message := fmt.Sprintf(constants.InfoMessageSettingDataUserStorageService, userID)
-				utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
-			}
-			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, constants.DebugMessagesNoUserStorageServiceSet)
+			return schema.Variation{}, fmt.Errorf(constants.InfoMessageUserGotNoVariation, vwoInstance.API, userID, campaign.Key, err.Error())
 		}
 
-		message := fmt.Sprintf(constants.InfoMessageVariationAllocated, userID, campaign.Key, variation.Name)
+		if vwoInstance.UserStorage == nil {
+			message := fmt.Sprintf(constants.DebugMessageNoUserStorageServiceSet, vwoInstance.API)
+			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
+		} else {
+			if storage, ok := vwoInstance.UserStorage.(interface{ Set(a, b, c string) }); ok {
+				storage.Set(userID, campaign.Key, variationName)
+				message := fmt.Sprintf(constants.InfoMessageSettingDataUserStorageService, vwoInstance.API, userID)
+				utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
+			}
+			message := fmt.Sprintf(constants.ErrorMessageSetUserStorageServiceFailed, vwoInstance.API, userID)
+			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
+		}
+
+		message := fmt.Sprintf(constants.InfoMessageVariationAllocated, vwoInstance.API, userID, campaign.Key, variation.Name)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 		return variation, nil
 	}
 
-	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationAlloted, userID, campaign.Key, campaign.Type)
+	return schema.Variation{}, fmt.Errorf(constants.ErrorMessageNoVariationAlloted, vwoInstance.API, userID, campaign.Key, campaign.Type)
 }
 
 // FindTargetedVariation function Identifies and retrives if there exists any targeted
@@ -121,24 +135,30 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 	*/
 
 	if campaign.IsForcedVariation == false {
-		return schema.Variation{}, fmt.Errorf(constants.DebugMessageWhitelistingSkipped, userID, campaign.Key)
+		return schema.Variation{}, fmt.Errorf(constants.DebugMessageWhitelistingSkipped, vwoInstance.API, userID, campaign.Key)
 	}
 	whiteListedVariationsList := GetWhiteListedVariationsList(vwoInstance, userID, campaign, options)
 	whiteListedVariationsLength := len(whiteListedVariationsList)
 	var targettedVariation schema.Variation
 	if whiteListedVariationsLength == 0 {
-		return schema.Variation{}, fmt.Errorf(constants.DebugMessageNoWhitelistedVariation, campaign.Key)
+		return schema.Variation{}, fmt.Errorf(constants.DebugMessageNoWhitelistedVariation, vwoInstance.API, campaign.Key)
 	} else if whiteListedVariationsLength == 1 {
 		targettedVariation = whiteListedVariationsList[0]
 	} else {
 		whiteListedVariationsList = utils.ScaleVariations(whiteListedVariationsList)
 		whiteListedVariationsList = utils.GetVariationAllocationRanges(vwoInstance, whiteListedVariationsList)
-		bucketValue := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, 1)
+		_, bucketValue := GetBucketValueForUser(vwoInstance, userID, constants.MaxTrafficValue, 1)
 		var err error
 		targettedVariation, err = GetBucketerVariation(vwoInstance, whiteListedVariationsList, bucketValue, userID, campaign.Key)
 		if err != nil {
-			return schema.Variation{}, fmt.Errorf(constants.DebugMessageNoTargettedVariation, err.Error())
+			return schema.Variation{}, fmt.Errorf(constants.DebugMessageNoTargettedVariation, vwoInstance.API, err.Error())
 		}
+
+		message := fmt.Sprintf(constants.InfoMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, targettedVariation.Segments, "True", "WhiteListing", targettedVariation.Name)
+		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
+
+		message = fmt.Sprintf(constants.InfoMessageForcedvariationAllocated, vwoInstance.API, userID, campaign.Key, campaign.Type, targettedVariation.Name)
+		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 	}
 	return targettedVariation, nil
 }
@@ -156,21 +176,21 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 	*/
 
 	if vwoInstance.UserStorage == nil {
-		return "", fmt.Errorf(constants.DebugMessageNoUserStorageServiceGet)
+		return "", fmt.Errorf(constants.DebugMessageNoUserStorageServiceGet, vwoInstance.API)
 	}
 	if storage, ok := vwoInstance.UserStorage.(interface {
 		Get(a, b string) schema.UserData
 	}); ok {
 		userStorageFetch := storage.Get(userID, campaign.Key)
-		message := fmt.Sprintf(constants.DebugMessageGettingStoredVariation, userID, campaign.Key, userStorageFetch.VariationName)
+		message := fmt.Sprintf(constants.DebugMessageGettingStoredVariation, vwoInstance.API, userID, campaign.Key, userStorageFetch.VariationName)
 		utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
 		if userStorageFetch.VariationName == "" {
-			message := fmt.Sprintf(constants.DebugMessagesNoStoredVariation, userID, campaign.Key)
+			message := fmt.Sprintf(constants.DebugMessageNoStoredVariation, vwoInstance.API, userID, campaign.Key)
 			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
 		}
 		return userStorageFetch.VariationName, nil
 	}
-	return "", fmt.Errorf(constants.ErrorMessagesGetUserStorageServiceFailed)
+	return "", fmt.Errorf(constants.ErrorMessageGetUserStorageServiceFailed, vwoInstance.API, userID)
 }
 
 //GetWhiteListedVariationsList function identifies all forced variations which are targeted by variation_targeting_variables
@@ -190,16 +210,22 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 	var whiteListedVariationsList []schema.Variation
 	for _, variation := range campaign.Variations {
 		if len(variation.Segments) == 0 {
-			message := fmt.Sprintf(constants.DebugMessageNoSegmentsInVariation, userID, campaign.Key, variation)
+			message := fmt.Sprintf(constants.DebugMessageNoSegmentsInVariation, vwoInstance.API, userID, campaign.Key, variation.Name)
 			utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
+
+			message = fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.CustomVariables, "False", "WhiteListing", variation.Name)
+			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
+
+			continue
 		}
-		status := PreEvaluateSegment(vwoInstance, variation.Segments, options)
+
+		status := PreEvaluateSegment(vwoInstance, variation.Segments, options, variation.Name)
 		if status {
 			whiteListedVariationsList = append(whiteListedVariationsList, variation)
 		}
 
-		message := fmt.Sprintf(constants.InfoMessageSegmentationStatus, userID, campaign.Key, options.CustomVariables, strconv.FormatBool(status), variation)
-		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
+		message := fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.CustomVariables, strconv.FormatBool(status), "WhiteListing", variation.Name)
+		utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
 	}
 	return whiteListedVariationsList
 }
@@ -215,17 +241,23 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 			bool: if the options falls in the segments criteria
 	*/
 
-	if len(segments) == 0 {
-		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, segments, options.CustomVariables)
+	if options.CustomVariables == nil {
+		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
 		return true
 	}
-	return SegmentEvaluator(segments, options.CustomVariables)
+
+	status := SegmentEvaluator(segments, options.CustomVariables)
+
+	message := fmt.Sprintf(constants.InfoMessageSegmentationStatus, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, segments, strconv.FormatBool(status), "PreEvaluation")
+	utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
+
+	return status
 }
 
 // PreEvaluateSegment function evaluates segmentation for the userID against the segments found inside the campaign.
-func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interface{}, options schema.Options) bool {
+func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interface{}, options schema.Options, variationName string) bool {
 	/*
 		Args:
 			segments: segments from campaign or variation
@@ -235,8 +267,8 @@ func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]inte
 			bool: if the options falls in the segments criteria
 	*/
 
-	if len(segments) == 0 {
-		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, segments, options.CustomVariables)
+	if options.VariationTargetingVariables == nil {
+		message := fmt.Sprintf(constants.DebugMessageSegmentationSkippedForVariation, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, variationName)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
 		return false
