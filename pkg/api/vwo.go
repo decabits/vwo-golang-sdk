@@ -57,7 +57,7 @@ func (vwo VWOInstance) Launch(vwoOption ...VWOOption) (*VWOInstance, error) {
 		logger.SetFlags(log.LstdFlags)
 		message := fmt.Sprintf(constants.DebugMessageNoCustomLoggerFound)
 		vwo.Logger = logs
-		// defer logger.Close()
+		defer logger.Close()
 	}
 
 	if !utils.ValidateStorage(vwo.UserStorage) {
