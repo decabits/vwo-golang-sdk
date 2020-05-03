@@ -70,7 +70,7 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string, option inte
 
 	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n ", vwoInstance.API, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, vwoInstance.API, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, fileIsFeatureEnabled, message)
 		return false
 	}
@@ -88,7 +88,7 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string, option inte
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n ", vwoInstance.API, userID, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, vwoInstance.API, userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, fileIsFeatureEnabled, message)
 		return false
 	}

@@ -62,7 +62,10 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 
 	_, ok := options.VariationTargetingVariables["_vwo_user_id"]
 	if !ok {
-		options.VariationTargetingVariables = map[string]interface{}{"_vwo_user_id": userID}
+		if options.VariationTargetingVariables == nil {
+			options.VariationTargetingVariables = make(map[string]interface{})
+		}
+		options.VariationTargetingVariables["_vwo_user_id"] = userID
 	}
 
 	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
@@ -87,7 +90,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 	if !IsUserPartOfCampaign(vwoInstance, userID, campaign) {
 		return schema.Variation{}, fmt.Errorf(constants.DebugMessageUserNotPartOfCampaign, vwoInstance.API, userID, campaign.Key, campaign.Type, "IsUserPartOfCampaign")
 	}
-	
+
 	if EvaluateSegment(vwoInstance, campaign.Segments, options) {
 		variation, err := BucketUserToVariation(vwoInstance, userID, campaign)
 		if err != nil {
@@ -209,7 +212,13 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 		if len(variation.Segments) == 0 {
 			message := fmt.Sprintf(constants.DebugMessageNoSegmentsInVariation, vwoInstance.API, userID, campaign.Key, variation.Name)
 			utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
+
+			message = fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.CustomVariables, "False", "WhiteListing", variation.Name)
+			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
+
+			continue
 		}
+
 		status := PreEvaluateSegment(vwoInstance, variation.Segments, options, variation.Name)
 		if status {
 			whiteListedVariationsList = append(whiteListedVariationsList, variation)
@@ -232,7 +241,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 			bool: if the options falls in the segments criteria
 	*/
 
-	if len(segments) == 0 {
+	if options.CustomVariables == nil {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
@@ -240,7 +249,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 	}
 
 	status := SegmentEvaluator(segments, options.CustomVariables)
-	
+
 	message := fmt.Sprintf(constants.InfoMessageSegmentationStatus, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, segments, strconv.FormatBool(status), "PreEvaluation")
 	utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
@@ -258,7 +267,7 @@ func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]inte
 			bool: if the options falls in the segments criteria
 	*/
 
-	if len(segments) == 0 {
+	if options.VariationTargetingVariables == nil {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkippedForVariation, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, variationName)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 

@@ -71,7 +71,7 @@ func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID
 
 	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n ", vwoInstance.API, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, vwoInstance.API, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
 		return nil
 	}
@@ -89,7 +89,7 @@ func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n ", vwoInstance.API, userID, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, vwoInstance.API, userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, getFeatureVariableValue, message)
 		return nil
 	}
