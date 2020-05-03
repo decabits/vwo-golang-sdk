@@ -21,8 +21,8 @@ import (
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
-	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -94,6 +94,8 @@ func TestValidateStorage(t *testing.T) {
 
 func TestParseOptions(t *testing.T) {
 	expected := schema.Options{}
+	expected.CustomVariables = make(map[string]interface{})
+	expected.VariationTargetingVariables = make(map[string]interface{})
 	actual := ParseOptions(nil)
 	assert.Equal(t, expected, actual)
 

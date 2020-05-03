@@ -62,6 +62,9 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 
 	_, ok := options.VariationTargetingVariables["_vwo_user_id"]
 	if !ok {
+		if options.VariationTargetingVariables == nil {
+			options.VariationTargetingVariables = make(map[string]interface{})
+		}
 		options.VariationTargetingVariables["_vwo_user_id"] = userID
 	}
 
@@ -212,8 +215,8 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 
 			message = fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.CustomVariables, "False", "WhiteListing", variation.Name)
 			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
-			
-			continue;
+
+			continue
 		}
 
 		status := PreEvaluateSegment(vwoInstance, variation.Segments, options, variation.Name)

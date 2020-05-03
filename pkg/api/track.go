@@ -70,10 +70,12 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 	}
 
 	options := utils.ParseOptions(option)
+	fmt.Println("-----------------")
+	fmt.Println(options)
 
 	campaign, err := utils.GetCampaign(vwoInstance.API, vwo.SettingsFile, campaignKey)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound+" \n ", vwoInstance.API, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.ErrorMessageCampaignNotFound, vwoInstance.API, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
 	}
@@ -91,7 +93,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 
 	goal, err := utils.GetCampaignGoal(vwoInstance.API, campaign, goalIdentifier)
 	if err != nil {
-		message := fmt.Sprintf(constants.ErrorMessageTrackAPIGoalNotFound+" \n ", vwoInstance.API, goalIdentifier, campaignKey, userID, err.Error())
+		message := fmt.Sprintf(constants.ErrorMessageTrackAPIGoalNotFound, vwoInstance.API, goalIdentifier, campaignKey, userID, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
 	}
@@ -104,7 +106,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 
 	variation, err := core.GetVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
-		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey+" \n ", vwoInstance.API, userID, campaignKey, err.Error())
+		message := fmt.Sprintf(constants.InfoMessageInvalidVariationKey, vwoInstance.API, userID, campaignKey, err.Error())
 		utils.LogMessage(vwo.Logger, constants.Info, track, message)
 		return false
 	}

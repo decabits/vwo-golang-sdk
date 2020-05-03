@@ -19,7 +19,6 @@ package api
 import (
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -67,28 +66,28 @@ func TestTrack(t *testing.T) {
 
 	userID = "USER_3"
 	campaignKey = "CAMPAIGN_10"
-	options := schema.Options{
-		RevenueGoal: 0,
+	option := map[string]interface{}{
+		"revenueGoal": 0,
 	}
 	goalIdentifier = "GOAL_1"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
+	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
 	assertOutput.False(value, "Revenue Not defined")
 
 	userID = "USER_3"
 	campaignKey = "CAMPAIGN_2"
-	options = schema.Options{
-		RevenueGoal: 10,
+	option = map[string]interface{}{
+		"revenueGoal": 10,
 	}
 	goalIdentifier = "GOAL_2"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
+	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
 	assertOutput.False(value, "No Variation in Campaign")
 
-	options = schema.Options{
-		RevenueGoal: 12,
+	option = map[string]interface{}{
+		"revenueGoal": 12,
 	}
 	userID = "USER_9"
 	campaignKey = "CAMPAIGN_10"
 	goalIdentifier = "GOAL_2"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
+	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
 	assertOutput.True(value, "Variation should be defined")
 }

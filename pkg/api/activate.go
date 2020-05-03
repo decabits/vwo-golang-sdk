@@ -54,9 +54,6 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string, option interface{})
 
 	options := utils.ParseOptions(option)
 
-	fmt.Println("========================")
-	fmt.Println(options)
-
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      vwo.SettingsFile,
 		UserStorage:       vwo.UserStorage,
