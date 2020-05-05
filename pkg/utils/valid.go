@@ -24,6 +24,8 @@ import (
 // ParseOptions - parses custom options
 func ParseOptions(option interface{}) (options schema.Options) {
 	if option == nil {
+		options.CustomVariables = make(map[string]interface{})
+		options.VariationTargetingVariables = make(map[string]interface{})
 		return
 	}
 	optionMap, okMap := option.(map[string]interface{})

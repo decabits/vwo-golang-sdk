@@ -63,7 +63,6 @@ func (vwo VWOInstance) Init(vwoOption ...VWOOption) (*VWOInstance, error) {
 
 	if !utils.ValidateStorage(vwo.UserStorage) {
 		return &vwo, fmt.Errorf(constants.ErrorMessageInvalidLoggerStorage, "")
-
 	}
 
 	message := fmt.Sprintf(constants.DebugMessageDevelopmentMode+constants.DebugMessageSDKInitialized, vwo.IsDevelopmentMode)
