@@ -7,9 +7,12 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLoggingBeforeInit(t *testing.T) {
+	logLevel = 3
 	old := os.Stderr
 	r, w, err := os.Pipe()
 	if err != nil {
@@ -82,4 +85,9 @@ func TestInit(t *testing.T) {
 			t.Errorf("logger %d wrong number of lines, want %d, got %d", i+1, tt.want, got)
 		}
 	}
+}
+
+func TestSetLogLevel(t *testing.T) {
+	SetLogLevel(2)
+	assert.Equal(t, 2, logLevel)
 }

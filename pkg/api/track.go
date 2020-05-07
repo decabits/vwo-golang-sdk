@@ -110,7 +110,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 	}
 
 	impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, campaign.ID, goal.ID, 5) // revenueValue = 5
-	event.DispatchTrackingGoal(vwoInstance, impression)
+	go event.DispatchTrackingGoal(vwoInstance, impression)
 
 	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
 	utils.LogMessage(vwo.Logger, constants.Info, activate, message)
