@@ -29,12 +29,12 @@ type VWOInstance schema.VwoInstance
 
 const fileVWO = "vwo.go"
 
-// Init function to intialise sdk
-func Init(settingsFile schema.SettingsFile, vwoOption ...api.VWOOption) (*api.VWOInstance, error) {
+// Launch function to intialise sdk
+func Launch(settingsFile schema.SettingsFile, vwoOption ...api.VWOOption) (*api.VWOInstance, error) {
 	vwo := &api.VWOInstance{
 		SettingsFile: settingsFile,
 	}
-	return vwo.Launch(vwoOption...)
+	return vwo.Init(vwoOption...)
 }
 
 // GetSettingsFile function to fetch and parse settingsfile
@@ -54,4 +54,8 @@ func GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
 	settingsFileManager.Process()
 	logger.Warningf(fileVWO + " : " + constants.DebugMessageSettingsFileProcessed, "")
 	return settingsFileManager.GetSettingsFile()
+}
+
+func SetLogLevel(lvl int) {
+	logger.SetLogLevel(lvl)
 }

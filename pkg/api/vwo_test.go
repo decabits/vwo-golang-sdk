@@ -40,7 +40,7 @@ func getInstance(path string) (*VWOInstance, error) {
 	var vwo VWOInstance
 	vwo.SettingsFile = settingsFile
 
-	return vwo.Launch(WithDevelopmentMode())
+	return vwo.Init(WithDevelopmentMode())
 }
 
 type WUserStorage interface {
@@ -55,14 +55,14 @@ func (us *WUserStorageData) Getter(userID, campaignKey string) schema.UserData {
 }
 func (us *WUserStorageData) Setter(userID, campaignKey, variationName string) {}
 
-func TestLaunch(t *testing.T) {
+func TestInit(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	_, err := vwoInstance.Launch(WithDevelopmentMode())
+	_, err := vwoInstance.Init(WithDevelopmentMode())
 	assert.Nil(t, err)
 
 	vwoInstance = VWOInstance{}
 	storage := &WUserStorageData{}
-	_, err = vwoInstance.Launch(WithStorage(storage))
+	_, err = vwoInstance.Init(WithUserStorage(storage))
 	assert.NotNil(t, err)
 
 	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
@@ -70,6 +70,6 @@ func TestLaunch(t *testing.T) {
 	defer logger.Close()
 
 	vwoInstance = VWOInstance{}
-	_, err = vwoInstance.Launch(WithLogger(logs))
+	_, err = vwoInstance.Init(WithCustomLogger(logs))
 	assert.Nil(t, err)
 }

@@ -35,8 +35,8 @@ type VWOInstance schema.VwoInstance
 // VWOOption is used to provide custom instance configuration.
 type VWOOption func(*VWOInstance)
 
-// Launch instantiates instance with the given options
-func (vwo VWOInstance) Launch(vwoOption ...VWOOption) (*VWOInstance, error) {
+// Init instantiates instance with the given options
+func (vwo VWOInstance) Init(vwoOption ...VWOOption) (*VWOInstance, error) {
 	// extracting options
 	for _, option := range vwoOption {
 		option(&vwo)
@@ -71,15 +71,15 @@ func (vwo VWOInstance) Launch(vwoOption ...VWOOption) (*VWOInstance, error) {
 	return &vwo, nil
 }
 
-// WithStorage sets user storage
-func WithStorage(storage interface{}) VWOOption {
+// WithUserStorage sets user storage
+func WithUserStorage(storage interface{}) VWOOption {
 	return func(vwo *VWOInstance) {
 		vwo.UserStorage = storage
 	}
 }
 
-// WithLogger sets user custom logger
-func WithLogger(logger interface{}) VWOOption {
+// WithCustomLogger sets user custom logger
+func WithCustomLogger(logger interface{}) VWOOption {
 	return func(vwo *VWOInstance) {
 		vwo.Logger = logger
 	}

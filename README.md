@@ -29,13 +29,13 @@ import "github.com/decabits/vwo-golang-sdk/pkg/api"
 settingsFile := vwo.GetSettingsFile("accountID", "SDKKey")
 
 // Default instance of VwoInstance
-instance, err := vwo.Init(settingsFile)
+instance, err := vwo.Launch(settingsFile)
 if err != nil {
 	//handle err
 }
 
 // Instance with custom options
-instance, err := vwo.Init(settingsFile, api.WithDevelopmentMode())
+instance, err := vwo.Launch(settingsFile, api.WithDevelopmentMode())
 if err != nil {
 	//handle err
 }
@@ -173,7 +173,7 @@ func main() {
 	// create UserStorageData object
 	storage := &UserStorageData{}
 
-	instance, err := vwo.Init(settingsFile, api.WithStorage(storage))
+	instance, err := vwo.Launch(settingsFile, api.WithUserStorage(storage))
 	if err != nil {
 		//handle err
 	}
@@ -203,7 +203,7 @@ func main() {
 	// create LogS object
 	logger := &LogS{}
 
-	instance, err := vwo.Init(settingsFile, api.WithLogger(logger))
+	instance, err := vwo.Launch(settingsFile, api.WithCustomLogger(logger))
 	if err != nil {
 		//handle err
 	}
