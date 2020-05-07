@@ -97,7 +97,7 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string, option inte
 	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureTest) {
 		isFeatureEnabled = variation.IsFeatureEnabled
 		impression := utils.CreateImpressionTrackingUser(vwoInstance, campaign.ID, variation.ID, userID)
-		event.Dispatch(vwoInstance, impression)
+		go event.Dispatch(vwoInstance, impression)
 	} else if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
 		isFeatureEnabled = true
 	}
