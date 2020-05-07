@@ -71,15 +71,15 @@ func (vwo VWOInstance) Init(vwoOption ...VWOOption) (*VWOInstance, error) {
 	return &vwo, nil
 }
 
-// WithUserStorage sets user storage
-func WithUserStorage(storage interface{}) VWOOption {
+// WithStorage sets user storage
+func WithStorage(storage interface{}) VWOOption {
 	return func(vwo *VWOInstance) {
 		vwo.UserStorage = storage
 	}
 }
 
-// WithCustomLogger sets user custom logger
-func WithCustomLogger(logger interface{}) VWOOption {
+// WithLogger sets user custom logger
+func WithLogger(logger interface{}) VWOOption {
 	return func(vwo *VWOInstance) {
 		vwo.Logger = logger
 	}

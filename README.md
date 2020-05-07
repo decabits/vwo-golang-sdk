@@ -173,7 +173,7 @@ func main() {
 	// create UserStorageData object
 	storage := &UserStorageData{}
 
-	instance, err := vwo.Launch(settingsFile, api.WithUserStorage(storage))
+	instance, err := vwo.Launch(settingsFile, api.WithStorage(storage))
 	if err != nil {
 		//handle err
 	}
@@ -203,7 +203,7 @@ func main() {
 	// create LogS object
 	logger := &LogS{}
 
-	instance, err := vwo.Launch(settingsFile, api.WithCustomLogger(logger))
+	instance, err := vwo.Launch(settingsFile, api.WithLogger(logger))
 	if err != nil {
 		//handle err
 	}

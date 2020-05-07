@@ -62,7 +62,7 @@ func TestInit(t *testing.T) {
 
 	vwoInstance = VWOInstance{}
 	storage := &WUserStorageData{}
-	_, err = vwoInstance.Init(WithUserStorage(storage))
+	_, err = vwoInstance.Init(WithStorage(storage))
 	assert.NotNil(t, err)
 
 	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
@@ -70,6 +70,6 @@ func TestInit(t *testing.T) {
 	defer logger.Close()
 
 	vwoInstance = VWOInstance{}
-	_, err = vwoInstance.Init(WithCustomLogger(logs))
+	_, err = vwoInstance.Init(WithLogger(logs))
 	assert.Nil(t, err)
 }
