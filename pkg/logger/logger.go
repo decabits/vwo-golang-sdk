@@ -50,6 +50,7 @@ const (
 var (
 	logLock       sync.Mutex
 	defaultLogger *Logger
+	logLevel      int
 )
 
 // initialize resets defaultLogger.  Which allows tests to reset environment.
@@ -158,16 +159,29 @@ func (l *Logger) output(s severity, depth int, txt string) {
 	defer logLock.Unlock()
 	switch s {
 	case sInfo:
-		l.infoLog.Output(3+depth, txt)
+		if logLevel >= 2 {
+			l.infoLog.Output(3+depth, txt)
+		}
 	case sWarning:
-		l.warningLog.Output(3+depth, txt)
+		if logLevel >= 3 {
+			l.warningLog.Output(3+depth, txt)
+		}
 	case sError:
-		l.errorLog.Output(3+depth, txt)
+		if logLevel >= 0 {
+			l.errorLog.Output(3+depth, txt)
+		}
 	case sFatal:
-		l.fatalLog.Output(3+depth, txt)
+		if logLevel >= 1 {
+			l.fatalLog.Output(3+depth, txt)
+		}
 	default:
 		panic(fmt.Sprintln("unrecognized severity:", s))
 	}
+}
+
+func SetLogLevel(lvl int) {
+	logLevel = lvl
+	fmt.Printf("log level set to %d\n", lvl)
 }
 
 // Close closes all the underlying log writers, which will flush any cached logs.

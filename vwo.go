@@ -55,3 +55,7 @@ func GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
 	logger.Warningf(fileVWO + " : " + constants.DebugMessageSettingsFileProcessed, "")
 	return settingsFileManager.GetSettingsFile()
 }
+
+func SetLogLevel(lvl int) {
+	logger.SetLogLevel(lvl)
+}
