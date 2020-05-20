@@ -37,7 +37,7 @@ const (
 	DebugMessageVariationHashBucketValue        = "[%v] User ID: %v for CampaignKey: %v having percent traffic: %v got bucket value: %v "
 	DebugMessageUserNotPartOfCampaign           = "[%v] User ID: %v for CampaignKey: %v type: %v did not become part of campaign method: %v "
 	DebugMessageSegmentationSkippedForVariation = "[%v] For User ID: %v of CampaignKey: %v segments are missing, hence skipping segmentation for variation %v "
-	DebugMessageSegmentationStatusForVariation  = "[%v] For User ID: %v of Campaign: %v with variables: %v %v %v for variation %v "
+	DebugMessageSegmentationStatusForVariation  = "[%v] For User ID: %v of Campaign: %v with variables: %v, %v, %v for variation %v "
 
 	/*Extras*/
 	DebugMessageNoWhitelistedVariation = "[%v] No whitelisting variation found in campaign: %v "
@@ -93,14 +93,14 @@ const (
 	InfoMessageFeatureEnabledForUser          = "[%v] Campaign: %v for user ID: %v is enabled"
 	InfoMessageFeatureNotEnabledForUser       = "[%v] Campaign: %v for user ID: %v is not enabled"
 	InfoMessageUserEligibilityForCampaign     = "[%v] Is User ID: %v part of campaign ? %v "
-	InfoMessageSegmentationStatus             = "[%v] For User ID: %v of Campaign: %v with variables: %v %v %v "
+	InfoMessageSegmentationStatus             = "[%v] For User ID: %v of Campaign: %v with variables: %v, %v, %v "
 	InfoMessageImpressionSuccess              = "[%v] Impression event - %v was successfully received by VWO having keys: %v "
 	InfoMessageForcedvariationAllocated       = "[%v] User ID: %v of CampaignKey: %v type: %v got forced-variation: %v "
 	InfoMessageVariationAllocated             = "[%v] User ID: %v of Campaign: %v got variation: %v "
 	InfoMessageUserGotNoVariation             = "[%v] User ID: %v for Campaign: %v did not allot any variation : %v "
-	InfoMessageMainKeysForPushAPI             = "[%v] Having main keys: AccountID: %v User ID: %v u: %v and tags: %v "
+	InfoMessageMainKeysForPushAPI             = "[%v] Having main keys: AccountID: %v User ID: %v U: %v and tags: %v "
 	InfoMessageMainKeysForImpression          = "[%v] Having main keys: AccountID: %v User ID: %v campaignId: %v and VariationID: %v "
-	InfoMessageSegmentationStatusForVariation = "[%v] For User ID: %v of Campaign: %v with variables: %v %v %v for variation %v "
+	InfoMessageSegmentationStatusForVariation = "[%v] For User ID: %v of Campaign: %v with variables: %v, %v, %v for variation %v "
 	InfoMessageGotVariationForUser            = "[%v] User ID: %v for CampaignKey: %v type: %v got variation_name: %v "
 	InfoMessageNoUserStorageServiceGet        = "[%v] No UserStorageService to get stored data"
 
