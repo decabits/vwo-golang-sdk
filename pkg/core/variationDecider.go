@@ -124,7 +124,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 
 // FindTargetedVariation function Identifies and retrives if there exists any targeted
 // variation in the given campaign for given userID
-func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, error) {
+func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign, options schema.Options) (schema.Variation, string, error) {
 	/*
 		Args:
 			userId: the unique ID assigned to User
@@ -139,13 +139,13 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 	*/
 
 	if campaign.IsForcedVariation == false {
-		return schema.Variation{}, fmt.Errorf(constants.DebugMessageWhitelistingSkipped, vwoInstance.API, userID, campaign.Key)
+		return schema.Variation{}, constants.Info, fmt.Errorf(constants.InfoMessageWhitelistingSkipped, vwoInstance.API, userID, campaign.Key)
 	}
 	whiteListedVariationsList := GetWhiteListedVariationsList(vwoInstance, userID, campaign, options)
 	whiteListedVariationsLength := len(whiteListedVariationsList)
 	var targettedVariation schema.Variation
 	if whiteListedVariationsLength == 0 {
-		return schema.Variation{}, fmt.Errorf(constants.DebugMessageNoWhitelistedVariation, vwoInstance.API, campaign.Key)
+		return schema.Variation{}, constants.Info, fmt.Errorf(constants.InfoMessageNoWhitelistedVariation, vwoInstance.API, campaign.Key)
 	} else if whiteListedVariationsLength == 1 {
 		targettedVariation = whiteListedVariationsList[0]
 	} else {
@@ -155,7 +155,7 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 		var err error
 		targettedVariation, err = GetBucketerVariation(vwoInstance, whiteListedVariationsList, bucketValue, userID, campaign.Key)
 		if err != nil {
-			return schema.Variation{}, fmt.Errorf(constants.DebugMessageNoTargettedVariation, vwoInstance.API, err.Error())
+			return schema.Variation{}, constants.Debug fmt.Errorf(constants.DebugMessageNoTargettedVariation, vwoInstance.API, err.Error())
 		}
 
 		message := fmt.Sprintf(constants.InfoMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, targettedVariation.Segments, "True", "WhiteListing", targettedVariation.Name)
@@ -164,7 +164,7 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 		message = fmt.Sprintf(constants.InfoMessageForcedvariationAllocated, vwoInstance.API, userID, campaign.Key, campaign.Type, targettedVariation.Name)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 	}
-	return targettedVariation, nil
+	return targettedVariation, nil, nil
 }
 
 // GetVariationFromUserStorage function tries retrieving variation from user_storage
