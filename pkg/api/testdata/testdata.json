@@ -22,7 +22,7 @@
       "isForcedVariationEnabled": false,
       "key": "CAMPAIGN_1",
       "variations": {},
-      "type": "FEATURE_TEST"
+      "type": "FEATURE_ROLLOUT"
     },
     {
       "id": 203,

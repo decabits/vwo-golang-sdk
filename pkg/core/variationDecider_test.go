@@ -102,23 +102,23 @@ func TestFindTargetedVariation(t *testing.T) {
 
 	userID := "USER_1"
 	campaign := vwoInstance.SettingsFile.Campaigns[2]
-	actual, _ := FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, _, _ := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	assertOutput.Empty(actual, "Forced variation Disabled")
 
 	userID = "USER_1"
 	campaign = vwoInstance.SettingsFile.Campaigns[3]
-	actual, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, _, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
 	assertOutput.Empty(actual, "Expected no variation")
 
 	userID = "USER_1"
 	campaign = vwoInstance.SettingsFile.Campaigns[4]
-	actual, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, _, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
 	expected := campaign.Variations[0]
 	assertOutput.Equal(expected, actual, "Expected single variation")
 
 	userID = "USER_1"
 	campaign = vwoInstance.SettingsFile.Campaigns[5]
-	actual, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, _, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
 	expected = campaign.Variations[1]
 	assertOutput.Equal(expected, actual, "Expected single variation")
 
@@ -128,7 +128,7 @@ func TestFindTargetedVariation(t *testing.T) {
 	}
 	userID = "USER_8"
 	campaign = vwoInstance.SettingsFile.Campaigns[6]
-	actual, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, _, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
 	assertOutput.Empty(actual, "No Varaition Expected ")
 
 }

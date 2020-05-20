@@ -41,7 +41,6 @@ const (
 	/*Extras*/
 	DebugMessageCustomLoggerFound     = "[%v] Custom logger found"
 	DebugMessageNoSegmentsInVariation = "[%v] For User ID: %v of Campaign: %v, segment was missing, hence skipping segmentation %v "
-	DebugMessageNoTargettedVariation  = "[%v] No targetted variation found : %v "
 	DebugMessageSettingsFileProcessed = "[%v] Settings file processed"
 	DebugMessageValidConfiguration    = "[%v] SDK configuration and account settings are valid"
 
@@ -104,6 +103,7 @@ const (
 	InfoMessageWhitelistingSkipped            = "[%v] For User ID: %v of Campaign: %v, whitelisting was skipped"
 
 	/*Extras*/
+	InfoMessageNoTargettedVariation  = "[%v] No targetted variation found : %v "
 	InfoMessageNoWhitelistedVariation    = "[%v] No whitelisting variation found in campaign: %v "
 	InfoMessageUserRecievedVariableValue = "[%v] Value for variable: %v of feature flag: %v is: %v for user: %v "
 )
