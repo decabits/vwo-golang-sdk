@@ -27,6 +27,7 @@ const (
 	DebugMessageImpressionForTrackGoal          = "[%v] impression built for track goal - %v "
 	DebugMessageImpressionForTrackUser          = "[%v] impression built for track user - %v "
 	DebugMessageSDKInitialized                  = "SDK properly initialized"
+	DebugMessageNoCustomLoggerFound             = "No custom logger found, using pre-defined google logger "
 	DebugMessageNoStoredVariation               = "[%v] No stored variation for User ID: %v for Campaign: %v found in UserStorageService"
 	DebugMessageNoUserStorageServiceSet         = "[%v] No UserStorageService to set data"
 	DebugMessageSegmentationSkipped             = "[%v] For User ID: %v of CampaignKey: %v segments are missing, hence skipping Presegmentation"
