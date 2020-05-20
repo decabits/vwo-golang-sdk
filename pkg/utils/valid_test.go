@@ -102,11 +102,11 @@ func TestParseOptions(t *testing.T) {
 	data := make(map[string]interface{})
 	data["customVariables"] = map[string]interface{}{"a": "x"}
 	data["variationTargetingVariables"] = map[string]interface{}{"a": "x"}
-	data["revenueGoal"] = 12
+	data["revenueValue"] = 12
 	expected = schema.Options{
 		CustomVariables:             map[string]interface{}{"a": "x"},
 		VariationTargetingVariables: map[string]interface{}{"a": "x"},
-		RevenueGoal:                 12,
+		RevenueValue:                 12,
 	}
 	actual = ParseOptions(data)
 	assert.Equal(t, expected, actual)

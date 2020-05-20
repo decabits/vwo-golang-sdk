@@ -67,7 +67,7 @@ func TestTrack(t *testing.T) {
 	userID = "USER_3"
 	campaignKey = "CAMPAIGN_10"
 	option := map[string]interface{}{
-		"revenueGoal": 0,
+		"revenueValue": 0,
 	}
 	goalIdentifier = "GOAL_1"
 	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
@@ -76,14 +76,14 @@ func TestTrack(t *testing.T) {
 	userID = "USER_3"
 	campaignKey = "CAMPAIGN_2"
 	option = map[string]interface{}{
-		"revenueGoal": 10,
+		"revenueValue": 10,
 	}
 	goalIdentifier = "GOAL_2"
 	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
 	assertOutput.False(value, "No Variation in Campaign")
 
 	option = map[string]interface{}{
-		"revenueGoal": 12,
+		"revenueValue": 12,
 	}
 	userID = "USER_9"
 	campaignKey = "CAMPAIGN_10"

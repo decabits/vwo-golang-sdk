@@ -47,7 +47,7 @@ func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID
 			userID: Unique identification of user
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
-			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
 			interrface{}: Value of the variable
@@ -102,7 +102,7 @@ func (vwo *VWOInstance) GetFeatureVariableValue(campaignKey, variableKey, userID
 	}
 
 	if variable.Key == "" {
-		message := fmt.Sprintf(constants.ErrorMessageVariableNotFound, vwoInstance.API, variable.Key, userID, campaign.Key, campaign.Type)
+		message := fmt.Sprintf(constants.ErrorMessageVariableNotFound, vwoInstance.API, variableKey, userID, campaign.Key, campaign.Type)
 		utils.LogMessage(vwo.Logger, constants.Error, getFeatureVariableValue, message)
 	} else {
 		message := fmt.Sprintf(constants.InfoMessageUserRecievedVariableValue, vwoInstance.API, variable.Key, campaignKey, variable, userID)

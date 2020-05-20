@@ -66,16 +66,16 @@ func TestCreateImpressionTrackingGoal(t *testing.T) {
 	variationID := 1
 	campaignID := 283
 	goalID := 281
-	revenueGoal := 5
+	revenueValue := 1000
 	userID := "Chris"
 	URL := "https://dev.visualwebsiteoptimizer.com/server-side/track-goal"
 
-	DemoImpression := CreateImpressionTrackingGoal(vwoInstance, variationID, userID, campaignID, goalID, revenueGoal)
+	DemoImpression := CreateImpressionTrackingGoal(vwoInstance, variationID, userID, campaignID, goalID, revenueValue)
 	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
 	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
 	assert.Equal(t, goalID, DemoImpression.GoalID, "Non Matching GoalIDs")
 	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
-	assert.Equal(t, revenueGoal, DemoImpression.R, "Non Matching Revenues")
+	assert.Equal(t, revenueValue, DemoImpression.R, "Non Matching Revenues")
 	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
 	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
 	var temp1 string

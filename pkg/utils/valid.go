@@ -38,9 +38,9 @@ func ParseOptions(option interface{}) (options schema.Options) {
 		if okVariationTargetingVariables {
 			options.VariationTargetingVariables = variationTargetingVariables.(map[string]interface{})
 		}
-		revenueGoal, okRevenueGoal := optionMap["revenueGoal"]
-		if okRevenueGoal {
-			options.RevenueGoal = revenueGoal.(int)
+		revenueValue, okRevenueValue := optionMap["revenueValue"]
+		if okRevenueValue {
+			options.RevenueValue = revenueValue.(int)
 		}
 	}
 	return

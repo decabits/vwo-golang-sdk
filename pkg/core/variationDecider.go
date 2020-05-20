@@ -51,7 +51,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 			campaign: campaign in which user is participating
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
-			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
 			schema.Variation: Struct object containing the information regarding variation assigned else empty object
@@ -77,9 +77,13 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 		return targettedVariation, nil
 	}
 
-	variationName, err := GetVariationFromUserStorage(vwoInstance, userID, campaign)
+	variationName, level, err := GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	if err != nil {
-		utils.LogMessage(vwoInstance.Logger, constants.Error, variationDecider, err.Error())
+		if level == constants.Info {
+			utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, err.Error())
+		} else if level == constants.Error {
+			utils.LogMessage(vwoInstance.Logger, constants.Error, variationDecider, err.Error())
+		}
 	}
 	if variationName != "" {
 		message := fmt.Sprintf(constants.InfoMessageGotStoredVariation, vwoInstance.API, variationName, campaign.Key, userID)
@@ -127,7 +131,7 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 			campaign: campaign in which user is participating
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
-			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
 			schema.Variation: Struct object containing the information regarding variation assigned else empty object
@@ -164,7 +168,7 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 }
 
 // GetVariationFromUserStorage function tries retrieving variation from user_storage
-func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) (string, error) {
+func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) (string, string, error) {
 	/*
 		Args:
 			userId: the unique ID assigned to User
@@ -176,7 +180,7 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 	*/
 
 	if vwoInstance.UserStorage == nil {
-		return "", fmt.Errorf(constants.DebugMessageNoUserStorageServiceGet, vwoInstance.API)
+		return "", constants.Info, fmt.Errorf(constants.InfoMessageNoUserStorageServiceGet, vwoInstance.API)
 	}
 	if storage, ok := vwoInstance.UserStorage.(interface {
 		Get(a, b string) schema.UserData
@@ -188,9 +192,9 @@ func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, 
 			message := fmt.Sprintf(constants.DebugMessageNoStoredVariation, vwoInstance.API, userID, campaign.Key)
 			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
 		}
-		return userStorageFetch.VariationName, nil
+		return userStorageFetch.VariationName, "", nil
 	}
-	return "", fmt.Errorf(constants.ErrorMessageGetUserStorageServiceFailed, vwoInstance.API, userID)
+	return "", constants.Error, fmt.Errorf(constants.ErrorMessageGetUserStorageServiceFailed, vwoInstance.API, userID)
 }
 
 //GetWhiteListedVariationsList function identifies all forced variations which are targeted by variation_targeting_variables
@@ -201,7 +205,7 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 			campaign: campaign in which user is participating
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
-			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
 			schema.Variation: Struct object containing the information regarding variation assigned else empty object
@@ -250,7 +254,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 
 	status := SegmentEvaluator(segments, options.CustomVariables)
 
-	message := fmt.Sprintf(constants.InfoMessageSegmentationStatus, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, segments, strconv.FormatBool(status), "PreEvaluation")
+	message := fmt.Sprintf(constants.InfoMessageSegmentationStatus, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, segments, strconv.FormatBool(status), "PreSegmentation")
 	utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
 	return status

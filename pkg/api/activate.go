@@ -46,7 +46,7 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string, option interface{})
 			userID: Unique identification of user
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
-			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
 			string: Variation Name for user to corresponding camapign

@@ -45,7 +45,7 @@ if err != nil {
 options := make(map[string]interface{})
 options["customVariables"] = map[string]interface{}{"a": "x"}
 options["variationTargetingVariables"] = map[string]interface{}{"a": "x"}
-options["revenueGoal"] = 12
+options["revenueValue"] = 12
 variationName = vwoInstance.Activate(campaignKey, userID, options)
 
 // Without Custom Variables
@@ -70,13 +70,13 @@ isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
 
 // With Revenue Value
 options := make(map[string]interface{})
-options["revenueGoal"] = 12
+options["revenueValue"] = 12
 isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
 
 // With both Custom Variables and Revenue Value
 options := make(map[string]interface{})
 options["customVariables"] = map[string]interface{}{"a": "x"}
-options["revenueGoal"] = 12
+options["revenueValue"] = 12
 isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
 
 //Without Custom Variables

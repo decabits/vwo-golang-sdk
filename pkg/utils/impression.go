@@ -53,14 +53,14 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 }
 
 // CreateImpressionTrackingGoal creates the impression from the arguments passed to track goal
-func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID string, campaignID, goalID, revenueGoal int) schema.Impression {
+func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID string, campaignID, goalID, revenueValue int) schema.Impression {
 	/*
 		Args:
 		    variationID : Variation identifier
 			userID : User identifier
 			campaignID : Campaign identifier
 		    goalID : Goal identifier
-		    revenueGoal : Revenue goal for the campaign
+		    revenueValue : Revenue goal for the campaign
 
 		Returns:
 			schema.Impression: Imression struct with required values
@@ -72,8 +72,8 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackGoal
 	impression.GoalID = goalID
-	if revenueGoal > 0 {
-		impression.R = revenueGoal
+	if revenueValue > 0 {
+		impression.R = revenueValue
 	}
 
 	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackGoal, vwoInstance.API, impression)
