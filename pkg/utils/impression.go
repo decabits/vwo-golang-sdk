@@ -46,7 +46,7 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	parameters.Add(tagKey, tagValue)
 	impression.U = parameters.Encode()
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.U)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression
@@ -72,13 +72,19 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackGoal
 	impression.GoalID = goalID
-	
+
 	if goalType==constants.GoalTypeRevenue && revenueValue >= 0 {
 		impression.R = revenueValue
 	}
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackGoal, vwoInstance.API, impression)
-	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
+	if goalType == constants.GoalTypeRevenue { 
+		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackRevenueGoal, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.GoalID, revenueValue)
+		LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
+	} else {
+		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackCustomGoal, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.GoalID)
+		LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
+	}
+	
 
 	return impression
 }
@@ -102,7 +108,7 @@ func CreateImpressionTrackingUser(vwoInstance schema.VwoInstance, campaignID int
 	impression.ED = `{\"p\":\"` + constants.Platform + `\"}`
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackUser
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackUser, vwoInstance.API, impression)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackUser, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.ED)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression

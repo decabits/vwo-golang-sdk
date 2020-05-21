@@ -61,12 +61,13 @@ func TestCreateImpressionTrackingUser(t *testing.T) {
 	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
 
 }
+
 func TestCreateImpressionTrackingGoal(t *testing.T) {
 	vwoInstance := getInstance()
 	variationID := 1
 	campaignID := 283
 	goalID := 281
-	goalType:= "rev"
+	goalType:= "REVENUE_TRACKING"
 	revenueValue := 1000
 	userID := "Chris"
 	URL := "https://dev.visualwebsiteoptimizer.com/server-side/track-goal"

@@ -96,7 +96,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 		return false
 	}
 
-	if goal.Type == constants.GoalTypeRevenue && options.RevenueValue == nil {
+	if goal.Type == constants.GoalTypeRevenue && options.RevenueValue == 0  {
 		message := fmt.Sprintf(constants.ErrorMessageTrackAPIRevenueNotPassedForRevenueValue, vwoInstance.API, goalIdentifier, campaignKey, userID)
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
