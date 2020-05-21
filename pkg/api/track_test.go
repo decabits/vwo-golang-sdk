@@ -71,7 +71,7 @@ func TestTrack(t *testing.T) {
 	}
 	goalIdentifier = "GOAL_1"
 	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
-	assertOutput.False(value, "Revenue Not defined")
+	assertOutput.True(value, "Revenue Not defined")
 
 	userID = "USER_3"
 	campaignKey = "CAMPAIGN_2"

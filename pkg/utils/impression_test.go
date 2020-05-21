@@ -77,7 +77,7 @@ func TestCreateImpressionTrackingGoal(t *testing.T) {
 	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
 	assert.Equal(t, goalID, DemoImpression.GoalID, "Non Matching GoalIDs")
 	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
-	assert.Equal(t, revenueValue, DemoImpression.R, "Non Matching Revenues")
+	assert.Equal(t, float64(revenueValue), DemoImpression.R, "Non Matching Revenues")
 	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
 	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
 	var temp1 string
