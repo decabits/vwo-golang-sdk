@@ -96,7 +96,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 		return false
 	}
 
-	if goal.Type == constants.GoalTypeRevenue && options.RevenueValue == 0 {
+	if goal.Type == constants.GoalTypeRevenue && options.RevenueValue == nil {
 		message := fmt.Sprintf(constants.ErrorMessageTrackAPIRevenueNotPassedForRevenueValue, vwoInstance.API, goalIdentifier, campaignKey, userID)
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
@@ -109,7 +109,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 		return false
 	}
 
-	impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, campaign.ID, goal.ID, options.RevenueValue) // revenueValue = 5
+	impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, goal.Type, campaign.ID, goal.ID, options.RevenueValue)
 	go event.DispatchTrackingGoal(vwoInstance, impression)
 
 	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
