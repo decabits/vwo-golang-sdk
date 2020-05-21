@@ -124,6 +124,6 @@ func getCommonProperties(vwoInstance schema.VwoInstance, userID string) schema.I
 		SID:       strconv.FormatInt(time.Now().Unix(), 10),
 		U:         generateFor(vwoInstance, userID, vwoInstance.SettingsFile.AccountID),
 		AccountID: vwoInstance.SettingsFile.AccountID,
-		UID:       userID,
+		UID:       url.QueryEscape(userID),
 	}
 }
