@@ -75,23 +75,23 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 
 	if goalType==constants.GoalTypeRevenue {
 		switch revenueValue.(type) {
-		case int : 
+		case int :
 			impression.R = float64(revenueValue.(int))
 		case float32 :
 			impression.R = float64(revenueValue.(float32))
-		case float64 : 
+		case float64 :
 			impression.R = revenueValue.(float64)
 		}
 	}
 
-	if goalType == constants.GoalTypeRevenue { 
+	if goalType == constants.GoalTypeRevenue {
 		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackRevenueGoal, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.GoalID, revenueValue)
 		LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 	} else {
 		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackCustomGoal, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.GoalID)
 		LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 	}
-	
+
 	return impression
 }
 
@@ -137,6 +137,6 @@ func getCommonProperties(vwoInstance schema.VwoInstance, userID string) schema.I
 		SID:       strconv.FormatInt(time.Now().Unix(), 10),
 		U:         generateFor(vwoInstance, userID, vwoInstance.SettingsFile.AccountID),
 		AccountID: vwoInstance.SettingsFile.AccountID,
-		UID:       url.QueryEscape(userID),
+		UID:       url.PathEscape(userID),
 	}
 }
