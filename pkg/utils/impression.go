@@ -42,9 +42,10 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	*/
 	impression := getCommonProperties(vwoInstance, userID)
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsPush
-	parameters := url.Values{}
-	parameters.Add(tagKey, tagValue)
-	impression.U = parameters.Encode()
+	// parameters := url.Values{}
+	// parameters.Add(tagKey, tagValue)
+	// impression.U = parameters.Encode()
+	impression.U = url.PathEscape(tagKey) + "=" + url.PathEscape(tagValue)
 
 	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.U)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
@@ -140,3 +141,5 @@ func getCommonProperties(vwoInstance schema.VwoInstance, userID string) schema.I
 		UID:       url.PathEscape(userID),
 	}
 }
+
+// https://dev.visualwebsiteoptimizer.com/server-side/push?random=0.6868230700492859&sdk=vwo-golang-sdk&sdk-v=1.0.0&ap=server&sId=1590091612&u=temp%20Key=temp%20Val&account_id=89499&uId=Lisa&experiment_id=0&combination=0&ed= 

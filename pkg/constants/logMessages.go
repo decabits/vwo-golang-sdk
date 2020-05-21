@@ -63,7 +63,7 @@ const (
 	ErrorMessageTrackAPIGoalNotFound                    = "[%v] Goal: %v not found for Campaign: %v and User ID: %v : %v "
 	ErrorMessageTrackAPIMissingParams                   = "[%v] track API got bad parameters. It expects campaignKey(String) as first, User ID(String) as second, goalIdentifier(String) as third argument and options(Optional) as fourth parameter"
 	ErrorMessageTrackAPIRevenueNotPassedForRevenueValue = "[%v] Revenue value should be passed for revenue, Goal: %v for Campaign: %v and User ID: %v "
-	ErrorMessageVariableNotFound                        = "[%v] Variable: %v for User ID: %v for campaign %v of type %v "
+	ErrorMessageVariableNotFound                        = "[%v] Variable: %v not found for User ID: %v for campaign %v of type %v "
 
 	/*Extras*/
 	ErrorMessageCampaignNotFound          = "[%v] Campaign key: %v not found : %v "

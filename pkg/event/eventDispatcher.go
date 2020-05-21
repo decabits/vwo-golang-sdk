@@ -45,8 +45,11 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 			"&account_id=" + strconv.Itoa(impression.AccountID) +
 			"&uId=" + impression.UID +
 			"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
-			"&combination=" + strconv.Itoa(impression.Combination) +
-			"&ed=" + impression.ED
+			"&combination=" + strconv.Itoa(impression.Combination)
+			
+		if vwoInstance.API != "Push" {
+			URL = URL + "&ed=" + impression.ED
+		}
 
 		_, err := utils.GetRequest(URL)
 
@@ -87,6 +90,7 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, goalType string, impre
 		}
 
 		_, err := utils.GetRequest(URL)
+		
 		if err != nil {
 			message := fmt.Sprintf(constants.ErrorMessageImpressionFailed, vwoInstance.API, err)
 			utils.LogMessage(vwoInstance.Logger, constants.Error, eventDispatcher, message)
