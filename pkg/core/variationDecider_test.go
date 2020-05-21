@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -102,25 +103,33 @@ func TestFindTargetedVariation(t *testing.T) {
 
 	userID := "USER_1"
 	campaign := vwoInstance.SettingsFile.Campaigns[2]
-	actual, _, _ := FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, level, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	assertOutput.Empty(actual, "Forced variation Disabled")
+	assertOutput.Equal(level, constants.Info, "Mismatching Log Level")
+	assertOutput.NotNil(err, "Error Expected")
 
 	userID = "USER_1"
 	campaign = vwoInstance.SettingsFile.Campaigns[3]
-	actual, _, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, level, err = FindTargetedVariation(vwoInstance, userID, campaign, options)
 	assertOutput.Empty(actual, "Expected no variation")
+	assertOutput.Equal(level, constants.Info, "Mismatching Log Level")
+	assertOutput.NotNil(err, "Error Expected")
 
 	userID = "USER_1"
 	campaign = vwoInstance.SettingsFile.Campaigns[4]
-	actual, _, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, level, err = FindTargetedVariation(vwoInstance, userID, campaign, options)
 	expected := campaign.Variations[0]
 	assertOutput.Equal(expected, actual, "Expected single variation")
+	assertOutput.Empty(level, "Expected No Log as variation is assigned")
+	assertOutput.Nil(err, "Error Expected")
 
 	userID = "USER_1"
 	campaign = vwoInstance.SettingsFile.Campaigns[5]
-	actual, _, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, level, err = FindTargetedVariation(vwoInstance, userID, campaign, options)
 	expected = campaign.Variations[1]
 	assertOutput.Equal(expected, actual, "Expected single variation")
+	assertOutput.Empty(level, "Expected No Log as variation is assigned")
+	assertOutput.Nil(err, "Error Expected")
 
 	options = schema.Options{
 		CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_8"},
@@ -128,9 +137,10 @@ func TestFindTargetedVariation(t *testing.T) {
 	}
 	userID = "USER_8"
 	campaign = vwoInstance.SettingsFile.Campaigns[6]
-	actual, _, _ = FindTargetedVariation(vwoInstance, userID, campaign, options)
+	actual, level, err = FindTargetedVariation(vwoInstance, userID, campaign, options)
 	assertOutput.Empty(actual, "No Varaition Expected ")
-
+	assertOutput.Equal(level, constants.Info, "Mismatching Log Level")
+	assertOutput.NotNil(err, "Error Expected")
 }
 
 func TestGetVariation(t *testing.T) {
@@ -194,16 +204,19 @@ func TestGetVariationFromUserStorage(t *testing.T) {
 
 	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	userID := "USER_3"
-	actual, _, err := GetVariationFromUserStorage(vwoInstance, userID, campaign)
-	assertOutput.NotNil(err, "Actual and Expected Variation Name mismatch")
+	actual, level, err := GetVariationFromUserStorage(vwoInstance, userID, campaign)
+	assertOutput.NotNil(err, "Error Expected")
 	assertOutput.Empty(actual, "Actual and Expected Variation Name mismatch")
-
+	assertOutput.Equal(level, constants.Info, "Mismatching Log Level")
+	
 	vwoInstance = getInstanceWithStorage("./testdata/testVariation.json")
 
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	userID = "user1"
 	expected := "Control"
-	actual, _, err = GetVariationFromUserStorage(vwoInstance, userID, campaign)
+	actual, level, err = GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	assertOutput.Nil(err, "Actual and Expected Variation Name mismatch")
 	assert.Equal(t, expected, actual, "Actual and Expected Variation Name mismatch")
+	assertOutput.Empty(level, "Expected No Log as variation is assigned")
+
 }

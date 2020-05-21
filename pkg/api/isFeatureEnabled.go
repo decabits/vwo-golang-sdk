@@ -102,7 +102,7 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string, option inte
 		isFeatureEnabled = true
 	}
 
-	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
+	message := fmt.Sprintf(constants.InfoMessageMainKeysForFeatureTestImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
 	utils.LogMessage(vwo.Logger, constants.Info, activate, message)
 
 	if isFeatureEnabled {
