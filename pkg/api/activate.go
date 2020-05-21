@@ -98,7 +98,7 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string, option interface{})
 	impression := utils.CreateImpressionTrackingUser(vwoInstance, campaign.ID, variation.ID, userID)
 	go event.Dispatch(vwoInstance, impression)
 
-	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, impression)
+	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
 	utils.LogMessage(vwo.Logger, constants.Info, activate, message)
 
 	return variation.Name

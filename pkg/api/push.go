@@ -73,7 +73,7 @@ func (vwo *VWOInstance) Push(tagKey, tagValue, userID string) bool {
 	impression := utils.CreateImpressionForPush(vwoInstance, tagKey, tagValue, userID)
 	go event.Dispatch(vwoInstance, impression)
 
-	message := fmt.Sprintf(constants.InfoMessageMainKeysForPushAPI, vwoInstance.API, impression)
+	message := fmt.Sprintf(constants.InfoMessageMainKeysForPushAPI, vwoInstance.API, vwoInstance.SettingsFile.AccountID, userID, impression.U, impression.URL)
 	utils.LogMessage(vwo.Logger, constants.Info, push, message)
 
 	return true

@@ -40,7 +40,7 @@ func ParseOptions(option interface{}) (options schema.Options) {
 		}
 		revenueValue, okRevenueValue := optionMap["revenueValue"]
 		if okRevenueValue {
-			options.RevenueValue = revenueValue.(int)
+			options.RevenueValue = revenueValue
 		}
 	}
 	return

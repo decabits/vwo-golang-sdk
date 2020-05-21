@@ -82,7 +82,7 @@ type Variable struct {
 type Options struct {
 	CustomVariables             map[string]interface{} `json:"customVariables"`
 	VariationTargetingVariables map[string]interface{} `json:"variationTargetingVariables"`
-	RevenueValue                 int
+	RevenueValue                interface{}
 }
 
 // UserData  struct
@@ -113,5 +113,5 @@ type Impression struct {
 	Combination  int     `json:"combination"`
 	ED           string  `json:"ed"`
 	GoalID       int     `json:"goal_id"`
-	R            int     `json:"r"`
+	R            float64     `json:"r"`
 }

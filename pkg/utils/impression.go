@@ -46,14 +46,14 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	parameters.Add(tagKey, tagValue)
 	impression.U = parameters.Encode()
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.U)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression
 }
 
 // CreateImpressionTrackingGoal creates the impression from the arguments passed to track goal
-func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID , goalType string, campaignID, goalID, revenueValue int) schema.Impression {
+func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID , goalType string, campaignID, goalID int, revenueValue interface{}) schema.Impression {
 	/*
 		Args:
 		    variationID : Variation identifier
@@ -73,15 +73,22 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackGoal
 	impression.GoalID = goalID
 
-	if goalType==constants.GoalTypeRevenue && revenueValue >= 0 {
-		impression.R = revenueValue
+	if goalType==constants.GoalTypeRevenue {
+		switch revenueValue.(type) {
+		case int : 
+			impression.R = float64(revenueValue.(int))
+		case float32 :
+			impression.R = float64(revenueValue.(float32))
+		case float64 : 
+			impression.R = revenueValue.(float64)
+		}
 	}
 
 	if goalType == constants.GoalTypeRevenue { 
-		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackRevenueGoal, vwoInstance.API, impression)
+		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackRevenueGoal, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.GoalID, revenueValue)
 		LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 	} else {
-		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackCustomGoal, vwoInstance.API, impression)
+		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackCustomGoal, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.GoalID)
 		LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 	}
 	
@@ -107,7 +114,7 @@ func CreateImpressionTrackingUser(vwoInstance schema.VwoInstance, campaignID int
 	impression.ED = `{\"p\":\"` + constants.Platform + `\"}`
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackUser
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackUser, vwoInstance.API, impression)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackUser, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.ED)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression

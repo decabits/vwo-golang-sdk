@@ -62,7 +62,7 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 
 // DispatchTrackingGoal function dispatches the event with goal tracking represented by
 // the impression object to our servers
-func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impression) {
+func DispatchTrackingGoal(vwoInstance schema.VwoInstance, goalType string, impression schema.Impression) {
 	/*
 		Args:
 			impression: impression to be dispatched
@@ -80,15 +80,18 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 			"&uId=" + impression.UID +
 			"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
 			"&combination=" + strconv.Itoa(impression.Combination) +
-			"&goal_id=" + strconv.Itoa(impression.GoalID) +
-			"&r=" + strconv.Itoa(impression.R)
+			"&goal_id=" + strconv.Itoa(impression.GoalID)
+
+		if goalType == constants.GoalTypeRevenue {
+			URL = URL + "&r=" + strconv.FormatFloat(float64(impression.R), 'f', -1, 64)
+		}
 
 		_, err := utils.GetRequest(URL)
 		if err != nil {
 			message := fmt.Sprintf(constants.ErrorMessageImpressionFailed, vwoInstance.API, err)
 			utils.LogMessage(vwoInstance.Logger, constants.Error, eventDispatcher, message)
 		} else {
-			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Tracking Goal", impression)
+			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Tracking Goal", URL)
 			utils.LogMessage(vwoInstance.Logger, constants.Info, eventDispatcher, message)
 		}
 	}
