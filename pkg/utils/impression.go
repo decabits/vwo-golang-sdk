@@ -74,14 +74,16 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackGoal
 	impression.GoalID = goalID
 
-	if goalType==constants.GoalTypeRevenue {
+	if goalType == constants.GoalTypeRevenue {
 		switch revenueValue.(type) {
 		case int :
-			impression.R = float64(revenueValue.(int))
+			impression.R = fmt.Sprintf("%f", revenueValue.(int))
 		case float32 :
-			impression.R = float64(revenueValue.(float32))
+			impression.R = fmt.Sprintf("%f", revenueValue.(float32))
 		case float64 :
-			impression.R = revenueValue.(float64)
+			impression.R = fmt.Sprintf("%f", revenueValue.(float64))
+		case string :
+			impression.R = revenueValue.(string)	
 		}
 	}
 

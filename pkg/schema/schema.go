@@ -113,5 +113,5 @@ type Impression struct {
 	Combination  int     `json:"combination"`
 	ED           string  `json:"ed"`
 	GoalID       int     `json:"goal_id"`
-	R            float64     `json:"r"`
+	R            string  `json:"r"`
 }
