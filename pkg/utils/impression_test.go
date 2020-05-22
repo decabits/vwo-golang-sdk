@@ -68,21 +68,100 @@ func TestCreateImpressionTrackingGoal(t *testing.T) {
 	campaignID := 283
 	goalID := 281
 	goalType:= "REVENUE_TRACKING"
-	revenueValue := 1000
+	revenueValueActual1 := "1000"
+	revenueValueExpected := "1000"
 	userID := "Chris"
 	URL := "https://dev.visualwebsiteoptimizer.com/server-side/track-goal"
 
-	DemoImpression := CreateImpressionTrackingGoal(vwoInstance, variationID, userID, goalType, campaignID, goalID, revenueValue)
+	DemoImpression := CreateImpressionTrackingGoal(vwoInstance, variationID, userID, goalType, campaignID, goalID, revenueValueActual1)
 	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
 	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
 	assert.Equal(t, goalID, DemoImpression.GoalID, "Non Matching GoalIDs")
 	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
-	assert.Equal(t, float64(revenueValue), DemoImpression.R, "Non Matching Revenues")
+	assert.Equal(t, revenueValueExpected, DemoImpression.R, "Non Matching Revenues")
 	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
 	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
 	var temp1 string
 	assert.IsType(t, temp1, DemoImpression.SID, "Incorrect SID type")
 	var temp2 float32
+	assert.IsType(t, temp2, DemoImpression.Random, "Incorrect Random type")
+
+	variationID = 2
+	campaignID = 284
+	goalID = 283
+	goalType= "REVENUE_TRACKING"
+	revenueValueActual2 := 1234
+	revenueValueExpected = "1234"
+	userID = "Chris"
+	URL = "https://dev.visualwebsiteoptimizer.com/server-side/track-goal"
+
+	DemoImpression = CreateImpressionTrackingGoal(vwoInstance, variationID, userID, goalType, campaignID, goalID, revenueValueActual2)
+	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
+	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
+	assert.Equal(t, goalID, DemoImpression.GoalID, "Non Matching GoalIDs")
+	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
+	assert.Equal(t, revenueValueExpected, DemoImpression.R, "Non Matching Revenues")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
+	assert.IsType(t, temp1, DemoImpression.SID, "Incorrect SID type")
+	assert.IsType(t, temp2, DemoImpression.Random, "Incorrect Random type")
+
+	variationID = 3
+	campaignID = 284
+	goalID = 283
+	goalType= "REVENUE_TRACKING"
+	revenueValueActual3 := 123.234
+	revenueValueExpected = "123.234"
+	userID = "Chris"
+	URL = "https://dev.visualwebsiteoptimizer.com/server-side/track-goal"
+
+	DemoImpression = CreateImpressionTrackingGoal(vwoInstance, variationID, userID, goalType, campaignID, goalID, revenueValueActual3)
+	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
+	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
+	assert.Equal(t, goalID, DemoImpression.GoalID, "Non Matching GoalIDs")
+	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
+	assert.Equal(t, revenueValueExpected, DemoImpression.R, "Non Matching Revenues")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
+	assert.IsType(t, temp1, DemoImpression.SID, "Incorrect SID type")
+	assert.IsType(t, temp2, DemoImpression.Random, "Incorrect Random type")
+
+	variationID = 3
+	campaignID = 284
+	goalID = 283
+	goalType= "REVENUE_TRACKING"
+	revenueValueActual4 := float32(123.234)
+	revenueValueExpected = "123.234"
+	userID = "Chris"
+	URL = "https://dev.visualwebsiteoptimizer.com/server-side/track-goal"
+
+	DemoImpression = CreateImpressionTrackingGoal(vwoInstance, variationID, userID, goalType, campaignID, goalID, revenueValueActual4)
+	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
+	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
+	assert.Equal(t, goalID, DemoImpression.GoalID, "Non Matching GoalIDs")
+	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
+	assert.Equal(t, revenueValueExpected, DemoImpression.R, "Non Matching Revenues")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
+	assert.IsType(t, temp1, DemoImpression.SID, "Incorrect SID type")
+	assert.IsType(t, temp2, DemoImpression.Random, "Incorrect Random type")
+
+	variationID = 3
+	campaignID = 284
+	goalID = 283
+	goalType= "CUSTOM_GOAL"
+	revenueValueActual5 := "1000"
+	userID = "Chris"
+	URL = "https://dev.visualwebsiteoptimizer.com/server-side/track-goal"
+
+	DemoImpression = CreateImpressionTrackingGoal(vwoInstance, variationID, userID, goalType, campaignID, goalID, revenueValueActual5)
+	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
+	assert.Equal(t, variationID, DemoImpression.Combination, "Non Matching VariationIDs")
+	assert.Equal(t, goalID, DemoImpression.GoalID, "Non Matching GoalIDs")
+	assert.Equal(t, campaignID, DemoImpression.ExperimentID, "Non Matching CampaignIDs")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
+	assert.IsType(t, temp1, DemoImpression.SID, "Incorrect SID type")
 	assert.IsType(t, temp2, DemoImpression.Random, "Incorrect Random type")
 }
 

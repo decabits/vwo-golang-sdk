@@ -77,11 +77,11 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 	if goalType == constants.GoalTypeRevenue {
 		switch revenueValue.(type) {
 		case int :
-			impression.R = fmt.Sprintf("%f", revenueValue.(int))
+			impression.R = strconv.Itoa(revenueValue.(int))
 		case float32 :
-			impression.R = fmt.Sprintf("%f", revenueValue.(float32))
+			impression.R = strconv.FormatFloat(float64(revenueValue.(float32)), 'f', -1, 32)
 		case float64 :
-			impression.R = fmt.Sprintf("%f", revenueValue.(float64))
+			impression.R = strconv.FormatFloat(float64(revenueValue.(float64)), 'f', -1, 64)
 		case string :
 			impression.R = revenueValue.(string)	
 		}
@@ -144,4 +144,3 @@ func getCommonProperties(vwoInstance schema.VwoInstance, userID string) schema.I
 	}
 }
 
-// https://dev.visualwebsiteoptimizer.com/server-side/push?random=0.6868230700492859&sdk=vwo-golang-sdk&sdk-v=1.0.0&ap=server&sId=1590091612&u=temp%20Key=temp%20Val&account_id=89499&uId=Lisa&experiment_id=0&combination=0&ed= 

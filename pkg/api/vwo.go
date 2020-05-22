@@ -88,6 +88,6 @@ func WithLogger(logger interface{}) VWOOption {
 // WithDevelopmentMode sets development mode true
 func WithDevelopmentMode() VWOOption {
 	return func(vwo *VWOInstance) {
-		vwo.IsDevelopmentMode = true
+		vwo.IsDevelopmentMode = false
 	}
 }
