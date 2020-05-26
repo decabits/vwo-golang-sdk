@@ -42,12 +42,10 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	*/
 	impression := getCommonProperties(vwoInstance, userID)
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsPush
-	// parameters := url.Values{}
-	// parameters.Add(tagKey, tagValue)
-	// impression.U = parameters.Encode()
-	impression.U = url.PathEscape(tagKey) + "=" + url.PathEscape(tagValue)
+	
+	impression.Tags = `{\"u\":{\"` + url.PathEscape(tagKey) + `\":\"` + url.PathEscape(tagValue) + `\"}}`
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.U)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.Tags)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression
@@ -83,7 +81,7 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 		case float64 :
 			impression.R = strconv.FormatFloat(float64(revenueValue.(float64)), 'f', -1, 64)
 		case string :
-			impression.R = revenueValue.(string)	
+			impression.R = revenueValue.(string)
 		}
 	}
 
@@ -143,4 +141,3 @@ func getCommonProperties(vwoInstance schema.VwoInstance, userID string) schema.I
 		UID:       url.PathEscape(userID),
 	}
 }
-

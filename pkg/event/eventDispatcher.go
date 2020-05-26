@@ -19,7 +19,7 @@ package event
 import (
 	"fmt"
 	"strconv"
-	"net/url"
+	// "net/url"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
@@ -44,7 +44,8 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 			"&sId=" + impression.SID +
 			"&u=" + impression.U +
 			"&account_id=" + strconv.Itoa(impression.AccountID) +
-			"&uId=" + impression.UID 
+			"&uId=" + impression.UID +
+			"&tags=" + impression.Tags 
 
 		if vwoInstance.API != "Push" {
 			URL = URL + "&ed=" + impression.ED +

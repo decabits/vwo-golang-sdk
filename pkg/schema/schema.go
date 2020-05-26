@@ -114,4 +114,5 @@ type Impression struct {
 	ED           string  `json:"ed"`
 	GoalID       int     `json:"goal_id"`
 	R            string  `json:"r"`
+	Tags				 string	 `json:"tags"`
 }

@@ -23,7 +23,7 @@ const (
 	DebugMessageDevelopmentMode                 = "Development mode is : %v "
 	DebugMessageGettingStoredVariation          = "[%v] Got User Storage, Checking stored variation for User ID: %v of Campaign: %v "
 	DebugMessageGotVariationForUser             = "[%v] User ID: %v of Campaign: %v campaignType: %v got variation: %v inside method: %v "
-	DebugMessageImpressionForPush               = "[%v] impression built for pushing - AccountID: %v, UserID: %v, SID: %v, URL: %v, U: %v "
+	DebugMessageImpressionForPush               = "[%v] impression built for pushing - AccountID: %v, UserID: %v, SID: %v, URL: %v, Tags: %v "
 	DebugMessageImpressionForTrackCustomGoal    = "[%v] impression built for track goal -  AccountID: %v, UserID: %v, SID: %v, URL: %v, ExperimentID: %v, Combination: %v, GoalID: %v "
 	DebugMessageImpressionForTrackRevenueGoal   = "[%v] impression built for track goal -  AccountID: %v, UserID: %v, SID: %v, URL: %v, ExperimentID: %v, Combination: %v, GoalID: %v, RevenueValue: %v "
 	DebugMessageImpressionForTrackUser          = "[%v] impression built for track user - AccountID: %v, UserID: %v, SID: %v, URL: %v, ExperimentID: %v, Combination: %v, ED: %v"
