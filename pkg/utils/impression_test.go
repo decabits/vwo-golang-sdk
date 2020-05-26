@@ -43,6 +43,15 @@ func TestCreateImpressionForPush(t *testing.T) {
 	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
 	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
 	assert.Equal(t, `{\"u\":{\"testKey\":\"testVal\"}}`, DemoImpression.Tags, "Non Matching Parameters")
+
+	userID = "Lizzie"
+	tagValue = "test Val"
+	tagKey = "test Key"
+	DemoImpression = CreateImpressionForPush(vwoInstance, tagKey, tagValue, userID)
+	assert.Equal(t, userID, DemoImpression.UID, "Non Matching UIDs")
+	assert.Equal(t, vwoInstance.SettingsFile.AccountID, DemoImpression.AccountID, "Non Matching Account IDs")
+	assert.Equal(t, URL, DemoImpression.URL, "Non Matching URLs")
+	assert.Equal(t, `{\"u\":{\"test%20Key\":\"test%20Val\"}}`, DemoImpression.Tags, "Non Matching Parameters")
 }
 
 func TestCreateImpressionTrackingUser(t *testing.T) {
