@@ -22,6 +22,8 @@ import (
 	"log"
 	"os"
 	"sync"
+
+	"github.com/fatih/color"
 )
 
 type severity int
@@ -102,9 +104,9 @@ func Init(name string, verbose, systemLog bool, logFile io.Writer) *Logger {
 	}
 
 	l := Logger{
-		infoLog:    log.New(io.MultiWriter(iLogs...), tagInfo, flags),
-		warningLog: log.New(io.MultiWriter(wLogs...), tagWarning, flags),
-		errorLog:   log.New(io.MultiWriter(eLogs...), tagError, flags),
+		infoLog:    log.New(io.MultiWriter(iLogs...), color.CyanString(tagInfo), flags),
+		warningLog: log.New(io.MultiWriter(wLogs...), color.MagentaString(tagWarning), flags),
+		errorLog:   log.New(io.MultiWriter(eLogs...), color.RedString(tagError), flags),
 		fatalLog:   log.New(io.MultiWriter(eLogs...), tagFatal, flags),
 	}
 	for _, w := range []io.Writer{logFile, il, wl, el} {
