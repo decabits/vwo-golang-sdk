@@ -43,7 +43,7 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	impression := getCommonProperties(vwoInstance, userID)
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsPush
 	
-	impression.Tags =`"{\"u\":{\"` + url.PathEscape(tagKey) + `\":\"` + url.PathEscape(tagValue) + `\"}}"`
+	impression.Tags =`{"u":{"` + url.PathEscape(tagKey) + `":"` + url.PathEscape(tagValue) + `"}}`
 
 	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.Tags)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
