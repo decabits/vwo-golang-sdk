@@ -1,18 +1,22 @@
 {
 	"sdkKey": "somrthing12345",
-	"campaigns": [{
+	"campaigns": [
+		{
 			"id": 281,
 			"segments": {},
 			"status": "RUNNING",
 			"percentTraffic": 100,
 			"goals": [],
-			"variations": [{
-				"id": 1,
-				"name": "website",
-				"changes": {},
-				"weight": 100
-			}],
-			"variables": [{
+			"variations": [
+				{
+					"id": 1,
+					"name": "website",
+					"changes": {},
+					"weight": 100
+				}
+			],
+			"variables": [
+				{
 					"value": 100,
 					"type": "integer",
 					"key": "int1",
@@ -46,7 +50,8 @@
 			"segments": {},
 			"status": "RUNNING",
 			"percentTraffic": 100,
-			"goals": [{
+			"goals": [
+				{
 					"identifier": "GOAL_1",
 					"id": 2,
 					"type": "REVENUE_TRACKING"
@@ -59,15 +64,19 @@
 			],
 			"isForcedVariationEnabled": true,
 			"key": "CAMPAIGN_2",
-			"variations": [{
+			"variations": [
+				{
 					"segments": {
-						"or": [{
-							"user": "USER_1"
-						}]
+						"or": [
+							{
+								"user": "USER_1"
+							}
+						]
 					},
 					"changes": {},
 					"id": 1,
-					"variables": [{
+					"variables": [
+						{
 							"value": 30,
 							"type": "integer",
 							"key": "int2",
@@ -98,15 +107,18 @@
 				},
 				{
 					"segments": {
-						"or": [{
-							"custom_variable": {
-								"abcd": "regex(1)"
+						"or": [
+							{
+								"custom_variable": {
+									"abcd": "regex(1)"
+								}
 							}
-						}]
+						]
 					},
 					"changes": {},
 					"id": 2,
-					"variables": [{
+					"variables": [
+						{
 							"value": 301,
 							"type": "integer",
 							"key": "int2",
@@ -139,7 +151,8 @@
 					"segments": {},
 					"changes": {},
 					"id": 3,
-					"variables": [{
+					"variables": [
+						{
 							"value": 302,
 							"type": "integer",
 							"key": "int2",
@@ -174,15 +187,18 @@
 		{
 			"id": 286,
 			"segments": {
-				"or": [{
-					"custom_variable": {
-						"email": "wildcard(*%O`brian+uk!#$^&*?@gmail.com%*)"
+				"or": [
+					{
+						"custom_variable": {
+							"email": "wildcard(*%O`brian+uk!#$^&*?@gmail.com%*)"
+						}
 					}
-				}]
+				]
 			},
 			"status": "RUNNING",
 			"percentTraffic": 100,
-			"goals": [{
+			"goals": [
+				{
 					"identifier": "GOAL_1",
 					"id": 2,
 					"type": "REVENUE_TRACKING"
@@ -195,7 +211,8 @@
 			],
 			"isForcedVariationEnabled": false,
 			"key": "CAMPAIGN_9",
-			"variations": [{
+			"variations": [
+				{
 					"id": 1,
 					"name": "Control",
 					"changes": {},
@@ -221,7 +238,8 @@
 			"segments": {},
 			"status": "RUNNING",
 			"percentTraffic": 100,
-			"goals": [{
+			"goals": [
+				{
 					"identifier": "GOAL_1",
 					"id": 2,
 					"type": "REVENUE_TRACKING"
@@ -234,7 +252,8 @@
 			],
 			"isForcedVariationEnabled": false,
 			"key": "CAMPAIGN_10",
-			"variations": [{
+			"variations": [
+				{
 					"id": 1,
 					"name": "Control",
 					"changes": {},
@@ -260,14 +279,17 @@
 			"segments": {},
 			"status": "RUNNING",
 			"percentTraffic": 100,
-			"goals": [{
-				"identifier": "GOAL_2",
-				"id": 286,
-				"type": "CUSTOM_GOAL"
-			}],
+			"goals": [
+				{
+					"identifier": "GOAL_2",
+					"id": 286,
+					"type": "CUSTOM_GOAL"
+				}
+			],
 			"isForcedVariationEnabled": false,
 			"key": "CAMPAIGN_4",
-			"variations": [{
+			"variations": [
+				{
 					"changes": {},
 					"id": 1,
 					"variables": [],
@@ -299,7 +321,8 @@
 			"segments": {},
 			"status": "RUNNING",
 			"percentTraffic": 100,
-			"goals": [{
+			"goals": [
+				{
 					"identifier": "GOAL_1",
 					"id": 2,
 					"type": "REVENUE_TRACKING"
@@ -312,7 +335,8 @@
 			],
 			"isForcedVariationEnabled": false,
 			"key": "hhjjjj",
-			"variations": [{
+			"variations": [
+				{
 					"id": 1,
 					"name": "Control",
 					"changes": {},
@@ -338,7 +362,8 @@
 			"segments": {},
 			"status": "RUNNING",
 			"percentTraffic": 100,
-			"goals": [{
+			"goals": [
+				{
 					"identifier": "GOAL_1",
 					"id": 2,
 					"type": "REVENUE_TRACKING"
@@ -351,7 +376,8 @@
 			],
 			"isForcedVariationEnabled": true,
 			"key": "rubyab1",
-			"variations": [{
+			"variations": [
+				{
 					"changes": {},
 					"id": 1,
 					"segments": {},
@@ -362,9 +388,11 @@
 					"changes": {},
 					"id": 2,
 					"segments": {
-						"or": [{
-							"user": "USER_1,  USER_4, USER_5,    USER_6 , USER_7"
-						}]
+						"or": [
+							{
+								"user": "USER_1,  USER_4, USER_5,    USER_6 , USER_7"
+							}
+						]
 					},
 					"name": "Variation-1",
 					"weight": 25
@@ -373,11 +401,13 @@
 					"changes": {},
 					"id": 3,
 					"segments": {
-						"or": [{
-							"custom_variable": {
-								"abcd": "1"
+						"or": [
+							{
+								"custom_variable": {
+									"abcd": "1"
+								}
 							}
-						}]
+						]
 					},
 					"name": "Variation-2",
 					"weight": 25
@@ -386,11 +416,13 @@
 					"changes": {},
 					"id": 4,
 					"segments": {
-						"or": [{
-							"custom_variable": {
-								"abcd": "regex(1)"
+						"or": [
+							{
+								"custom_variable": {
+									"abcd": "regex(1)"
+								}
 							}
-						}]
+						]
 					},
 					"name": "Variation-3",
 					"weight": 25

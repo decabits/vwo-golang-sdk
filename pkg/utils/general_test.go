@@ -19,8 +19,8 @@ package utils
 import (
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/stretchr/testify/assert"
 )
 
