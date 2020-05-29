@@ -19,40 +19,45 @@ package utils
 import (
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckCampaignType(t *testing.T) {
-	vwoInstance := getInstance()
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 
 	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	campaignType := constants.CampaignTypeVisualAB
 	value := CheckCampaignType(campaign, campaignType)
 	assert.True(t, value, "Campaign should match")
 
-	campaign = vwoInstance.SettingsFile.Campaigns[4]
+	vwoInstance = testdata.GetInstanceWithSettings("FT_T_0_W_10_20_30_40")
+
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	campaignType = constants.CampaignTypeFeatureTest
 	value = CheckCampaignType(campaign, campaignType)
 	assert.True(t, value, "Campaign should not match")
 
-	campaign = vwoInstance.SettingsFile.Campaigns[2]
+	vwoInstance = testdata.GetInstanceWithSettings("FR_T_0_W_100")
+
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	campaignType = constants.CampaignTypeFeatureRollout
 	value = CheckCampaignType(campaign, campaignType)
 	assert.True(t, value, "Campaign should not match")
 
-	campaign = vwoInstance.SettingsFile.Campaigns[2]
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	campaignType = constants.CampaignTypeFeatureTest
 	value = CheckCampaignType(campaign, campaignType)
 	assert.False(t, value, "Campaign should not match")
 }
 
 func TestGetKeyValue(t *testing.T) {
-	vwoInstance := getInstance()
+	vwoInstance := testdata.GetInstanceWithSettings("T_50_W_50_50_WS")
 
-	segment := vwoInstance.SettingsFile.Campaigns[4].Variations[0].Segments
+	segment := vwoInstance.SettingsFile.Campaigns[0].Segments
 	actualKey, actualValue := GetKeyValue(segment)
-	expectedKey := "or"
+	expectedKey := constants.OperatorTypeAnd
 	assert.Equal(t, expectedKey, actualKey, "Expected and Actual Keys should be same")
 	var Temp []interface{}
 	assert.IsType(t, Temp, actualValue, "Type Mismatch")
