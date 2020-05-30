@@ -42,8 +42,8 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	*/
 	impression := getCommonProperties(vwoInstance, userID)
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsPush
-	
-	impression.Tags =`{"u":{"` + url.QueryEscape(tagKey) + `":"` + url.QueryEscape(tagValue) + `"}}`
+
+	impression.Tags = `{"u":{"` + url.QueryEscape(tagKey) + `":"` + url.QueryEscape(tagValue) + `"}}`
 
 	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.Tags)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
@@ -52,7 +52,7 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 }
 
 // CreateImpressionTrackingGoal creates the impression from the arguments passed to track goal
-func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID , goalType string, campaignID, goalID int, revenueValue interface{}) schema.Impression {
+func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID, goalType string, campaignID, goalID int, revenueValue interface{}) schema.Impression {
 	/*
 		Args:
 		    variationID : Variation identifier
@@ -74,13 +74,13 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 
 	if goalType == constants.GoalTypeRevenue {
 		switch revenueValue.(type) {
-		case int :
+		case int:
 			impression.R = strconv.Itoa(revenueValue.(int))
-		case float32 :
+		case float32:
 			impression.R = strconv.FormatFloat(float64(revenueValue.(float32)), 'f', -1, 32)
-		case float64 :
+		case float64:
 			impression.R = strconv.FormatFloat(float64(revenueValue.(float64)), 'f', -1, 64)
-		case string :
+		case string:
 			impression.R = revenueValue.(string)
 		}
 	}

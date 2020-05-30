@@ -25,7 +25,6 @@ func GetInstanceWithCustomSettings(SettingsFileName string) schema.VwoInstance {
 	}
 
 	settings := settingsFiles[SettingsFileName]
-	
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      settings,
@@ -52,7 +51,6 @@ func GetInstanceWithSettings(SettingsFileName string) schema.VwoInstance {
 	}
 
 	settings := settingsFiles[SettingsFileName]
-	
 
 	vwoInstance := schema.VwoInstance{
 		SettingsFile:      settings,

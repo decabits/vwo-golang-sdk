@@ -21,8 +21,8 @@ import (
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
-	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
+	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -106,7 +106,7 @@ func TestParseOptions(t *testing.T) {
 	expected = schema.Options{
 		CustomVariables:             map[string]interface{}{"a": "x"},
 		VariationTargetingVariables: map[string]interface{}{"a": "x"},
-		RevenueValue:                 12,
+		RevenueValue:                12,
 	}
 	actual = ParseOptions(data)
 	assert.Equal(t, expected, actual)

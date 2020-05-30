@@ -24,7 +24,7 @@ type VwoInstance struct {
 	IsDevelopmentMode bool
 	UserID            string
 	Campaign          Campaign
-	API 							string
+	API               string
 }
 
 // SettingsFile struct
@@ -114,5 +114,5 @@ type Impression struct {
 	ED           string  `json:"ed"`
 	GoalID       int     `json:"goal_id"`
 	R            string  `json:"r"`
-	Tags				 string	 `json:"tags"`
+	Tags         string  `json:"tags"`
 }

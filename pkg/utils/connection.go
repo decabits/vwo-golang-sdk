@@ -36,7 +36,7 @@ func GetRequest(url string) (string, error) {
 	*/
 	response, err := http.Get(url)
 	if err != nil {
-		return "", fmt.Errorf(constants.ErrorMessageURLNotFound, "",  err.Error())
+		return "", fmt.Errorf(constants.ErrorMessageURLNotFound, "", err.Error())
 	}
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
@@ -44,7 +44,7 @@ func GetRequest(url string) (string, error) {
 		return "", fmt.Errorf(constants.ErrorMessageResponseNotParsed, "", url)
 	}
 	if response.StatusCode != 200 {
-		return "", fmt.Errorf(constants.ErrorMessageCouldNotGetURL, "",  url)
+		return "", fmt.Errorf(constants.ErrorMessageCouldNotGetURL, "", url)
 	}
 	return string(body), nil
 }
