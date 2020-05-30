@@ -71,7 +71,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 	targettedVariation, err := FindTargetedVariation(vwoInstance, userID, campaign, options)
 	if err != nil {
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, err.Error())
-	}else {
+	} else {
 		message := fmt.Sprintf(constants.InfoMessageGotVariationForUser, vwoInstance.API, userID, campaign.Key, campaign.Type, targettedVariation.Name)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 		return targettedVariation, nil
@@ -103,7 +103,7 @@ func GetVariation(vwoInstance schema.VwoInstance, userID string, campaign schema
 				storage.Set(userID, campaign.Key, variation.Name)
 				message := fmt.Sprintf(constants.InfoMessageSettingDataUserStorageService, vwoInstance.API, userID)
 				utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
-			}else {
+			} else {
 				message := fmt.Sprintf(constants.ErrorMessageSetUserStorageServiceFailed, vwoInstance.API, userID)
 				utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
 			}
@@ -164,7 +164,7 @@ func FindTargetedVariation(vwoInstance schema.VwoInstance, userID string, campai
 }
 
 // GetVariationFromUserStorage function tries retrieving variation from user_storage
-func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) (string) {
+func GetVariationFromUserStorage(vwoInstance schema.VwoInstance, userID string, campaign schema.Campaign) string {
 	/*
 		Args:
 			userId: the unique ID assigned to User
@@ -247,7 +247,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 			bool: if the options falls in the segments criteria
 	*/
 
-	if segments ==  nil {
+	if segments == nil {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 

@@ -3,8 +3,7 @@
     "sdkKey": "someuniquestuff1234567",
     "accountId": 12345,
     "version": 1,
-    "campaigns": [
-      {
+    "campaigns": [{
         "id": 202,
         "segments": {},
         "status": "RUNNING",
@@ -23,8 +22,7 @@
         "goals": {},
         "isForcedVariationEnabled": true,
         "key": "CAMPAIGN_2",
-        "variations": [
-          {
+        "variations": [{
             "segments": {},
             "changes": {},
             "id": 1,
@@ -72,6 +70,69 @@
       "isForcedVariationEnabled": false,
       "key": "CAMPAIGN_2",
       "variations": {},
+      "type": "FEATURE_ROLLOUT"
+    }]
+  },
+
+  "SettingsFile3": {
+    "sdkKey": "someuniquestuff1234567",
+    "accountId": 12345,
+    "version": 1,
+    "campaigns": [{
+      "id": 291,
+      "segments": {},
+      "status": "RUNNING",
+      "percentTraffic": 100,
+      "goals": {},
+      "isForcedVariationEnabled": true,
+      "key": "CAMPAIGN_1",
+      "variations": [{
+          "segments": {
+            "or": [{
+              "custom_variable": {
+                "a": "wildcard(*123*)"
+              }
+            }]
+          },
+          "changes": {},
+          "id": 1,
+          "variables": [{
+            "value": 302,
+            "type": "integer",
+            "key": "int2",
+            "id": 1
+          }],
+          "isFeatureEnabled": true,
+          "weight": 50.0,
+          "name": "Control"
+        },
+        {
+          "segments": {
+            "or": [{
+              "custom_variable": {
+                "a": "wildcard(*123*)"
+              }
+            }]
+          },
+          "changes": {},
+          "id": 2,
+          "variables": [{
+            "value": 302,
+            "type": "integer",
+            "key": "int2",
+            "id": 1
+          }],
+          "isFeatureEnabled": false,
+          "weight": 50.0,
+          "name": "Variation-1"
+        }
+      ],
+      "variables": [{
+        "value": 301,
+        "type": "integer",
+        "key": "int1",
+        "id": 1
+      }],
       "type": "FEATURE_ROLLOUT"
     }]
   }
