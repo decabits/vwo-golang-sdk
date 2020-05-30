@@ -56,7 +56,7 @@ func TestCreateImpressionForPush(t *testing.T) {
 }
 
 func TestCreateImpressionTrackingUser(t *testing.T) {
-		vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 	variationID := 1
 	campaignID := 283
 	userID := testdata.GetRandomUser()
@@ -72,7 +72,7 @@ func TestCreateImpressionTrackingUser(t *testing.T) {
 }
 
 func TestCreateImpressionTrackingGoal(t *testing.T) {
-		vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 	variationID := 1
 	campaignID := 283
 	goalID := 281
@@ -176,7 +176,7 @@ func TestCreateImpressionTrackingGoal(t *testing.T) {
 
 func TestGetCommonProperties(t *testing.T) {
 	userID := testdata.GetRandomUser()
-		vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 	impression := getCommonProperties(vwoInstance, userID)
 
 	assert.Equal(t, userID, impression.UID, "Non Matching UIDs")
