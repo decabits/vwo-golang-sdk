@@ -17,77 +17,144 @@
 package api
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
+	"github.com/decabits/vwo-golang-sdk/pkg/constants"
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
+	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTrack(t *testing.T) {
 	assertOutput := assert.New(t)
 
-	vwoInstance, err := getInstance("./testdata/testTrack.json")
-	assertOutput.Nil(err, "error fetching instance")
+	var userExpectation map[string][]TestCase
+	data, err := ioutil.ReadFile("../testdata/userExpectations1.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	if err = json.Unmarshal(data, &userExpectation); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	var settingsFiles map[string]schema.SettingsFile
+	data, err = ioutil.ReadFile("../testdata/settings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	if err = json.Unmarshal(data, &settingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
+
+	instance := VWOInstance{}
+	instance.SettingsFile = schema.SettingsFile{}
+	instance.Logger = logs
+
+	options := make(map[string]interface{})
+	options["revenueValue"] = 12
+
+	for settingsFileName, settingsFile := range settingsFiles {
+		vwoInstance := schema.VwoInstance{
+			Logger: logs,
+		}
+		settingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, settingsFile.Campaigns[0].Variations)
+
+		instance.SettingsFile = settingsFile
+
+		if instance.SettingsFile.Campaigns[0].Type != constants.CampaignTypeFeatureRollout {
+			testCases := userExpectation[settingsFileName]
+			for i := range testCases {
+				if testCases[i].Variation != "" {
+					actual := instance.Track(settingsFile.Campaigns[0].Key, testCases[i].User, settingsFile.Campaigns[0].Goals[0].Identifier, options)
+					assertOutput.True(actual, settingsFileName+" "+testCases[i].User)
+				} else {
+					actual := instance.Track(settingsFile.Campaigns[0].Key, testCases[i].User, settingsFile.Campaigns[0].Goals[0].Identifier, options)
+					assertOutput.False(actual, settingsFileName+" "+testCases[i].User)
+				}
+			}
+		} else {
+			testCases := userExpectation[settingsFileName]
+			for i := range testCases {
+				if testCases[i].Variation != "" {
+					actual := instance.Track(settingsFile.Campaigns[0].Key, testCases[i].User, settingsFile.Campaigns[0].Goals[0].Identifier, options)
+					assertOutput.True(actual, settingsFileName+" "+testCases[i].User)
+				} else {
+					actual := instance.Track(settingsFile.Campaigns[0].Key, testCases[i].User, settingsFile.Campaigns[0].Goals[0].Identifier, options)
+					assertOutput.False(actual, settingsFileName+" "+testCases[i].User)
+				}
+			}
+		}
+
+	}
+
+	// CORNER CASES
+
+	var customSettingsFiles map[string]schema.SettingsFile
+	data, err = ioutil.ReadFile("../testdata/customSettings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	if err = json.Unmarshal(data, &customSettingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	settings := customSettingsFiles["SettingsFile2"]
+	instance.SettingsFile = settings
 
 	userID := ""
 	campaignKey := ""
 	goalIdentifier := ""
-	value := vwoInstance.Track(campaignKey, userID, goalIdentifier, nil)
+	value := instance.Track(campaignKey, userID, goalIdentifier, nil)
 	assertOutput.False(value, "Invalid params")
 
-	userID = "USER_1"
-	campaignKey = "notPresent"
-	goalIdentifier = "GOAL_2"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, nil)
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.NonExistingCampaign
+	goalIdentifier = "GOAL_0"
+	value = instance.Track(campaignKey, userID, goalIdentifier, nil)
 	assertOutput.False(value, "Campaign does not exist")
 
-	userID = "USER_1"
-	campaignKey = "CAMPAIGN_8"
-	goalIdentifier = "GOAL_2"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, nil)
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.NotRunningCampaign
+	goalIdentifier = "GOAL_0"
+	value = instance.Track(campaignKey, userID, goalIdentifier, nil)
 	assertOutput.False(value, "Campaign Not running")
 
-	userID = "USER_3"
-	campaignKey = "CAMPAIGN_1"
-	goalIdentifier = "GOAL_2"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, nil)
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.FeatureRolloutCampaign
+	goalIdentifier = "GOAL_0"
+	value = instance.Track(campaignKey, userID, goalIdentifier, nil)
 	assertOutput.False(value, "Campaign Not Valid")
 
-	userID = "USER_3"
-	campaignKey = "CAMPAIGN_9"
-	goalIdentifier = "test"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, nil)
+	userID = testdata.GetRandomUser()
+	campaignKey = "CAMPAIGN_3"
+	goalIdentifier = "GOAL_0"
+	value = instance.Track(campaignKey, userID, goalIdentifier, nil)
 	assertOutput.False(value, "Goal Not Found")
 
-	userID = "USER_3"
-	campaignKey = "CAMPAIGN_10"
-	goalIdentifier = "GOAL_1"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, nil)
-	assertOutput.False(value, "Invalid Goal type")
+	userID = testdata.GetRandomUser()
+	campaignKey = "CAMPAIGN_3"
+	goalIdentifier = "abcd"
+	value = instance.Track(campaignKey, userID, goalIdentifier, nil)
+	assertOutput.False(value, "Revenue Not defined")
 
-	userID = "USER_3"
-	campaignKey = "CAMPAIGN_10"
-	option := map[string]interface{}{
-		"revenueValue": 0,
-	}
-	goalIdentifier = "GOAL_1"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
-	assertOutput.True(value, "Revenue Not defined")
-
-	userID = "USER_3"
-	campaignKey = "CAMPAIGN_2"
-	option = map[string]interface{}{
-		"revenueValue": 10,
-	}
-	goalIdentifier = "GOAL_2"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
-	assertOutput.False(value, "No Variation in Campaign")
-
-	option = map[string]interface{}{
-		"revenueValue": 12,
-	}
-	userID = "USER_9"
-	campaignKey = "CAMPAIGN_10"
-	goalIdentifier = "GOAL_2"
-	value = vwoInstance.Track(campaignKey, userID, goalIdentifier, option)
-	assertOutput.True(value, "Variation should be defined")
+	// userID = testdata.GetRandomUser()
+	// campaignKey = "CAMPAIGN_2"
+	// option = map[string]interface{}{
+	// 	"revenueValue": 10,
+	// }
+	// goalIdentifier = "GOAL_2"
+	// value = instance.Track(campaignKey, userID, goalIdentifier, option)
+	// assertOutput.False(value, "No Variation in Campaign")
 }

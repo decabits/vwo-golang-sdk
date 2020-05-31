@@ -73,7 +73,7 @@ func TestGetVariationName(t *testing.T) {
 		for i := range testCases {
 			actual := instance.GetVariationName(settingsFile.Campaigns[0].Key, testCases[i].User, nil)
 			expected := testCases[i].Variation
-			assert.Equal(t, expected, actual, settingsFileName+" "+testCases[i].User)
+			assertOutput.Equal(expected, actual, settingsFileName+" "+testCases[i].User)
 		}
 	}
 

@@ -38,7 +38,7 @@ type TestCase struct {
 func TestActivate(t *testing.T) {
 	assertOutput := assert.New(t)
 
-		var userExpectation map[string][]TestCase
+	var userExpectation map[string][]TestCase
 	data, err := ioutil.ReadFile("../testdata/userExpectations1.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
@@ -79,7 +79,7 @@ func TestActivate(t *testing.T) {
 		for i := range testCases {
 			actual := instance.Activate(settingsFile.Campaigns[0].Key, testCases[i].User, nil)
 			expected := testCases[i].Variation
-			assert.Equal(t, expected, actual, settingsFileName+" "+testCases[i].User)
+			assertOutput.Equal(expected, actual, settingsFileName+" "+testCases[i].User)
 		}
 	}
 
