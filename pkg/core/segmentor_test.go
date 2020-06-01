@@ -21,11 +21,12 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestCase struct {
+type SegmentTestCase struct {
 	DSL                         map[string]interface{} `json:"dsl"`
 	Expected                    bool                   `json:"expectation"`
 	CustomVariable              map[string]interface{} `json:"custom_variables"`
@@ -33,17 +34,17 @@ type TestCase struct {
 }
 
 func TestSegmentEvaluator(t *testing.T) {
-	var testdata map[string]map[string]TestCase
+	var TestData map[string]map[string]SegmentTestCase
 	data, err := ioutil.ReadFile("../testdata/testSegment.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}
 
-	if err = json.Unmarshal(data, &testdata); err != nil {
+	if err = json.Unmarshal(data, &TestData); err != nil {
 		logger.Info("Error: " + err.Error())
 	}
 
-	for parent, v := range testdata {
+	for parent, v := range TestData {
 		for child, value := range v {
 			var actual bool
 			if value.CustomVariable != nil {
@@ -55,4 +56,18 @@ func TestSegmentEvaluator(t *testing.T) {
 			assert.Equal(t, expected, actual, parent+" "+child)
 		}
 	}
+
+	// CORNER CASES
+
+	vwoInstance := testdata.GetInstanceWithCustomSettings("SettingsFile4")
+	segments := vwoInstance.SettingsFile.Campaigns[0].Segments
+	actual := SegmentEvaluator(segments, nil)
+	assert.True(t, actual, "No Case for operator hit")	
+}
+
+func TestEvaluate(t *testing.T) {
+	operator := "InvalidOperator"
+	var res []bool
+	actual := evaluate(operator, res)
+	assert.False(t, actual, "No Case for operator hit")
 }

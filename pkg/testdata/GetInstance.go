@@ -16,8 +16,17 @@ type UserStorage interface {
 	Set(userID, campaignKey, variationName string)
 }
 
+// IncorrectUserStorage interface
+type IncorrectUserStorage interface {
+	Get(userID, campaignKey string) schema.UserData
+	IncorrectSet(campaignKey, variationName string)
+}
+
 // UserStorageData struct
 type UserStorageData struct{}
+
+// IncorrectUserStorageData struct
+type IncorrectUserStorageData struct{}
 
 // data is an example of how data is stored
 var data = `{
@@ -29,7 +38,7 @@ var data = `{
         {
             "UserID": "TempUser",
             "CampaignKey": "AB_T_50_W_50_50",
-            "VariationName": "TempVariation"
+            "VariationName": "Control"
         }
     ]
 }`
@@ -58,6 +67,38 @@ func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
 
 // Set function
 func (us *UserStorageData) Set(userID, campaignKey, variationName string) {
+}
+
+// IncorrectSet function
+func (us *UserStorageData) IncorrectSet(campaignKey, variationName string) {
+}
+
+//GetInstanceWithIncorrectStorage function
+func GetInstanceWithIncorrectStorage(SettingsFileName string) schema.VwoInstance {
+	logger := logger.Init(constants.SDKName, false, false, ioutil.Discard)
+	defer logger.Close()
+
+	var settingsFiles map[string]schema.SettingsFile
+	data, err := ioutil.ReadFile("../testdata/settings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	if err = json.Unmarshal(data, &settingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	settings := settingsFiles[SettingsFileName]
+
+	storage := &IncorrectUserStorageData{}
+
+	vwoInstance := schema.VwoInstance{
+		SettingsFile:      settings,
+		UserStorage:       storage,
+		Logger:            logger,
+		IsDevelopmentMode: true,
+	}
+	return vwoInstance
 }
 
 //GetInstanceWithStorage function

@@ -123,7 +123,7 @@
             "id": 1
           }],
           "isFeatureEnabled": true,
-          "weight": 50.0,
+          "weight": 33.33,
           "name": "Control"
         },
         {
@@ -143,8 +143,27 @@
             "id": 1
           }],
           "isFeatureEnabled": false,
-          "weight": 50.0,
+          "weight": 33.33,
           "name": "Variation-1"
+        }, {
+          "segments": {
+            "or": [{
+              "custom_variable": {
+                "b": "wildcard(*456*)"
+              }
+            }]
+          },
+          "changes": {},
+          "id": 3,
+          "variables": [{
+            "value": 303,
+            "type": "integer",
+            "key": "int2",
+            "id": 1
+          }],
+          "isFeatureEnabled": false,
+          "weight": 33.33,
+          "name": "Variation-2"
         }
       ],
       "variables": [{
@@ -154,6 +173,29 @@
         "id": 1
       }],
       "type": "FEATURE_ROLLOUT"
+    }]
+  },
+
+  "SettingsFile4": {
+    "sdkKey": "someuniquestuff1234567",
+    "accountId": 12345,
+    "version": 1,
+    "campaigns":[{
+      "id": 202,
+      "segments": {
+        "or": [{
+          "IncorrectOperator": {
+            "a": "wildcard(*123*)"
+          }
+        }]
+      },
+      "status": "RUNNING",
+      "percentTraffic": 100,
+      "goals": {},
+      "isForcedVariationEnabled": false,
+      "key": "CAMPAIGN_1",
+      "variations": {},
+      "type": "VISUAL_AB"
     }]
   }
 }

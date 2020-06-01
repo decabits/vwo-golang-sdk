@@ -41,7 +41,7 @@ func TestBucketUserToVariation(t *testing.T) {
 	assertOutput := assert.New(t)
 	vwoInstance := testdata.GetInstanceWithSettings("AB_T_100_W_50_50")
 	vwoInstance.SettingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, vwoInstance.SettingsFile.Campaigns[0].Variations)
-		
+
 	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	userID := testdata.GetRandomUser()
 	actual, err := BucketUserToVariation(vwoInstance, userID, campaign)
@@ -77,7 +77,7 @@ func TestGetBucketerVariation(t *testing.T) {
 }
 
 func TestIsUserPartOfCampaign(t *testing.T) {
-vwoInstance := testdata.GetInstanceWithSettings("AB_T_100_W_33_33_33")
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_100_W_33_33_33")
 	vwoInstance.SettingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, vwoInstance.SettingsFile.Campaigns[0].Variations)
 
 	userID := testdata.ValidUser
@@ -89,6 +89,12 @@ vwoInstance := testdata.GetInstanceWithSettings("AB_T_100_W_33_33_33")
 	vwoInstance.SettingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, vwoInstance.SettingsFile.Campaigns[0].Variations)
 
 	userID = testdata.InvalidUser
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
+	actual = IsUserPartOfCampaign(vwoInstance, userID, campaign)
+	assert.False(t, actual, "User should not be part of the campaign")
+
+	vwoInstance = testdata.GetInstanceWithCustomSettings("SettingsFile1")
+	userID = testdata.ValidUser
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	actual = IsUserPartOfCampaign(vwoInstance, userID, campaign)
 	assert.False(t, actual, "User should not be part of the campaign")
