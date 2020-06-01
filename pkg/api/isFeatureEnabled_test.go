@@ -17,108 +17,133 @@
 package api
 
 import (
-	// "encoding/json"
-	// "io/ioutil"
-	// "log"
+	"encoding/json"
+	"io/ioutil"
+	"log"
 	"testing"
 
-	// "github.com/decabits/vwo-golang-sdk/pkg/constants"
-	// "github.com/decabits/vwo-golang-sdk/pkg/logger"
-	// "github.com/decabits/vwo-golang-sdk/pkg/schema"
-	// "github.com/decabits/vwo-golang-sdk/pkg/utils"
-	// "github.com/stretchr/testify/assert"
+	"github.com/decabits/vwo-golang-sdk/pkg/constants"
+	"github.com/decabits/vwo-golang-sdk/pkg/core"
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
+	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
+	"github.com/decabits/vwo-golang-sdk/pkg/utils"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestIsFeatureEnabled(t *testing.T) {
-	// assertOutput := assert.New(t)
+	assertOutput := assert.New(t)
 
-	// var userExpectation map[string][]TestCase
-	// data, err := ioutil.ReadFile("../testdata/userExpectations1.json")
-	// if err != nil {
-	// 	logger.Info("Error: " + err.Error())
-	// }
+	var settingsFiles map[string]schema.SettingsFile
+	data, err := ioutil.ReadFile("../testdata/settings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	// if err = json.Unmarshal(data, &userExpectation); err != nil {
-	// 	logger.Info("Error: " + err.Error())
-	// }
+	if err = json.Unmarshal(data, &settingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	// var settingsFiles map[string]schema.SettingsFile
-	// data, err = ioutil.ReadFile("../testdata/settings.json")
-	// if err != nil {
-	// 	logger.Info("Error: " + err.Error())
-	// }
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
 
-	// if err = json.Unmarshal(data, &settingsFiles); err != nil {
-	// 	logger.Info("Error: " + err.Error())
-	// }
+	instance := VWOInstance{}
+	instance.SettingsFile = schema.SettingsFile{}
+	instance.Logger = logs
 
-	// logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
-	// logger.SetFlags(log.LstdFlags)
-	// defer logger.Close()
+	for settingsFileName, settingsFile := range settingsFiles {
+		vwoInstance := schema.VwoInstance{
+			Logger: logs,
+		}
+		settingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, settingsFile.Campaigns[0].Variations)
 
-	// instance := VWOInstance{}
-	// instance.Logger = logs
+		instance.SettingsFile = settingsFile
+		if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeVisualAB {
+			actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, testdata.GetRandomUser(), nil)
+			assertOutput.False(actual, "Wrong Campaign Type")
+		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureRollout && settingsFileName != "NEW_SETTINGS_FILE" {
+			userID := testdata.GetRandomUser()
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
+				actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
+				assertOutput.True(actual, "Feature Rollout Campaign")
+			}
+		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureRollout && settingsFileName == "NEW_SETTINGS_FILE" {
+			userID := testdata.GetRandomUser()
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
+				actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
+				assertOutput.True(actual, "Feature Rollout Campaign")
+			}
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[1], schema.Options{}); variation.Name != "" {
+				if variation.Name == "Control" {
+					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[1].Key, userID, nil)
+					assertOutput.False(actual, "Feature Test Campaign")
+				} else {
+					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[1].Key, userID, nil)
+					assertOutput.True(actual, "Feature Test Campaign")
+				}
+			}
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[2], schema.Options{}); variation.Name != "" {
+				actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[2].Key, userID, nil)
+				assertOutput.False(actual, "Visual AB Campaign")
+			}
+		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureTest && settingsFileName != "FT_T_100_W_10_20_30_40_IFEF" {
+			userID := testdata.GetRandomUser()
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
+				if variation.Name == "Control" {
+					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
+					assertOutput.False(actual, "Feature Test Campaign : " + variation.Name + userID)
+				} else {
+					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
+					assertOutput.True(actual, "Feature Test Campaign : " + variation.Name + userID)
+				}
+			}
+		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureTest && settingsFileName == "FT_T_100_W_10_20_30_40_IFEF" {
+			userID := testdata.GetRandomUser()
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
+				if variation.Name == "Variation-2" {
+					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
+					assertOutput.True(actual, "Feature Test Campaign : " + variation.Name + userID)
+				} else {
+					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
+					assertOutput.False(actual, "Feature Test Campaign : " + variation.Name + userID)
+				}
+			}
+		}
+	}
 
-	// for settingsFileName, settingsFile := range settingsFiles {
-	// 	vwoInstance := schema.VwoInstance{
-	// 		Logger: logs,
-	// 	}
-	// 	settingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, settingsFile.Campaigns[0].Variations)
+	// CORNER CASES
 
-	// 	instance.SettingsFile = settingsFile
+	var customSettingsFiles map[string]schema.SettingsFile
+	data, err = ioutil.ReadFile("../testdata/customSettings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	// 	testCases := userExpectation[settingsFileName]
-	// 	for i := range testCases {
-	// 		actual := instance.IsFeatureEnabled(settingsFile.Campaigns[0].Key, testCases[i].User, nil)
-	// 		expected := testCases[i].Variation
-	// 		if settingsFileName != "T_75_W_10_TIMES_10" && settingsFileName != "AB_T_100_W_33_33_33" && settingsFileName != "AB_T_50_W_50_50" && settingsFileName != "AB_T_100_W_0_100" && settingsFileName != "AB_T_20_W_10_90" {
-	// 			assertOutput.Equal(expected != "", actual, settingsFileName+" "+testCases[i].User)
-	// 		} else {
-	// 			assertOutput.Equal(expected == "", actual, settingsFileName+" "+testCases[i].User)
-	// 		}
-	// 	}
-	// }
+	if err = json.Unmarshal(data, &customSettingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	// vwoInstance, err := getInstance("./testdata/testIsFeatureEnabled.json")
-	// assertOutput.Nil(err, "error fetching instance")
+	settings := customSettingsFiles["SettingsFile2"]
+	instance.SettingsFile = settings
 
-	// userID := ""
-	// campaignKey := ""
-	// value := vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
-	// assertOutput.False(value, "Invalid params")
+	userID := ""
+	campaignKey := ""
+	value := instance.IsFeatureEnabled(campaignKey, userID, nil)
+	assertOutput.False(value, "Invalid params")
 
-	// userID = "USER_1"
-	// campaignKey = "notPresent"
-	// value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
-	// assertOutput.False(value, "Campaign does not exist")
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.NonExistingCampaign
+	value = instance.IsFeatureEnabled(campaignKey, userID, nil)
+	assertOutput.False(value, "Campaign does not exist")
 
-	// userID = "USER_1"
-	// campaignKey = "CAMPAIGN_1"
-	// value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
-	// assertOutput.False(value, "Campaign Not running")
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.NotRunningCampaign
+	value = instance.IsFeatureEnabled(campaignKey, userID, nil)
+	assertOutput.False(value, "Campaign Not Running")
 
-	// userID = "USER_3"
-	// campaignKey = "CAMPAIGN_8"
-	// value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
-	// assertOutput.False(value, "Campaign Not Valid")
-
-	// userID = "Robbie"
-	// campaignKey = "CAMPAIGN_2"
-	// value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
-	// assertOutput.False(value, "No Variation from campaign Not alloted")
-
-	// userID = "USER_8"
-	// campaignKey = "CAMPAIGN_3"
-	// value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
-	// assertOutput.True(value, "Campaign Feature Rollout")
-
-	// userID = "USER_2"
-	// campaignKey = "CAMPAIGN_4"
-	// value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
-	// assertOutput.True(value, "Campaign Feature Test")
-
-	// userID = "USER_8"
-	// campaignKey = "CAMPAIGN_4"
-	// value = vwoInstance.IsFeatureEnabled(campaignKey, userID, nil)
-	// assertOutput.False(value, "Campaign Feature Rollout")
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.FeatureRolloutCampaign
+	value = instance.IsFeatureEnabled(campaignKey, userID, nil)
+	assertOutput.False(value, "No Variation from campaign Not alloted")
 }

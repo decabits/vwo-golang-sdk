@@ -174,19 +174,19 @@ func TestGetFeatureVariableValue(t *testing.T) {
 	}
 
 	// CORNER CASES
-		
-		var customSettingsFiles map[string]schema.SettingsFile
-		data, err = ioutil.ReadFile("../testdata/customSettings.json")
-		if err != nil {
-			logger.Info("Error: " + err.Error())
-		}
+	
+	var customSettingsFiles map[string]schema.SettingsFile
+	data, err = ioutil.ReadFile("../testdata/customSettings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-		if err = json.Unmarshal(data, &customSettingsFiles); err != nil {
-			logger.Info("Error: " + err.Error())
-		}
+	if err = json.Unmarshal(data, &customSettingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-		settings := customSettingsFiles["SettingsFile2"]
-		instance.SettingsFile = settings
+	settings := customSettingsFiles["SettingsFile2"]
+	instance.SettingsFile = settings
 
 	userID := ""
 	campaignKey := ""
