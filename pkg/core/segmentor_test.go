@@ -66,7 +66,7 @@ func TestSegmentEvaluator(t *testing.T) {
 }
 
 func TestEvaluate(t *testing.T) {
-	operator := "InvalidOperator"
+	operator := testdata.InvalidOperator
 	var res []bool
 	actual := evaluate(operator, res)
 	assert.False(t, actual, "No Case for operator hit")

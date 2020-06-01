@@ -55,21 +55,6 @@ func TestEvaluateSegment(t *testing.T) {
 	}
 	value := EvaluateSegment(vwoInstance, segments, options)
 	assert.True(t, value, "Expected True as mismatch")
-
-	// segments = vwoInstance.SettingsFile.Campaigns[0].Variations[0].Segments
-	// options = schema.Options{
-	// 	CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_1"},
-	// 	RevenueValue:    12,
-	// }
-	// value = EvaluateSegment(vwoInstance, segments, options)
-	// assert.True(t, value, "Expected True")
-
-	// options = schema.Options{
-	// 	CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_3"},
-	// 	RevenueValue:    12,
-	// }
-	// value = EvaluateSegment(vwoInstance, segments, options)
-	// assert.False(t, value, "Expected True")
 }
 
 func TestGetWhiteListedVariationsList(t *testing.T) {
@@ -104,7 +89,7 @@ func TestFindTargetedVariation(t *testing.T) {
 	options := schema.Options {
 		VariationTargetingVariables: map[string]interface{}{"a":"789"},
 	}
-	actual, _ := FindTargetedVariation(instance, "DummyUser", campaign, options)
+	actual, _ := FindTargetedVariation(instance, testdata.ValidUser, campaign, options)
 	assertOutput.Equal("", actual.Name, "Variations should match")
 }
 
@@ -177,19 +162,19 @@ func TestGetVariation(t *testing.T) {
 	options := schema.Options {
 		VariationTargetingVariables: map[string]interface{}{"a":"123"},
 	}
-	actual, _ := GetVariation(instance, "DummyUser", campaign, options)
-	expected := "Control"
+	actual, _ := GetVariation(instance, testdata.ValidUser, campaign, options)
+	expected := testdata.ValidVariationControl
 	assertOutput.Equal(expected, actual.Name, "Variations should match")
 
 	options = schema.Options {
 		VariationTargetingVariables: map[string]interface{}{"b":"456"},
 	}
-	actual, _ = GetVariation(instance, "DummyUser", campaign, options)
-	expected = "Variation-2"
+	actual, _ = GetVariation(instance, testdata.ValidUser, campaign, options)
+	expected = testdata.ValidVariationVariation2
 	assertOutput.Equal(expected, actual.Name, "Variations should match")
 
 	instance = testdata.GetInstanceWithStorage("AB_T_50_W_50_50")
-	actual, _ = GetVariation(instance, "TempUser", instance.SettingsFile.Campaigns[0], schema.Options{})
+	actual, _ = GetVariation(instance, testdata.TempUser, instance.SettingsFile.Campaigns[0], schema.Options{})
 	expected = instance.SettingsFile.Campaigns[0].Variations[0].Name
 	assertOutput.Equal(expected, actual.Name, "Variations should match")
 
@@ -202,14 +187,14 @@ func TestGetVariation(t *testing.T) {
 	instance.SettingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(instance, instance.SettingsFile.Campaigns[0].Variations)
 	userID = testdata.GetRandomUser()
 	actual, err = GetVariation(instance, userID, instance.SettingsFile.Campaigns[0], schema.Options{})
-	assertOutput.Equal(nil, err, "LOL")
+	assertOutput.Equal(nil, err, "No error expected")
 	assertOutput.NotEmpty(actual, "Variations should match : " + userID)
 
 	instance = testdata.GetInstanceWithIncorrectStorage("AB_T_100_W_20_80")
 	instance.SettingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(instance, instance.SettingsFile.Campaigns[0].Variations)
 	userID = testdata.GetRandomUser()
 	actual, err = GetVariation(instance, userID, instance.SettingsFile.Campaigns[0], schema.Options{})
-	assertOutput.Equal(nil, err, "LOL")
+	assertOutput.Equal(nil, err, "No error expected")
 	assertOutput.NotEmpty(actual, "Variations should match : " + userID)
 }
 
@@ -225,13 +210,13 @@ func TestGetVariationFromUserStorage(t *testing.T) {
 	vwoInstance = testdata.GetInstanceWithStorage("AB_T_50_W_50_50")
 
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
-	userID = "DummyUser"
-	expected := "DummyVariation"
+	userID = testdata.ValidUser
+	expected := testdata.DummyVariation
 	actual = GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	assertOutput.Equal(expected, actual, "Actual and Expected Variation Name mismatch")
 
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
-	userID = "DummyUser1"
+	userID = testdata.InvalidUser
 	expected = ""
 	actual = GetVariationFromUserStorage(vwoInstance, userID, campaign)
 	assertOutput.Equal(expected, actual, "Actual and Expected Variation Name mismatch")

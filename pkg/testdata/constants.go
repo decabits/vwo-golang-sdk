@@ -14,6 +14,21 @@ const (
 	InvalidBucketValue = 0
 	ValidUser = "DummyUser"
 	InvalidUser = "UserInvalid"
+	InvalidOperator = "InvalidOperator"
+	DummyVariation = "DummyVariation"
+	TempUser = "TempUser"
+	ValidVariationControl = "Control"
+	ValidVariationVariation2 = "Variation-2"
+
+	DummyAccountID = "accountID"
+	DummySDKKey = "SDKKey"
+	InvalidAccountID = ""
+	InvalidSDKKey = ""
+	ValidAccountID = "60781"
+	ValidSDKKey = "ea87170ad94079aa190bc7c9b85d26fb"	
+	ValidSettingsFile = "../testdata/DummySettingsFile.json"
+	InvalidSettingsFile = "../testdata/InvalidSettingsFile.json"
+	EmptySettingsFile = "../testdata/settingsFile.json"
 
 	ValidCampaignKey       = "AB_T_50_W_50_50"
 	InvalidCampaignKey     = "notAvailable"
