@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -44,9 +44,13 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 			"&u=" + impression.U +
 			"&account_id=" + strconv.Itoa(impression.AccountID) +
 			"&uId=" + impression.UID +
-			"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
-			"&combination=" + strconv.Itoa(impression.Combination) +
-			"&ed=" + impression.ED
+			"&tags=" + impression.Tags
+
+		if vwoInstance.API != "Push" {
+			URL = URL + "&ed=" + impression.ED +
+				"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
+				"&combination=" + strconv.Itoa(impression.Combination)
+		}
 
 		_, err := utils.GetRequest(URL)
 
@@ -54,7 +58,7 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 			message := fmt.Sprintf(constants.ErrorMessageImpressionFailed, vwoInstance.API, err)
 			utils.LogMessage(vwoInstance.Logger, constants.Error, eventDispatcher, message)
 		} else {
-			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Normal", impression)
+			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Normal", URL)
 			utils.LogMessage(vwoInstance.Logger, constants.Info, eventDispatcher, message)
 		}
 	}
@@ -62,7 +66,7 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 
 // DispatchTrackingGoal function dispatches the event with goal tracking represented by
 // the impression object to our servers
-func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impression) {
+func DispatchTrackingGoal(vwoInstance schema.VwoInstance, goalType string, impression schema.Impression) {
 	/*
 		Args:
 			impression: impression to be dispatched
@@ -80,15 +84,19 @@ func DispatchTrackingGoal(vwoInstance schema.VwoInstance, impression schema.Impr
 			"&uId=" + impression.UID +
 			"&experiment_id=" + strconv.Itoa(impression.ExperimentID) +
 			"&combination=" + strconv.Itoa(impression.Combination) +
-			"&goal_id=" + strconv.Itoa(impression.GoalID) +
-			"&r=" + strconv.Itoa(impression.R)
+			"&goal_id=" + strconv.Itoa(impression.GoalID)
+
+		if goalType == constants.GoalTypeRevenue {
+			URL = URL + "&r=" + impression.R
+		}
 
 		_, err := utils.GetRequest(URL)
+
 		if err != nil {
 			message := fmt.Sprintf(constants.ErrorMessageImpressionFailed, vwoInstance.API, err)
 			utils.LogMessage(vwoInstance.Logger, constants.Error, eventDispatcher, message)
 		} else {
-			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Tracking Goal", impression)
+			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Tracking Goal", URL)
 			utils.LogMessage(vwoInstance.Logger, constants.Info, eventDispatcher, message)
 		}
 	}

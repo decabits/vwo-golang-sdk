@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import (
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
-	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
+	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -102,11 +102,11 @@ func TestParseOptions(t *testing.T) {
 	data := make(map[string]interface{})
 	data["customVariables"] = map[string]interface{}{"a": "x"}
 	data["variationTargetingVariables"] = map[string]interface{}{"a": "x"}
-	data["revenueGoal"] = 12
+	data["revenueValue"] = 12
 	expected = schema.Options{
 		CustomVariables:             map[string]interface{}{"a": "x"},
 		VariationTargetingVariables: map[string]interface{}{"a": "x"},
-		RevenueGoal:                 12,
+		RevenueValue:                12,
 	}
 	actual = ParseOptions(data)
 	assert.Equal(t, expected, actual)

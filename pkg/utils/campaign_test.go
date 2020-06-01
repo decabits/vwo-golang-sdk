@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,41 +17,12 @@
 package utils
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
-	"github.com/decabits/vwo-golang-sdk/pkg/logger"
-	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/stretchr/testify/assert"
 )
-
-// getInstance function creates and return a temporary VWO instance for testing
-func getInstance() schema.VwoInstance {
-	settingsFile, err := ioutil.ReadFile("./testdata/testUtils.json")
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	var settings schema.SettingsFile
-	if err = json.Unmarshal(settingsFile, &settings); err != nil {
-		fmt.Println(err)
-	}
-
-	logger := logger.Init(constants.SDKName, false, false, ioutil.Discard)
-	defer logger.Close()
-
-	vwoInstance := schema.VwoInstance{
-		SettingsFile:      settings,
-		UserStorage:       nil,
-		Logger:            logger,
-		IsDevelopmentMode: true,
-	}
-
-	return vwoInstance
-}
 
 func TestGetVariationBucketingRange(t *testing.T) {
 	var weight float64
@@ -73,95 +44,100 @@ func TestGetVariationBucketingRange(t *testing.T) {
 }
 
 func TestGetCampaign(t *testing.T) {
-	vwoInstance := getInstance()
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 
-	campaignKey := "CAMPAIGN_8"
+	campaignKey := testdata.ValidCampaignKey
 	campaign, err := GetCampaign("", vwoInstance.SettingsFile, campaignKey)
 	assert.Nil(t, err)
 	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[0], campaign, "Expected and Actual Campaign IDs should be same")
 
-	campaignKey = "notAvailable"
+	campaignKey = testdata.InvalidCampaignKey
 	campaign, err = GetCampaign("", vwoInstance.SettingsFile, campaignKey)
 	assert.NotNil(t, err)
 	assert.Empty(t, campaign, "Expected campaign should be empty")
 }
 
 func TestGetCampaignVariation(t *testing.T) {
-	vwoInstance := getInstance()
-	campaign := vwoInstance.SettingsFile.Campaigns[1]
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
+	campaign := vwoInstance.SettingsFile.Campaigns[0]
 
-	variationName := "Control"
-	variation, err:= GetCampaignVariation("", campaign, variationName)
+	variationName := testdata.ValidVariationName
+	variation, err := GetCampaignVariation("", campaign, variationName)
 	assert.Nil(t, err)
 	assert.Equal(t, campaign.Variations[0], variation, "Expected and Actual Variation IDs should be same")
 
-	variationName = "Variation-3"
-	variation, err= GetCampaignVariation("", campaign, variationName)
+	variationName = testdata.IncorrectNariationName
+	variation, err = GetCampaignVariation("", campaign, variationName)
 	assert.NotNil(t, err)
 	assert.Empty(t, variation, "Expected Variation should be empty")
 
+	vwoInstance = testdata.GetInstanceWithCustomSettings("SettingsFile1")
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
-	variationName = "Control"
-	variation, err= GetCampaignVariation("", campaign, variationName)
+	variationName = testdata.InvalidVariationName
+	variation, err = GetCampaignVariation("", campaign, variationName)
 	assert.NotNil(t, err)
-	assert.Empty(t, variation, "Expected and Actual Variation IDs should be same")
+	assert.Empty(t, variation, "No Variations in the Campaign")
 }
 
 func TestGetCampaignGoal(t *testing.T) {
-	vwoInstance := getInstance()
-	campaign := vwoInstance.SettingsFile.Campaigns[1]
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
+	campaign := vwoInstance.SettingsFile.Campaigns[0]
 
-	goalName := "GOAL_1"
-	goal, err:= GetCampaignGoal("", campaign, goalName)
+	goalName := testdata.ValidGoal
+	goal, err := GetCampaignGoal("", campaign, goalName)
 	assert.Nil(t, err)
 	assert.Equal(t, campaign.Goals[0], goal, "Expected and Actual Goal IDs should be same")
 
-	goalName = "demo"
-	goal, err= GetCampaignGoal("", campaign, goalName)
+	goalName = testdata.InvalidGoal
+	goal, err = GetCampaignGoal("", campaign, goalName)
 	assert.NotNil(t, err)
 	assert.Empty(t, goal, "Expected Goal should be empty")
 }
 
 func TestGetControlVariation(t *testing.T) {
-	vwoInstance := getInstance()
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 
-	campaign := vwoInstance.SettingsFile.Campaigns[1]
+	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	variation := GetControlVariation(campaign)
 	assert.Equal(t, campaign.Variations[0], variation, "Expected variation should be present in the campaign")
 
-	campaign = vwoInstance.SettingsFile.Campaigns[2]
+	vwoInstance = testdata.GetInstanceWithCustomSettings("SettingsFile1")
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	variation = GetControlVariation(campaign)
 	assert.Empty(t, variation, "Expected variation should be empty")
 }
 
 func TestScaleVariations(t *testing.T) {
-	vwoInstance := getInstance()
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 
-	variations := vwoInstance.SettingsFile.Campaigns[3].Variations
+	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
 	variations = ScaleVariations(variations)
-	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[3].Variations, variations, "List of variations did not match")
-	assert.Equal(t, 100.0, variations[0].Weight, "Variation weight did not match")
+	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[0].Variations, variations, "List of variations did not match")
 
-	variations = vwoInstance.SettingsFile.Campaigns[4].Variations
+	vwoInstance = testdata.GetInstanceWithCustomSettings("SettingsFile1")
+
+	variations = vwoInstance.SettingsFile.Campaigns[1].Variations
 	variations = ScaleVariations(variations)
-	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[4].Variations, variations, "List of variations did not match")
+	assert.Equal(t, vwoInstance.SettingsFile.Campaigns[1].Variations, variations, "List of variations did not match")
 }
 
 func TestGetVariationAllocationRanges(t *testing.T) {
-	vwoInstance := getInstance()
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 
-	variations := vwoInstance.SettingsFile.Campaigns[3].Variations
+	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
 	assert.NotEmpty(t, variations, "No Variations recieved")
 	variations = GetVariationAllocationRanges(vwoInstance, variations)
 	assert.Equal(t, 1, variations[0].StartVariationAllocation, "Value Mismatch")
-	assert.Equal(t, 10000, variations[0].EndVariationAllocation, "Value Mismatch")
+	assert.Equal(t, 10000, variations[1].EndVariationAllocation, "Value Mismatch")
 
-	variations = vwoInstance.SettingsFile.Campaigns[4].Variations
+	vwoInstance = testdata.GetInstanceWithSettings("AB_T_100_W_0_100")
+	variations = vwoInstance.SettingsFile.Campaigns[0].Variations
 	assert.NotEmpty(t, variations, "No Variations recieved")
 	variations = GetVariationAllocationRanges(vwoInstance, variations)
 	assert.Equal(t, -1, variations[0].StartVariationAllocation, "Start Allocation range failed to match")
 	assert.Equal(t, -1, variations[0].EndVariationAllocation, "End Allocation range failed to match")
-
+	assert.Equal(t, 1, variations[1].StartVariationAllocation, "Start Allocation range failed to match")
+	assert.Equal(t, 10000, variations[1].EndVariationAllocation, "End Allocation range failed to match")
 }
 
 func TestMin(t *testing.T) {

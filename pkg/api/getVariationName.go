@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option inte
 			userID: Unique identification of user
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
-			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
 			string: Variation Name for user to corresponding camapign
@@ -78,7 +78,7 @@ func (vwo *VWOInstance) GetVariationName(campaignKey, userID string, option inte
 		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
 		return ""
 	}
-	if !utils.CheckCampaignType(campaign, constants.CampaignTypeVisualAB) {
+	if utils.CheckCampaignType(campaign, constants.CampaignTypeFeatureRollout) {
 		message := fmt.Sprintf(constants.ErrorMessageInvalidAPI, vwoInstance.API, campaignKey, campaign.Type, userID)
 		utils.LogMessage(vwo.Logger, constants.Error, getVariationName, message)
 		return ""

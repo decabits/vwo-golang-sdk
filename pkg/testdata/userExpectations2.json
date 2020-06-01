@@ -1,6 +1,6 @@
 {
 	"STRING_VARIABLE": {
-		"Control": "Control string",
+		"Control": "",
 		"Variation-1": "Variation-1 string",
 		"Variation-2": "Variation-2 string",
 		"Variation-3": "Variation-3 string"
@@ -16,7 +16,7 @@
 	"ROLLOUT_VARIABLES": {
 		"STRING_VARIABLE": "this_is_a_string",
 		"INTEGER_VARIABLE": 123,
-		"DOUBLE_VARIABLE": 123.456,
+		"FLOAT_VARIABLE": 123.456,
 		"BOOLEAN_VARIABLE": true
 	}
 }

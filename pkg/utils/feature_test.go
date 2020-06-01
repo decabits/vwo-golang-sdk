@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,41 +19,41 @@ package utils
 import (
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetVariableValueForVariation(t *testing.T) {
-	vwoInstance := getInstance()
-	campaign := vwoInstance.SettingsFile.Campaigns[2]
+	vwoInstance := testdata.GetInstanceWithSettings("FT_T_0_W_10_20_30_40")
+	campaign := vwoInstance.SettingsFile.Campaigns[0]
 	userID := ""
 
 	variation := campaign.Variations[0]
-	variableKey := "string1"
+	variableKey := testdata.InvalidVariableKey
 	variable := GetVariableValueForVariation(vwoInstance, campaign, variation, variableKey, userID)
 	assert.Empty(t, variable, "Expected object should be empty")
 
 	variation = campaign.Variations[0]
-	variableKey = "int2"
+	variableKey = testdata.ValidVariableKey2
 	variable = GetVariableValueForVariation(vwoInstance, campaign, variation, variableKey, userID)
 	assert.Equal(t, campaign.Variations[0].Variables[0], variable, "Expected and Actual IDs should be same")
 
-	campaign = vwoInstance.SettingsFile.Campaigns[5]
 	variation = campaign.Variations[1]
-	variableKey = "int3"
+	variableKey = testdata.ValidVariableKey1
 	variable = GetVariableValueForVariation(vwoInstance, campaign, variation, variableKey, userID)
-	assert.Equal(t, campaign.Variations[0].Variables[0], variable, "Expected and Actual IDs should be same")
+	assert.Equal(t, campaign.Variations[1].Variables[1], variable, "Expected and Actual IDs should be same")
 
 }
 
 func TestGetVariableForFeature(t *testing.T) {
-	vwoInstance := getInstance()
+	vwoInstance := testdata.GetInstanceWithSettings("FR_T_0_W_100")
 
-	variables := vwoInstance.SettingsFile.Campaigns[2].Variables
-	variableKey := "int1"
+	variables := vwoInstance.SettingsFile.Campaigns[0].Variables
+	variableKey := testdata.ValidVariableKey2
 	variable := GetVariableForFeature(variables, variableKey)
 	assert.Equal(t, variables[0], variable, "Expected and Actual IDs should be same")
 
-	variableKey = "float2"
+	variableKey = testdata.InvalidVariableKey
 	variable = GetVariableForFeature(variables, variableKey)
 	assert.Empty(t, variable, "Expected variable should be empty")
 }

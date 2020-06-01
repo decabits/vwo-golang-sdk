@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,21 +19,22 @@ package utils
 import (
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetRequest(t *testing.T) {
-	url := "https://jsonplaceholder.typicode.com/todos/1"
+	url := testdata.IncorrectURL1
 	content, err := GetRequest(url)
 	assert.Nil(t, err, "Could not make the Get Request")
 	assert.NotEmpty(t, content, "Recieved no content")
 
-	url = "https.com"
+	url = testdata.IncorrectURL2
 	content, err = GetRequest(url)
 	assert.NotNil(t, err, "Could not make the Get Request")
 	assert.Empty(t, content, "Recieved no content")
 
-	url = "https://github.com/vaibhavsethia/Portfolio---Me"
+	url = testdata.IncorrectURL3
 	content, err = GetRequest(url)
 	assert.NotNil(t, err, "Could not make the Get Request")
 	assert.Empty(t, content, "Recieved no content")
