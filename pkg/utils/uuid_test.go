@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,27 +19,15 @@ package utils
 import (
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerateFor(t *testing.T) {
-	vwoInstance := getInstance()
+	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 
 	accountID := 12345
-	userID := "Chris"
+	userID := testdata.GetRandomUser()
 	actual := generateFor(vwoInstance, userID, accountID)
-	expected := "810E5C0420C2541C8E9BDACD245E6476"
-	assert.Equal(t, expected, actual, "Expected and Actual UUIDs should be same")
-
-	accountID = 12345
-	userID = "__123__"
-	actual = generateFor(vwoInstance, userID, accountID)
-	expected = "50A5B167FB6356A796F91D8951E480EE"
-	assert.Equal(t, expected, actual, "Expected and Actual UUIDs should be same")
-
-	accountID = 12345
-	userID = "We@#dcs3232.f3"
-	actual = generateFor(vwoInstance, userID, accountID)
-	expected = "AAB4580A6BB3525FAA31DC341752D501"
-	assert.Equal(t, expected, actual, "Expected and Actual UUIDs should be same")
+	assert.NotEmpty(t, actual, "Expected and Actual UUIDs should be same")
 }

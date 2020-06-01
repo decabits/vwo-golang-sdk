@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -38,9 +38,9 @@ func ParseOptions(option interface{}) (options schema.Options) {
 		if okVariationTargetingVariables {
 			options.VariationTargetingVariables = variationTargetingVariables.(map[string]interface{})
 		}
-		revenueGoal, okRevenueGoal := optionMap["revenueGoal"]
-		if okRevenueGoal {
-			options.RevenueGoal = revenueGoal.(int)
+		revenueValue, okRevenueValue := optionMap["revenueValue"]
+		if okRevenueValue {
+			options.RevenueValue = revenueValue
 		}
 	}
 	return

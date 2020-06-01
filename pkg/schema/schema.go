@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ type VwoInstance struct {
 	IsDevelopmentMode bool
 	UserID            string
 	Campaign          Campaign
-	API 							string
+	API               string
 }
 
 // SettingsFile struct
@@ -82,7 +82,7 @@ type Variable struct {
 type Options struct {
 	CustomVariables             map[string]interface{} `json:"customVariables"`
 	VariationTargetingVariables map[string]interface{} `json:"variationTargetingVariables"`
-	RevenueGoal                 int
+	RevenueValue                interface{}
 }
 
 // UserData  struct
@@ -113,5 +113,6 @@ type Impression struct {
 	Combination  int     `json:"combination"`
 	ED           string  `json:"ed"`
 	GoalID       int     `json:"goal_id"`
-	R            int     `json:"r"`
+	R            string  `json:"r"`
+	Tags         string  `json:"tags"`
 }

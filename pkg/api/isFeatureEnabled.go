@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string, option inte
 			userID: Unique identification of user
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
-			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
 			bool: True if the user the feature is enambled for the user, else false
@@ -102,7 +102,7 @@ func (vwo *VWOInstance) IsFeatureEnabled(campaignKey, userID string, option inte
 		isFeatureEnabled = true
 	}
 
-	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
+	message := fmt.Sprintf(constants.InfoMessageMainKeysForFeatureTestImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
 	utils.LogMessage(vwo.Logger, constants.Info, activate, message)
 
 	if isFeatureEnabled {

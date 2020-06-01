@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -42,25 +42,24 @@ func CreateImpressionForPush(vwoInstance schema.VwoInstance, tagKey, tagValue, u
 	*/
 	impression := getCommonProperties(vwoInstance, userID)
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsPush
-	parameters := url.Values{}
-	parameters.Add(tagKey, tagValue)
-	impression.U = parameters.Encode()
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression)
+	impression.Tags = `{"u":{"` + url.QueryEscape(tagKey) + `":"` + url.QueryEscape(tagValue) + `"}}`
+
+	message := fmt.Sprintf(constants.DebugMessageImpressionForPush, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.Tags)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression
 }
 
 // CreateImpressionTrackingGoal creates the impression from the arguments passed to track goal
-func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID string, campaignID, goalID, revenueGoal int) schema.Impression {
+func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID int, userID, goalType string, campaignID, goalID int, revenueValue interface{}) schema.Impression {
 	/*
 		Args:
 		    variationID : Variation identifier
 			userID : User identifier
 			campaignID : Campaign identifier
 		    goalID : Goal identifier
-		    revenueGoal : Revenue goal for the campaign
+		    revenueValue : Revenue goal for the campaign
 
 		Returns:
 			schema.Impression: Imression struct with required values
@@ -72,12 +71,27 @@ func CreateImpressionTrackingGoal(vwoInstance schema.VwoInstance, variationID in
 
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackGoal
 	impression.GoalID = goalID
-	if revenueGoal > 0 {
-		impression.R = revenueGoal
+
+	if goalType == constants.GoalTypeRevenue {
+		switch revenueValue.(type) {
+		case int:
+			impression.R = strconv.Itoa(revenueValue.(int))
+		case float32:
+			impression.R = strconv.FormatFloat(float64(revenueValue.(float32)), 'f', -1, 32)
+		case float64:
+			impression.R = strconv.FormatFloat(float64(revenueValue.(float64)), 'f', -1, 64)
+		case string:
+			impression.R = revenueValue.(string)
+		}
 	}
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackGoal, vwoInstance.API, impression)
-	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
+	if goalType == constants.GoalTypeRevenue {
+		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackRevenueGoal, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.GoalID, revenueValue)
+		LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
+	} else {
+		message := fmt.Sprintf(constants.DebugMessageImpressionForTrackCustomGoal, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.GoalID)
+		LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
+	}
 
 	return impression
 }
@@ -101,7 +115,7 @@ func CreateImpressionTrackingUser(vwoInstance schema.VwoInstance, campaignID int
 	impression.ED = `{\"p\":\"` + constants.Platform + `\"}`
 	impression.URL = constants.HTTPSProtocol + constants.EndPointsBaseURL + constants.EndPointsTrackUser
 
-	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackUser, vwoInstance.API, impression)
+	message := fmt.Sprintf(constants.DebugMessageImpressionForTrackUser, vwoInstance.API, impression.AccountID, impression.UID, impression.SID, impression.URL, impression.ExperimentID, impression.Combination, impression.ED)
 	LogMessage(vwoInstance.Logger, constants.Debug, impressions, message)
 
 	return impression
@@ -124,6 +138,6 @@ func getCommonProperties(vwoInstance schema.VwoInstance, userID string) schema.I
 		SID:       strconv.FormatInt(time.Now().Unix(), 10),
 		U:         generateFor(vwoInstance, userID, vwoInstance.SettingsFile.AccountID),
 		AccountID: vwoInstance.SettingsFile.AccountID,
-		UID:       userID,
+		UID:       url.PathEscape(userID),
 	}
 }

@@ -1,5 +1,5 @@
 /*
-   Copyright 2019-2020 Wingify Software Pvt. Ltd.
+   Copyright 2020 Wingify Software Pvt. Ltd.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 			goalIdentifier: Unique identification of corresponding goal
 			customVariables(In option): variables for pre-segmentation
 			variationTargetingVariables(In option): variables for variation targeting
-			revenueGoal(In option): Value of revenue for the goal if the goal is revenue tracking
+			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
 			bool: True if the track is successfull else false
@@ -96,8 +96,8 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 		return false
 	}
 
-	if goal.Type == constants.GoalTypeRevenue && options.RevenueGoal == 0 {
-		message := fmt.Sprintf(constants.ErrorMessageTrackAPIRevenueNotPassedForRevenueGoal, vwoInstance.API, options.RevenueGoal, campaignKey, userID)
+	if goal.Type == constants.GoalTypeRevenue && options.RevenueValue == nil  {
+		message := fmt.Sprintf(constants.ErrorMessageTrackAPIRevenueNotPassedForRevenueValue, vwoInstance.API, goalIdentifier, campaignKey, userID)
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false
 	}
@@ -109,8 +109,8 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 		return false
 	}
 
-	impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, campaign.ID, goal.ID, 5) // revenueValue = 5
-	go event.DispatchTrackingGoal(vwoInstance, impression)
+	impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, goal.Type, campaign.ID, goal.ID, options.RevenueValue)
+	go event.DispatchTrackingGoal(vwoInstance, goal.Type, impression)
 
 	message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
 	utils.LogMessage(vwo.Logger, constants.Info, activate, message)

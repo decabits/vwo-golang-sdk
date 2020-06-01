@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/travis/decabits/vwo-golang-sdk)](http://travis-ci.org/decabits/vwo-golang-sdk)
 ![Size in Bytes](https://img.shields.io/github/languages/code-size/decabits/vwo-golang-sdk)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Coverage Status](https://coveralls.io/repos/github/decabits/vwo-golang-sdk/badge.svg)](https://coveralls.io/github/decabits/vwo-golang-sdk)
+![Coveralls github](https://img.shields.io/coveralls/github/decabits/vwo-golang-sdk)
 
 This open source library allows you to A/B Test your Website at server-side.
 
@@ -45,7 +45,7 @@ if err != nil {
 options := make(map[string]interface{})
 options["customVariables"] = map[string]interface{}{"a": "x"}
 options["variationTargetingVariables"] = map[string]interface{}{"a": "x"}
-options["revenueGoal"] = 12
+options["revenueValue"] = 12
 variationName = vwoInstance.Activate(campaignKey, userID, options)
 
 // Without Custom Variables
@@ -70,13 +70,13 @@ isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
 
 // With Revenue Value
 options := make(map[string]interface{})
-options["revenueGoal"] = 12
+options["revenueValue"] = 12
 isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
 
 // With both Custom Variables and Revenue Value
 options := make(map[string]interface{})
 options["customVariables"] = map[string]interface{}{"a": "x"}
-options["revenueGoal"] = 12
+options["revenueValue"] = 12
 isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
 
 //Without Custom Variables
