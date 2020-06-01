@@ -71,6 +71,26 @@
       "key": "CAMPAIGN_2",
       "variations": {},
       "type": "FEATURE_ROLLOUT"
+    }, {
+      "id": 202,
+      "segments": {},
+      "status": "RUNNING",
+      "percentTraffic": 100,
+      "goals": [{
+          "identifier": "abcd",
+          "id": 1,
+          "type": "REVENUE_TRACKING"
+        },
+        {
+          "identifier": "GOAL_2",
+          "id": 214,
+          "type": "CUSTOM_GOAL"
+        }
+      ],
+      "isForcedVariationEnabled": false,
+      "key": "CAMPAIGN_3",
+      "variations": {},
+      "type": "FEATURE_TEST"
     }]
   },
 
