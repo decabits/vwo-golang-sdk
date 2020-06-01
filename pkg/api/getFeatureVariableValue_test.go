@@ -17,132 +17,198 @@
 package api
 
 import (
-	// "encoding/json"
-	// "io/ioutil"
-	// "log"
+	"strconv"
+	"github.com/decabits/vwo-golang-sdk/pkg/core"
+	"encoding/json"
+	"io/ioutil"
+	"log"
 	"testing"
 
-	// "github.com/decabits/vwo-golang-sdk/pkg/constants"
-	// "github.com/decabits/vwo-golang-sdk/pkg/logger"
-	// "github.com/decabits/vwo-golang-sdk/pkg/schema"
-	// "github.com/decabits/vwo-golang-sdk/pkg/testdata"
-	// "github.com/decabits/vwo-golang-sdk/pkg/utils"
-	// "github.com/stretchr/testify/assert"
+	"github.com/decabits/vwo-golang-sdk/pkg/constants"
+	"github.com/decabits/vwo-golang-sdk/pkg/logger"
+	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
+	"github.com/decabits/vwo-golang-sdk/pkg/utils"
+	"github.com/stretchr/testify/assert"
 )
 
-type FeatureTestCase struct {
-
-}
 func TestGetFeatureVariableValue(t *testing.T) {
-	// assertOutput := assert.New(t)
+	assertOutput := assert.New(t)
 
-	// var userExpectation map[string][]TestCase
-	// data, err := ioutil.ReadFile("../testdata/userExpectations2.json")
-	// if err != nil {
-	// 	logger.Info("Error: " + err.Error())
-	// }
+	var userExpectation map[string]map[string]interface{}
+	data, err := ioutil.ReadFile("../testdata/userExpectations2.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	// if err = json.Unmarshal(data, &userExpectation); err != nil {
-	// 	logger.Info("Error: " + err.Error())
-	// }
+	if err = json.Unmarshal(data, &userExpectation); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	// var settingsFiles map[string]schema.SettingsFile
-	// data, err = ioutil.ReadFile("../testdata/settings.json")
-	// if err != nil {
-	// 	logger.Info("Error: " + err.Error())
-	// }
+	var settingsFiles map[string]schema.SettingsFile
+	data, err = ioutil.ReadFile("../testdata/settings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	// if err = json.Unmarshal(data, &settingsFiles); err != nil {
-	// 	logger.Info("Error: " + err.Error())
-	// }
+	if err = json.Unmarshal(data, &settingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
 
-	// logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
-	// logger.SetFlags(log.LstdFlags)
-	// defer logger.Close()
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
 
-	// instance := VWOInstance{}
-	// instance.SettingsFile = schema.SettingsFile{}
-	// instance.Logger = logs
+	instance := VWOInstance{}
+	instance.SettingsFile = schema.SettingsFile{}
+	instance.Logger = logs
 
-	// for settingsFileName, settingsFile := range settingsFiles {
-	// 	vwoInstance := schema.VwoInstance{
-	// 		Logger: logs,
-	// 	}
-	// 	settingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, settingsFile.Campaigns[0].Variations)
+	for settingsFileName, settingsFile := range settingsFiles {
+		vwoInstance := schema.VwoInstance{
+			Logger: logs,
+		}
+		settingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, settingsFile.Campaigns[0].Variations)
 
-	// 	instance.SettingsFile = settingsFile
+		instance.SettingsFile = settingsFile
 
-	// 	testCases := userExpectation[settingsFileName]
-	// 	for i := range testCases {
-	// 		actual := instance.GetFeatureVariableValue(settingsFile.Campaigns[0].Key, variableKey, userID, nil)(settingsFile.Campaigns[0].Key, testCases[i].User, nil)
-	// 		expected := testCases[i].Variation
-	// 		assertOutput.Equal(expected, actual, settingsFileName+" "+testCases[i].User)
-	// 	}
-	// }
-	// vwoInstance, err := getInstance("./testdata/testGetFeatureVariableValue.json")
-	// assertOutput.Nil(err, "error fetching instance")
+		if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureRollout && settingsFileName != "FR_WRONG_VARIABLE_TYPE" && settingsFileName != "NEW_SETTINGS_FILE" {
+			userID := testdata.GetFeatureDummyUser
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
+				testCases := userExpectation["ROLLOUT_VARIABLES"]
 
-	// userID := ""
-	// campaignKey := ""
-	// variableKey := ""
-	// value := vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// assertOutput.Nil(value, "Invalid params")
+				actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
+				assertOutput.Equal(testCases["STRING_VARIABLE"], actual.(string), settingsFileName + " : STRING_VARIABLE")
 
-	// userID = "USER_1"
-	// campaignKey = "notPresent"
-	// variableKey = "float2"
-	// value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// assertOutput.Nil(value, "Campaign does not exist")
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
+				assertOutput.Equal(testCases["INTEGER_VARIABLE"], actual.(float64), settingsFileName + " : INTEGER_VARIABLE")
 
-	// userID = "USER_1"
-	// campaignKey = "CAMPAIGN_1"
-	// variableKey = "float2"
-	// value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// assertOutput.Nil(value, "Campaign Not running")
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_VARIABLE", userID, nil)
+				assertOutput.Equal(testCases["FLOAT_VARIABLE"], actual.(float64), settingsFileName + " : FLOAT_VARIABLE")
 
-	// userID = "USER_3"
-	// campaignKey = "CAMPAIGN_8"
-	// variableKey = "float2"
-	// value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// assertOutput.Nil(value, "Campaign Not Valid")
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "BOOLEAN_VARIABLE", userID, nil)
+				assertOutput.Equal(testCases["BOOLEAN_VARIABLE"], actual.(bool), settingsFileName + " : BOOLEAN_VARIABLE")
+			}
+		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureRollout && settingsFileName == "FR_WRONG_VARIABLE_TYPE" && settingsFileName != "NEW_SETTINGS_FILE" {
+			userID := testdata.GetFeatureDummyUser
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
+				actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
+				assertOutput.Nil(actual, settingsFileName + " : STRING_VARIABLE")
 
-	// userID = "USER_3"
-	// campaignKey = "CAMPAIGN_2"
-	// variableKey = "float2"
-	// value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// assertOutput.Nil(value, "Variation Not alloted as none exist")
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
+				assertOutput.Nil(actual, settingsFileName + " : INTEGER_VARIABLE")
 
-	// userID = "USER_1"
-	// campaignKey = "CAMPAIGN_3"
-	// variableKey = "string1"
-	// value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// assertOutput.Nil(value, "No variable with name found")
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_VARIABLE", userID, nil)
+				assertOutput.Nil(actual, settingsFileName + " : FLOAT_VARIABLE")
 
-	// userID = "USER_2"
-	// campaignKey = "CAMPAIGN_3"
-	// variableKey = "float2"
-	// actual := vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// expected := 10.67
-	// assertOutput.Equal(expected, actual, "Value mismatch for variable")
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "BOOLEAN_VARIABLE", userID, nil)
+				assertOutput.Nil(actual, settingsFileName + " : BOOLEAN_VARIABLE")
 
-	// userID = "USER_2"
-	// campaignKey = "CAMPAIGN_4"
-	// variableKey = "bool1"
-	// value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// expected1 := true
-	// assertOutput.Equal(expected1, value, "Value mismatch for variable")
+				value := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_TO_INTEGER", userID, nil)
+				actual, err := strconv.ParseInt(value.(string), 10, 64)
+				assertOutput.Nil(err, "Error")
+				assertOutput.Equal(int64(123), actual, settingsFileName + " : STRING_TO_INTEGER")
 
-	// userID = "USER_2"
-	// campaignKey = "CAMPAIGN_4"
-	// variableKey = "int1"
-	// value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// expected2 := 301
-	// assertOutput.Equal(float64(expected2), value, "Value mismatch for variable")
+				value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_TO_FLOAT", userID, nil)
+				actual, err = strconv.ParseFloat(value.(string), 64)
+				assertOutput.Equal(float64(123.456), actual, settingsFileName + " : STRING_TO_FLOAT")
 
-	// userID = "USER_2"
-	// campaignKey = "CAMPAIGN_4"
-	// variableKey = "string2"
-	// value = vwoInstance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
-	// expected4 := "abcd"
-	// assertOutput.Equal(expected4, value, "Value mismatch for variable")
+				value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "BOOLEAN_TO_STRING", userID, nil)
+				actual = strconv.FormatBool(value.(bool))
+				assertOutput.Equal("true", actual, settingsFileName + " : BOOLEAN_TO_STRING")
+
+				// value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_TO_STRING", userID, nil)
+				// actual = strconv.FormatFloat(value.(float64), 'E', -1, 64)
+				// assertOutput.Equal("24", actual, settingsFileName + " : INTEGER_TO_STRING")
+
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_TO_FLOAT", userID, nil)
+				assertOutput.Equal(float64(24), actual.(float64), settingsFileName + " : INTEGER_TO_FLOAT")
+
+				// value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_TO_STRING", userID, nil)
+				// value = strconv.FormatFloat(value.(float64), 'E', -1, 64)
+				// assertOutput.Equal("24.24", actual, settingsFileName + " : FLOAT_TO_STRING")
+
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_TO_INTEGER", userID, nil)
+				assertOutput.Equal(float64(24), actual.(float64), settingsFileName + " : FLOAT_TO_INTEGER")
+
+				value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "WRONG_BOOLEAN", userID, nil)
+				actual, err = strconv.ParseBool(value.(string))
+				assertOutput.Nil(err, "Error : ")
+				assertOutput.Equal(true, actual, settingsFileName + " : WRONG_BOOLEAN")
+			}
+		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureRollout && settingsFileName != "FR_WRONG_VARIABLE_TYPE" && settingsFileName == "NEW_SETTINGS_FILE" {
+			userID := testdata.GetFeatureDummyUser
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
+				testCases := userExpectation["ROLLOUT_VARIABLES"]
+
+				actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
+				assertOutput.Equal("d1", actual.(string), settingsFileName + " : STRING_VARIABLE")
+
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
+				assertOutput.Equal(testCases["INTEGER_VARIABLE"], actual.(float64), settingsFileName + " : INTEGER_VARIABLE")
+			}
+		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeVisualAB {
+			userID := testdata.GetFeatureDummyUser
+			actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
+			assertOutput.Nil(actual, "Wrong Campaign Type")
+
+			actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
+			assertOutput.Nil(actual, "Wrong Campaign Type")
+
+			actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_VARIABLE", userID, nil)
+			assertOutput.Nil(actual, "Wrong Campaign Type")
+
+			actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "BOOLEAN_VARIABLE", userID, nil)
+			assertOutput.Nil(actual, "Wrong Campaign Type")
+		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureTest {
+				userID := testdata.GetFeatureDummyUser
+			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
+				actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
+				expected := userExpectation["STRING_VARIABLE"][variation.Name]
+				assertOutput.Equal(expected, actual.(string), settingsFileName + " : STRING_VARIABLE")
+
+				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
+				expected = userExpectation["INTEGER_VARIABLE"][variation.Name]
+				assertOutput.Equal(expected, actual.(float64), settingsFileName + " : INTEGER_VARIABLE")
+			}
+		}
+	}
+
+	// CORNER CASES
+		
+		var customSettingsFiles map[string]schema.SettingsFile
+		data, err = ioutil.ReadFile("../testdata/customSettings.json")
+		if err != nil {
+			logger.Info("Error: " + err.Error())
+		}
+
+		if err = json.Unmarshal(data, &customSettingsFiles); err != nil {
+			logger.Info("Error: " + err.Error())
+		}
+
+		settings := customSettingsFiles["SettingsFile2"]
+		instance.SettingsFile = settings
+
+	userID := ""
+	campaignKey := ""
+	variableKey := ""
+	value := instance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
+	assertOutput.Nil(value, "Invalid params")
+
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.NonExistingCampaign
+	variableKey = testdata.GetFeatureDummyVariable
+	value = instance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
+	assertOutput.Nil(value, "Campaign does not exist")
+
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.NotRunningCampaign
+	variableKey = testdata.GetFeatureDummyVariable
+	value = instance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
+	assertOutput.Nil(value, "Campaign Not running")
+
+	userID = testdata.GetRandomUser()
+	campaignKey = testdata.FeatureRolloutCampaign
+	variableKey = testdata.GetFeatureDummyVariable
+	value = instance.GetFeatureVariableValue(campaignKey, variableKey, userID, nil)
+	assertOutput.Nil(value, "Variation Not alloted as none exist")
 }
