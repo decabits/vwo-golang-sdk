@@ -21,12 +21,12 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/stretchr/testify/assert"
 )
 
-type SegmentTestCase struct {
+type SegmentorTestCase struct {
 	DSL                         map[string]interface{} `json:"dsl"`
 	Expected                    bool                   `json:"expectation"`
 	CustomVariable              map[string]interface{} `json:"custom_variables"`
@@ -34,7 +34,7 @@ type SegmentTestCase struct {
 }
 
 func TestSegmentEvaluator(t *testing.T) {
-	var TestData map[string]map[string]SegmentTestCase
+	var TestData map[string]map[string]SegmentorTestCase
 	data, err := ioutil.ReadFile("../testdata/testSegment.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
@@ -62,7 +62,7 @@ func TestSegmentEvaluator(t *testing.T) {
 	vwoInstance := testdata.GetInstanceWithCustomSettings("SettingsFile4")
 	segments := vwoInstance.SettingsFile.Campaigns[0].Segments
 	actual := SegmentEvaluator(segments, nil)
-	assert.True(t, actual, "No Case for operator hit")	
+	assert.True(t, actual, "No Case for operator hit")
 }
 
 func TestEvaluate(t *testing.T) {

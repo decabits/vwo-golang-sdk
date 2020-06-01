@@ -17,14 +17,14 @@
 package core
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
-	"encoding/json"
 	"testing"
 
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
-	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/decabits/vwo-golang-sdk/pkg/utils"
 	"github.com/stretchr/testify/assert"
@@ -54,7 +54,7 @@ func TestEvaluateSegment(t *testing.T) {
 		CustomVariables: map[string]interface{}{"a":"123", "hello":"world"},
 	}
 	value := EvaluateSegment(vwoInstance, segments, options)
-	assert.True(t, value, "Expected False as mismatch")
+	assert.True(t, value, "Expected True as mismatch")
 
 	// segments = vwoInstance.SettingsFile.Campaigns[0].Variations[0].Segments
 	// options = schema.Options{
@@ -228,12 +228,12 @@ func TestGetVariationFromUserStorage(t *testing.T) {
 	userID = "DummyUser"
 	expected := "DummyVariation"
 	actual = GetVariationFromUserStorage(vwoInstance, userID, campaign)
-	assert.Equal(t, expected, actual, "Actual and Expected Variation Name mismatch")
-	
+	assertOutput.Equal(expected, actual, "Actual and Expected Variation Name mismatch")
+
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	userID = "DummyUser1"
 	expected = ""
 	actual = GetVariationFromUserStorage(vwoInstance, userID, campaign)
-	assert.Equal(t, expected, actual, "Actual and Expected Variation Name mismatch")
+	assertOutput.Equal(expected, actual, "Actual and Expected Variation Name mismatch")
 
 }
