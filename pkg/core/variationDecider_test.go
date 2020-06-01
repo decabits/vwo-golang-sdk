@@ -17,15 +17,17 @@
 package core
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"testing"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
-	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 	"github.com/decabits/vwo-golang-sdk/pkg/service"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
+	"github.com/decabits/vwo-golang-sdk/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -80,7 +82,7 @@ func TestEvaluateSegment(t *testing.T) {
 	segments := vwoInstance.SettingsFile.Campaigns[0].Segments
 	options := schema.Options{}
 	value := EvaluateSegment(vwoInstance, segments, options)
-	assert.True(t, value, "Expected False as mismatch")
+	assert.True(t, value, "Expected True as mismatch")
 
 	segments = vwoInstance.SettingsFile.Campaigns[0].Variations[0].Segments
 	options = schema.Options{
@@ -166,58 +168,106 @@ func TestFindTargetedVariation(t *testing.T) {
 }
 
 func TestGetVariation(t *testing.T) {
-	// assertOutput := assert.New(t)
+	assertOutput := assert.New(t)
 
-	// vwoInstance := getInstanceWithoutStorage("./testdata/testVariation.json")
-	// options := schema.Options{
-	// 	CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_1"},
-	// 	RevenueValue:    12,
-	// }
+	vwoInstance := getInstanceWithoutStorage("./testdata/testVariation.json")
+	options := schema.Options{
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_1"},
+		RevenueValue:    12,
+	}
 
-	// userID := "USER_1"
-	// campaign := vwoInstance.SettingsFile.Campaigns[4]
-	// actual, err := GetVariation(vwoInstance, userID, campaign, options)
-	// expected := campaign.Variations[0]
-	// assertOutput.Nil(err, "Variation mis match")
-	// assertOutput.Equal(expected, actual, "Variation mis match")
+	userID := "USER_1"
+	campaign := vwoInstance.SettingsFile.Campaigns[4]
+	actual, err := GetVariation(vwoInstance, userID, campaign, options)
+	expected := campaign.Variations[0]
+	assertOutput.Nil(err, "Variation mis match")
+	assertOutput.Equal(expected, actual, "Variation mis match")
 
-	// userID = "USER_3"
-	// campaign = vwoInstance.SettingsFile.Campaigns[0]
-	// actual, err = GetVariation(vwoInstance, userID, campaign, options)
-	// expected = campaign.Variations[0]
-	// assertOutput.Nil(err, "Variation not found in userStorage")
-	// assertOutput.Equal(expected, actual, "Variation not found in userStorage")
+	userID = "USER_3"
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
+	actual, err = GetVariation(vwoInstance, userID, campaign, options)
+	expected = campaign.Variations[0]
+	assertOutput.Nil(err, "Variation not found in userStorage")
+	assertOutput.Equal(expected, actual, "Variation not found in userStorage")
 
-	// userID = "USER_8"
-	// campaign = vwoInstance.SettingsFile.Campaigns[7]
-	// actual, err = GetVariation(vwoInstance, userID, campaign, options)
-	// assertOutput.NotNil(err, "Variation not in campaign")
-	// assertOutput.Empty(actual, "Variation not in campaign")
+	userID = "USER_8"
+	campaign = vwoInstance.SettingsFile.Campaigns[7]
+	actual, err = GetVariation(vwoInstance, userID, campaign, options)
+	assertOutput.NotNil(err, "Variation not in campaign")
+	assertOutput.Empty(actual, "Variation not in campaign")
 
-	// userID = "Dummy_USER_8"
-	// campaign = vwoInstance.SettingsFile.Campaigns[3]
-	// actual, err = GetVariation(vwoInstance, userID, campaign, options)
-	// assertOutput.NotNil(err, "User not eligible for campaign")
-	// assertOutput.Empty(actual, "User not eligible for campaign")
+	userID = "Dummy_USER_8"
+	campaign = vwoInstance.SettingsFile.Campaigns[3]
+	actual, err = GetVariation(vwoInstance, userID, campaign, options)
+	assertOutput.NotNil(err, "User not eligible for campaign")
+	assertOutput.Empty(actual, "User not eligible for campaign")
 
-	// vwoInstance = testdata.GetInstanceWithStorage("AB_T_50_W_50_50")
-	// options = schema.Options{
-	// 	CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_1"},
-	// 	RevenueValue:    12,
-	// }
+	vwoInstance = testdata.GetInstanceWithStorage("AB_T_50_W_50_50")
+	options = schema.Options{
+		CustomVariables: map[string]interface{}{"_vwo_user_id": "USER_1"},
+		RevenueValue:    12,
+	}
 
-	// userID = "user1"
-	// campaign = vwoInstance.SettingsFile.Campaigns[3]
-	// expected = campaign.Variations[0]
-	// actual, err = GetVariation(vwoInstance, userID, campaign, options)
-	// assertOutput.Nil(err, "User not eligible for campaign")
-	// assertOutput.Equal(expected, actual, "User not eligible for campaign")
+	userID = "user1"
+	campaign = vwoInstance.SettingsFile.Campaigns[3]
+	expected = campaign.Variations[0]
+	actual, err = GetVariation(vwoInstance, userID, campaign, options)
+	assertOutput.Nil(err, "User not eligible for campaign")
+	assertOutput.Equal(expected, actual, "User not eligible for campaign")
 
-	// userID = "user1"
-	// campaign = vwoInstance.SettingsFile.Campaigns[0]
-	// actual, err = GetVariation(vwoInstance, userID, campaign, options)
-	// assertOutput.Nil(err, "Actual and Expected Variation Name mismatch")
-	// assertOutput.NotEmpty(actual, "Actual and Expected Variation Name mismatch")
+	userID = "user1"
+	campaign = vwoInstance.SettingsFile.Campaigns[0]
+	actual, err = GetVariation(vwoInstance, userID, campaign, options)
+	assertOutput.Nil(err, "Actual and Expected Variation Name mismatch")
+	assertOutput.NotEmpty(actual, "Actual and Expected Variation Name mismatch")
+
+	var userExpectation map[string][]TestCase
+	data, err := ioutil.ReadFile("../testdata/userExpectations1.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	if err = json.Unmarshal(data, &userExpectation); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	var settingsFiles map[string]schema.SettingsFile
+	data, err = ioutil.ReadFile("../testdata/settings.json")
+	if err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	if err = json.Unmarshal(data, &settingsFiles); err != nil {
+		logger.Info("Error: " + err.Error())
+	}
+
+	logs := logger.Init(constants.SDKName, true, false, ioutil.Discard)
+	logger.SetFlags(log.LstdFlags)
+	defer logger.Close()
+
+	instance := schema.VwoInstance{}
+	instance.Logger = logs
+
+	for settingsFileName, settingsFile := range settingsFiles {
+		vwoInstance := schema.VwoInstance{
+			Logger: logs,
+		}
+		settingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, settingsFile.Campaigns[0].Variations)
+
+		instance.SettingsFile = settingsFile
+
+		testCases := userExpectation[settingsFileName]
+		for i := range testCases {
+			actual, _ := GetVariation(instance, testCases[i].User, settingsFile.Campaigns[0], schema.Options{})
+			expected := testCases[i].Variation
+			assertOutput.Equal(expected, actual.Name, settingsFileName+" "+testCases[i].User)
+		}
+	}
+}
+
+type TestCase struct {
+	User      string `json:"user"`
+	Variation string `json:"variation"`
 }
 
 func TestGetVariationFromUserStorage(t *testing.T) {
@@ -235,12 +285,12 @@ func TestGetVariationFromUserStorage(t *testing.T) {
 	userID = "DummyUser"
 	expected := "DummyVariation"
 	actual = GetVariationFromUserStorage(vwoInstance, userID, campaign)
-	assert.Equal(t, expected, actual, "Actual and Expected Variation Name mismatch")
-	
+	assertOutput.Equal(expected, actual, "Actual and Expected Variation Name mismatch")
+
 	campaign = vwoInstance.SettingsFile.Campaigns[0]
 	userID = "DummyUser1"
 	expected = ""
 	actual = GetVariationFromUserStorage(vwoInstance, userID, campaign)
-	assert.Equal(t, expected, actual, "Actual and Expected Variation Name mismatch")
+	assertOutput.Equal(expected, actual, "Actual and Expected Variation Name mismatch")
 
 }

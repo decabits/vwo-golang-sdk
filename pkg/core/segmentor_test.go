@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type TestCase struct {
+type SegmentorTestCase struct {
 	DSL                         map[string]interface{} `json:"dsl"`
 	Expected                    bool                   `json:"expectation"`
 	CustomVariable              map[string]interface{} `json:"custom_variables"`
@@ -33,7 +33,7 @@ type TestCase struct {
 }
 
 func TestSegmentEvaluator(t *testing.T) {
-	var testdata map[string]map[string]TestCase
+	var testdata map[string]map[string]SegmentorTestCase
 	data, err := ioutil.ReadFile("../testdata/testSegment.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())

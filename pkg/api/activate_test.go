@@ -22,10 +22,10 @@ import (
 	"log"
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -38,7 +38,7 @@ type TestCase struct {
 func TestActivate(t *testing.T) {
 	assertOutput := assert.New(t)
 
-		var userExpectation map[string][]TestCase
+	var userExpectation map[string][]TestCase
 	data, err := ioutil.ReadFile("../testdata/userExpectations1.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
@@ -63,7 +63,6 @@ func TestActivate(t *testing.T) {
 	defer logger.Close()
 
 	instance := VWOInstance{}
-	instance.SettingsFile = schema.SettingsFile{}
 	instance.Logger = logs
 
 	for settingsFileName, settingsFile := range settingsFiles {
@@ -72,7 +71,6 @@ func TestActivate(t *testing.T) {
 		}
 		settingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(vwoInstance, settingsFile.Campaigns[0].Variations)
 
-		
 		instance.SettingsFile = settingsFile
 
 		testCases := userExpectation[settingsFileName]
