@@ -34,7 +34,7 @@ func TestGetVariationName(t *testing.T) {
 	assertOutput := assert.New(t)
 
 	var userExpectation map[string][]TestCase
-	data, err := ioutil.ReadFile("../testdata/userExpectations1.json")
+	data, err := ioutil.ReadFile("../testdata/user_expectations1.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}
@@ -80,7 +80,7 @@ func TestGetVariationName(t *testing.T) {
 	// CORNER CASES
 
 	var customSettingsFiles map[string]schema.SettingsFile
-	data, err = ioutil.ReadFile("../testdata/customSettings.json")
+	data, err = ioutil.ReadFile("../testdata/custom_settings.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}
