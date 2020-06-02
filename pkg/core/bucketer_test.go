@@ -102,7 +102,7 @@ func TestIsUserPartOfCampaign(t *testing.T) {
 
 func TestGetBucketValueForUser(t *testing.T) {
 	var settings map[string][]BucketTestCase
-	data, err := ioutil.ReadFile("../testdata/bucketValueExpectations.json")
+	data, err := ioutil.ReadFile("../testdata/bucket_value_expectations.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}
