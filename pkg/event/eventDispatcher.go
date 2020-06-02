@@ -58,8 +58,13 @@ func Dispatch(vwoInstance schema.VwoInstance, impression schema.Impression) {
 			message := fmt.Sprintf(constants.ErrorMessageImpressionFailed, vwoInstance.API, err)
 			utils.LogMessage(vwoInstance.Logger, constants.Error, eventDispatcher, message)
 		} else {
-			message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Normal", URL)
-			utils.LogMessage(vwoInstance.Logger, constants.Info, eventDispatcher, message)
+			if vwoInstance.API == "Push" {
+				message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Push", URL)
+				utils.LogMessage(vwoInstance.Logger, constants.Info, eventDispatcher, message)
+				} else {
+				message := fmt.Sprintf(constants.InfoMessageImpressionSuccess, vwoInstance.API, "Tracking User", URL)
+				utils.LogMessage(vwoInstance.Logger, constants.Info, eventDispatcher, message)
+			}
 		}
 	}
 }
