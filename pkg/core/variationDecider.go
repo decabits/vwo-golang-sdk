@@ -247,7 +247,7 @@ func EvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]interfa
 			bool: if the options falls in the segments criteria
 	*/
 
-	if segments == nil {
+	if len(segments) == 0 {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkipped, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
@@ -273,7 +273,7 @@ func PreEvaluateSegment(vwoInstance schema.VwoInstance, segments map[string]inte
 			bool: if the options falls in the segments criteria
 	*/
 
-	if options.VariationTargetingVariables == nil {
+	if len(options.VariationTargetingVariables) == 0 {
 		message := fmt.Sprintf(constants.DebugMessageSegmentationSkippedForVariation, vwoInstance.API, vwoInstance.UserID, vwoInstance.Campaign.Key, variationName)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
