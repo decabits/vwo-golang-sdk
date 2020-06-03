@@ -35,11 +35,11 @@ const (
 )
 
 // Severity tags.
-const (
-	tagInfo    = "INFO : "
-	tagWarning = "DEBUG : "
-	tagError   = "ERROR : "
-	tagFatal   = "FATAL : "
+var (
+	tagInfo    = "VWO-SDK - [INFO] : "
+	tagWarning = "VWO-SDK - [DEBUG] : "
+	tagError   = "VWO-SDK - [ERROR] : "
+	tagFatal   = "VWO-SDK - [FATAL] : "
 )
 
 const (
@@ -52,6 +52,14 @@ var (
 	defaultLogger *Logger
 	logLevel      int
 )
+
+// SetColoredOutput sets colored output for logging
+func SetColoredOutput() {
+	tagInfo    = "\033[1;36mVWO-SDK - [INFO] : \033[0m"
+	tagWarning = "\033[1;35mVWO-SDK - [DEBUG] : \033[0m"
+	tagError   = "\033[1;31mVWO-SDK - [ERROR] : \033[0m"
+	tagFatal   = "\033[1;33VWO-SDK - [FATAL] : \033[0m"
+}
 
 // initialize resets defaultLogger.  Which allows tests to reset environment.
 func initialize() {
