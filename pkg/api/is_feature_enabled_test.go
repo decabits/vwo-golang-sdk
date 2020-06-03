@@ -114,8 +114,14 @@ func TestIsFeatureEnabled(t *testing.T) {
 
 	// CORNER CASES
 
+	instance.SettingsFile = settingsFiles["FT_T_100_W_10_20_30_40"]
+	userID := testdata.UserIsFeatureEnabled
+	campaignKey := instance.SettingsFile.Campaigns[0].Key
+	value := instance.IsFeatureEnabled(campaignKey, userID, nil)
+	assertOutput.False(value, "Control Variation")
+
 	var customSettingsFiles map[string]schema.SettingsFile
-	data, err = ioutil.ReadFile("../testdata/customSettings.json")
+	data, err = ioutil.ReadFile("../testdata/custom_settings.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}
@@ -127,9 +133,9 @@ func TestIsFeatureEnabled(t *testing.T) {
 	settings := customSettingsFiles["SettingsFile2"]
 	instance.SettingsFile = settings
 
-	userID := ""
-	campaignKey := ""
-	value := instance.IsFeatureEnabled(campaignKey, userID, nil)
+	userID = ""
+	campaignKey = ""
+	value = instance.IsFeatureEnabled(campaignKey, userID, nil)
 	assertOutput.False(value, "Invalid params")
 
 	userID = testdata.GetRandomUser()
