@@ -92,7 +92,7 @@ func WithDevelopmentMode() VWOOption {
 	}
 }
 
-// WithColoredOutput function sets
+// WithColoredOutput function sets log color for logging
 func WithColoredOutput() VWOOption {
 	logger.SetColoredOutput()
 	return func(vwo *VWOInstance) {}

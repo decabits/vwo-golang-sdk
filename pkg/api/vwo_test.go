@@ -57,7 +57,7 @@ func (us *WUserStorageData) Setter(userID, campaignKey, variationName string) {}
 
 func TestInit(t *testing.T) {
 	vwoInstance := VWOInstance{}
-	_, err := vwoInstance.Init(WithDevelopmentMode())
+	_, err := vwoInstance.Init(WithDevelopmentMode(), WithColoredOutput())
 	assert.Nil(t, err)
 
 	vwoInstance = VWOInstance{}
