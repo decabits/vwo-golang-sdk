@@ -91,3 +91,9 @@ func WithDevelopmentMode() VWOOption {
 		vwo.IsDevelopmentMode = true
 	}
 }
+
+// WithColoredOutput function sets
+func WithColoredOutput() VWOOption {
+	logger.SetColoredOutput()
+	return func(vwo *VWOInstance) {}
+}
