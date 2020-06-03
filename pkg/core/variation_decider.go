@@ -219,7 +219,7 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 			message := fmt.Sprintf(constants.DebugMessageNoSegmentsInVariation, vwoInstance.API, userID, campaign.Key, variation.Name)
 			utils.LogMessage(vwoInstance.Logger, constants.Info, variationDecider, message)
 
-			message = fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.CustomVariables, variation.Segments, "False", "WhiteListing", variation.Name)
+			message = fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.VariationTargetingVariables, variation.Segments, "False", "WhiteListing", variation.Name)
 			utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
 
 			continue
@@ -230,7 +230,7 @@ func GetWhiteListedVariationsList(vwoInstance schema.VwoInstance, userID string,
 			whiteListedVariationsList = append(whiteListedVariationsList, variation)
 		}
 
-		message := fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.CustomVariables, variation.Segments, strconv.FormatBool(status), "WhiteListing", variation.Name)
+		message := fmt.Sprintf(constants.DebugMessageSegmentationStatusForVariation, vwoInstance.API, userID, campaign.Key, options.VariationTargetingVariables, variation.Segments, strconv.FormatBool(status), "WhiteListing", variation.Name)
 		utils.LogMessage(vwoInstance.Logger, constants.Debug, variationDecider, message)
 	}
 	return whiteListedVariationsList
