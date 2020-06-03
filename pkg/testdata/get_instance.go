@@ -135,7 +135,7 @@ func GetInstanceWithCustomSettings(SettingsFileName string) schema.VwoInstance {
 	defer logger.Close()
 
 	var settingsFiles map[string]schema.SettingsFile
-	data, err := ioutil.ReadFile("../testdata/customSettings.json")
+	data, err := ioutil.ReadFile("../testdata/custom_settings.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}

@@ -22,10 +22,10 @@ import (
 	"log"
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -51,7 +51,7 @@ func TestEvaluateSegment(t *testing.T) {
 
 	segments := vwoInstance.SettingsFile.Campaigns[0].Segments
 	options := schema.Options{
-		CustomVariables: map[string]interface{}{"a":"123", "hello":"world"},
+		CustomVariables: map[string]interface{}{"a": "123", "hello": "world"},
 	}
 	value := EvaluateSegment(vwoInstance, segments, options)
 	assert.True(t, value, "Expected True as mismatch")
@@ -86,8 +86,8 @@ func TestFindTargetedVariation(t *testing.T) {
 	instance := testdata.GetInstanceWithCustomSettings("SettingsFile3")
 
 	campaign := instance.SettingsFile.Campaigns[0]
-	options := schema.Options {
-		VariationTargetingVariables: map[string]interface{}{"a":"789"},
+	options := schema.Options{
+		VariationTargetingVariables: map[string]interface{}{"a": "789"},
 	}
 	actual, _ := FindTargetedVariation(instance, testdata.ValidUser, campaign, options)
 	assertOutput.Equal("", actual.Name, "Variations should match")
@@ -97,7 +97,7 @@ func TestGetVariation(t *testing.T) {
 	assertOutput := assert.New(t)
 
 	var userExpectation map[string][]TestCase
-	data, err := ioutil.ReadFile("../testdata/userExpectations1.json")
+	data, err := ioutil.ReadFile("../testdata/user_expectations1.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}
@@ -120,9 +120,8 @@ func TestGetVariation(t *testing.T) {
 	logger.SetFlags(log.LstdFlags)
 	defer logger.Close()
 
-	
-	instance := schema.VwoInstance {
-		Logger : logs,
+	instance := schema.VwoInstance{
+		Logger: logs,
 	}
 
 	for settingsFileName, settingsFile := range settingsFiles {
@@ -146,7 +145,7 @@ func TestGetVariation(t *testing.T) {
 	// CORNER CASES
 
 	var customSettingsFiles map[string]schema.SettingsFile
-	data, err = ioutil.ReadFile("../testdata/customSettings.json")
+	data, err = ioutil.ReadFile("../testdata/custom_settings.json")
 	if err != nil {
 		logger.Info("Error: " + err.Error())
 	}
@@ -159,15 +158,15 @@ func TestGetVariation(t *testing.T) {
 	instance.SettingsFile = settings
 
 	campaign := instance.SettingsFile.Campaigns[0]
-	options := schema.Options {
-		VariationTargetingVariables: map[string]interface{}{"a":"123"},
+	options := schema.Options{
+		VariationTargetingVariables: map[string]interface{}{"a": "123"},
 	}
 	actual, _ := GetVariation(instance, testdata.ValidUser, campaign, options)
 	expected := testdata.ValidVariationControl
 	assertOutput.Equal(expected, actual.Name, "Variations should match")
 
-	options = schema.Options {
-		VariationTargetingVariables: map[string]interface{}{"b":"456"},
+	options = schema.Options{
+		VariationTargetingVariables: map[string]interface{}{"b": "456"},
 	}
 	actual, _ = GetVariation(instance, testdata.ValidUser, campaign, options)
 	expected = testdata.ValidVariationVariation2
@@ -182,20 +181,20 @@ func TestGetVariation(t *testing.T) {
 	userID := testdata.GetRandomUser()
 	actual, err = GetVariation(instance, userID, instance.SettingsFile.Campaigns[0], schema.Options{})
 	assertOutput.NotNil(err, "No Variation Will Be Allcoated")
-	assertOutput.Empty(actual, "Variations should be empty : " + userID)
+	assertOutput.Empty(actual, "Variations should be empty : "+userID)
 
 	instance.SettingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(instance, instance.SettingsFile.Campaigns[0].Variations)
 	userID = testdata.GetRandomUser()
 	actual, err = GetVariation(instance, userID, instance.SettingsFile.Campaigns[0], schema.Options{})
 	assertOutput.Equal(nil, err, "No error expected")
-	assertOutput.NotEmpty(actual, "Variations should match : " + userID)
+	assertOutput.NotEmpty(actual, "Variations should match : "+userID)
 
 	instance = testdata.GetInstanceWithIncorrectStorage("AB_T_100_W_20_80")
 	instance.SettingsFile.Campaigns[0].Variations = utils.GetVariationAllocationRanges(instance, instance.SettingsFile.Campaigns[0].Variations)
 	userID = testdata.GetRandomUser()
 	actual, err = GetVariation(instance, userID, instance.SettingsFile.Campaigns[0], schema.Options{})
 	assertOutput.Equal(nil, err, "No error expected")
-	assertOutput.NotEmpty(actual, "Variations should match : " + userID)
+	assertOutput.NotEmpty(actual, "Variations should match : "+userID)
 }
 
 func TestGetVariationFromUserStorage(t *testing.T) {

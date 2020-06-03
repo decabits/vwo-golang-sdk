@@ -17,6 +17,7 @@ const (
 	ValidBucketValue         = 2345
 	InvalidBucketValue       = 0
 	ValidUser                = "DummyUser"
+	UserIsFeatureEnabled     = "John"
 	InvalidUser              = "UserInvalid"
 	InvalidOperator          = "InvalidOperator"
 	DummyVariation           = "DummyVariation"
@@ -31,9 +32,9 @@ const (
 	InvalidSDKKey       = ""
 	ValidAccountID      = "60781"
 	ValidSDKKey         = "ea87170ad94079aa190bc7c9b85d26fb"
-	ValidSettingsFile   = "../testdata/DummySettingsFile.json"
-	InvalidSettingsFile = "../testdata/InvalidSettingsFile.json"
-	EmptySettingsFile   = "../testdata/settingsFile.json"
+	ValidSettingsFile   = "../testdata/dummy_settings_file.json"
+	InvalidSettingsFile = "../testdata/invalid_settings_file.json"
+	EmptySettingsFile   = "../testdata/settings_file.json"
 
 	//UTILS
 	ValidCampaignKey       = "AB_T_50_W_50_50"
