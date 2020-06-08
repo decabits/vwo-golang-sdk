@@ -4,6 +4,7 @@
 ![Size in Bytes](https://img.shields.io/github/languages/code-size/decabits/vwo-golang-sdk)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 ![Coveralls github](https://img.shields.io/coveralls/github/decabits/vwo-golang-sdk)
+[![Go Report Card](https://goreportcard.com/badge/github.com/decabits/vwo-golang-sdk)](https://goreportcard.com/report/github.com/decabits/vwo-golang-sdk)
 
 This open source library allows you to A/B Test your Website at server-side.
 
