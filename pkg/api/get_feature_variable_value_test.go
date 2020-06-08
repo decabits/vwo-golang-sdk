@@ -17,12 +17,13 @@
 package api
 
 import (
-	"strconv"
-	"github.com/decabits/vwo-golang-sdk/pkg/core"
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"strconv"
 	"testing"
+
+	"github.com/decabits/vwo-golang-sdk/pkg/core"
 
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
@@ -77,63 +78,63 @@ func TestGetFeatureVariableValue(t *testing.T) {
 				testCases := userExpectation["ROLLOUT_VARIABLES"]
 
 				actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
-				assertOutput.Equal(testCases["STRING_VARIABLE"], actual.(string), settingsFileName + " : STRING_VARIABLE")
+				assertOutput.Equal(testCases["STRING_VARIABLE"], actual.(string), settingsFileName+" : STRING_VARIABLE")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
-				assertOutput.Equal(testCases["INTEGER_VARIABLE"], actual.(float64), settingsFileName + " : INTEGER_VARIABLE")
+				assertOutput.Equal(testCases["INTEGER_VARIABLE"], actual.(float64), settingsFileName+" : INTEGER_VARIABLE")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_VARIABLE", userID, nil)
-				assertOutput.Equal(testCases["FLOAT_VARIABLE"], actual.(float64), settingsFileName + " : FLOAT_VARIABLE")
+				assertOutput.Equal(testCases["FLOAT_VARIABLE"], actual.(float64), settingsFileName+" : FLOAT_VARIABLE")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "BOOLEAN_VARIABLE", userID, nil)
-				assertOutput.Equal(testCases["BOOLEAN_VARIABLE"], actual.(bool), settingsFileName + " : BOOLEAN_VARIABLE")
+				assertOutput.Equal(testCases["BOOLEAN_VARIABLE"], actual.(bool), settingsFileName+" : BOOLEAN_VARIABLE")
 			}
 		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureRollout && settingsFileName == "FR_WRONG_VARIABLE_TYPE" && settingsFileName != "NEW_SETTINGS_FILE" {
 			userID := testdata.GetFeatureDummyUser
 			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
 				actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
-				assertOutput.Nil(actual, settingsFileName + " : STRING_VARIABLE")
+				assertOutput.Nil(actual, settingsFileName+" : STRING_VARIABLE")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
-				assertOutput.Nil(actual, settingsFileName + " : INTEGER_VARIABLE")
+				assertOutput.Nil(actual, settingsFileName+" : INTEGER_VARIABLE")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_VARIABLE", userID, nil)
-				assertOutput.Nil(actual, settingsFileName + " : FLOAT_VARIABLE")
+				assertOutput.Nil(actual, settingsFileName+" : FLOAT_VARIABLE")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "BOOLEAN_VARIABLE", userID, nil)
-				assertOutput.Nil(actual, settingsFileName + " : BOOLEAN_VARIABLE")
+				assertOutput.Nil(actual, settingsFileName+" : BOOLEAN_VARIABLE")
 
 				value := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_TO_INTEGER", userID, nil)
 				actual, err := strconv.ParseInt(value.(string), 10, 64)
 				assertOutput.Nil(err, "Error")
-				assertOutput.Equal(int64(123), actual, settingsFileName + " : STRING_TO_INTEGER")
+				assertOutput.Equal(int64(123), actual, settingsFileName+" : STRING_TO_INTEGER")
 
 				value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_TO_FLOAT", userID, nil)
 				actual, err = strconv.ParseFloat(value.(string), 64)
-				assertOutput.Equal(float64(123.456), actual, settingsFileName + " : STRING_TO_FLOAT")
+				assertOutput.Equal(float64(123.456), actual, settingsFileName+" : STRING_TO_FLOAT")
 
 				value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "BOOLEAN_TO_STRING", userID, nil)
 				actual = strconv.FormatBool(value.(bool))
-				assertOutput.Equal("true", actual, settingsFileName + " : BOOLEAN_TO_STRING")
+				assertOutput.Equal("true", actual, settingsFileName+" : BOOLEAN_TO_STRING")
 
 				// value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_TO_STRING", userID, nil)
 				// actual = strconv.FormatFloat(value.(float64), 'E', -1, 64)
 				// assertOutput.Equal("24", actual, settingsFileName + " : INTEGER_TO_STRING")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_TO_FLOAT", userID, nil)
-				assertOutput.Equal(float64(24), actual.(float64), settingsFileName + " : INTEGER_TO_FLOAT")
+				assertOutput.Equal(float64(24), actual.(float64), settingsFileName+" : INTEGER_TO_FLOAT")
 
 				// value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_TO_STRING", userID, nil)
 				// value = strconv.FormatFloat(value.(float64), 'E', -1, 64)
 				// assertOutput.Equal("24.24", actual, settingsFileName + " : FLOAT_TO_STRING")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "FLOAT_TO_INTEGER", userID, nil)
-				assertOutput.Equal(float64(24), actual.(float64), settingsFileName + " : FLOAT_TO_INTEGER")
+				assertOutput.Equal(float64(24), actual.(float64), settingsFileName+" : FLOAT_TO_INTEGER")
 
 				value = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "WRONG_BOOLEAN", userID, nil)
 				actual, err = strconv.ParseBool(value.(string))
 				assertOutput.Nil(err, "Error : ")
-				assertOutput.Equal(true, actual, settingsFileName + " : WRONG_BOOLEAN")
+				assertOutput.Equal(true, actual, settingsFileName+" : WRONG_BOOLEAN")
 			}
 		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureRollout && settingsFileName != "FR_WRONG_VARIABLE_TYPE" && settingsFileName == "NEW_SETTINGS_FILE" {
 			userID := testdata.GetFeatureDummyUser
@@ -141,10 +142,10 @@ func TestGetFeatureVariableValue(t *testing.T) {
 				testCases := userExpectation["ROLLOUT_VARIABLES"]
 
 				actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
-				assertOutput.Equal("d1", actual.(string), settingsFileName + " : STRING_VARIABLE")
+				assertOutput.Equal("d1", actual.(string), settingsFileName+" : STRING_VARIABLE")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
-				assertOutput.Equal(testCases["INTEGER_VARIABLE"], actual.(float64), settingsFileName + " : INTEGER_VARIABLE")
+				assertOutput.Equal(testCases["INTEGER_VARIABLE"], actual.(float64), settingsFileName+" : INTEGER_VARIABLE")
 			}
 		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeVisualAB {
 			userID := testdata.GetFeatureDummyUser
@@ -160,21 +161,21 @@ func TestGetFeatureVariableValue(t *testing.T) {
 			actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "BOOLEAN_VARIABLE", userID, nil)
 			assertOutput.Nil(actual, "Wrong Campaign Type")
 		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureTest {
-				userID := testdata.GetFeatureDummyUser
+			userID := testdata.GetFeatureDummyUser
 			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
 				actual := instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "STRING_VARIABLE", userID, nil)
 				expected := userExpectation["STRING_VARIABLE"][variation.Name]
-				assertOutput.Equal(expected, actual.(string), settingsFileName + " : STRING_VARIABLE")
+				assertOutput.Equal(expected, actual.(string), settingsFileName+" : STRING_VARIABLE")
 
 				actual = instance.GetFeatureVariableValue(instance.SettingsFile.Campaigns[0].Key, "INTEGER_VARIABLE", userID, nil)
 				expected = userExpectation["INTEGER_VARIABLE"][variation.Name]
-				assertOutput.Equal(expected, actual.(float64), settingsFileName + " : INTEGER_VARIABLE")
+				assertOutput.Equal(expected, actual.(float64), settingsFileName+" : INTEGER_VARIABLE")
 			}
 		}
 	}
 
 	// CORNER CASES
-	
+
 	var customSettingsFiles map[string]schema.SettingsFile
 	data, err = ioutil.ReadFile("../testdata/custom_settings.json")
 	if err != nil {

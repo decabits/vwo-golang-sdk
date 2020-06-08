@@ -125,14 +125,14 @@ func TestGetVariationAllocationRanges(t *testing.T) {
 	vwoInstance := testdata.GetInstanceWithSettings("AB_T_50_W_50_50")
 
 	variations := vwoInstance.SettingsFile.Campaigns[0].Variations
-	assert.NotEmpty(t, variations, "No Variations recieved")
+	assert.NotEmpty(t, variations, "No Variations received")
 	variations = GetVariationAllocationRanges(vwoInstance, variations)
 	assert.Equal(t, 1, variations[0].StartVariationAllocation, "Value Mismatch")
 	assert.Equal(t, 10000, variations[1].EndVariationAllocation, "Value Mismatch")
 
 	vwoInstance = testdata.GetInstanceWithSettings("AB_T_100_W_0_100")
 	variations = vwoInstance.SettingsFile.Campaigns[0].Variations
-	assert.NotEmpty(t, variations, "No Variations recieved")
+	assert.NotEmpty(t, variations, "No Variations received")
 	variations = GetVariationAllocationRanges(vwoInstance, variations)
 	assert.Equal(t, -1, variations[0].StartVariationAllocation, "Start Allocation range failed to match")
 	assert.Equal(t, -1, variations[0].EndVariationAllocation, "End Allocation range failed to match")

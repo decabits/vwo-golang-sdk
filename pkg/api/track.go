@@ -37,7 +37,7 @@ This API method: Marks the conversion of the campaign for a particular goal
 4. Validates the Campaign Type
 5. Gets passed Goal
 6. Validates Revenue and Goal type
-7. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
+7. Assigns the deterministic variation to the user(based on userId), if user becomes part of campaign
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 8. If feature enabled, sends a call to VWO server for tracking visitor
 */
@@ -52,7 +52,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
-			bool: True if the track is successfull else false
+			bool: True if the track is successful else false
 	*/
 
 	vwoInstance := schema.VwoInstance{
@@ -96,7 +96,7 @@ func (vwo *VWOInstance) Track(campaignKey, userID, goalIdentifier string, option
 		return false
 	}
 
-	if goal.Type == constants.GoalTypeRevenue && options.RevenueValue == nil  {
+	if goal.Type == constants.GoalTypeRevenue && options.RevenueValue == nil {
 		message := fmt.Sprintf(constants.ErrorMessageTrackAPIRevenueNotPassedForRevenueValue, vwoInstance.API, goalIdentifier, campaignKey, userID)
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return false

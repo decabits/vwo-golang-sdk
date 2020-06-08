@@ -22,10 +22,10 @@ import (
 	"log"
 	"testing"
 
-	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
+	"github.com/decabits/vwo-golang-sdk/pkg/testdata"
 	"github.com/decabits/vwo-golang-sdk/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )

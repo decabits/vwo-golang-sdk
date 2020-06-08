@@ -27,15 +27,15 @@ func TestGetRequest(t *testing.T) {
 	url := testdata.IncorrectURL1
 	content, err := GetRequest(url)
 	assert.Nil(t, err, "Could not make the Get Request")
-	assert.NotEmpty(t, content, "Recieved no content")
+	assert.NotEmpty(t, content, "Received no content")
 
 	url = testdata.IncorrectURL2
 	content, err = GetRequest(url)
 	assert.NotNil(t, err, "Could not make the Get Request")
-	assert.Empty(t, content, "Recieved no content")
+	assert.Empty(t, content, "Received no content")
 
 	url = testdata.IncorrectURL3
 	content, err = GetRequest(url)
 	assert.NotNil(t, err, "Could not make the Get Request")
-	assert.Empty(t, content, "Recieved no content")
+	assert.Empty(t, content, "Received no content")
 }

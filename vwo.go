@@ -56,6 +56,7 @@ func GetSettingsFile(accountID, SDKKey string) schema.SettingsFile {
 	return settingsFileManager.GetSettingsFile()
 }
 
+// SetLogLevel fundtion - to set log level
 func SetLogLevel(lvl int) {
 	logger.SetLogLevel(lvl)
 }

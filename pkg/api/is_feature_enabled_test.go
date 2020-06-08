@@ -92,10 +92,10 @@ func TestIsFeatureEnabled(t *testing.T) {
 			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
 				if variation.Name == "Control" {
 					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
-					assertOutput.False(actual, "Feature Test Campaign : " + variation.Name + userID)
+					assertOutput.False(actual, "Feature Test Campaign : "+variation.Name+userID)
 				} else {
 					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
-					assertOutput.True(actual, "Feature Test Campaign : " + variation.Name + userID)
+					assertOutput.True(actual, "Feature Test Campaign : "+variation.Name+userID)
 				}
 			}
 		} else if instance.SettingsFile.Campaigns[0].Type == constants.CampaignTypeFeatureTest && settingsFileName == "FT_T_100_W_10_20_30_40_IFEF" {
@@ -103,10 +103,10 @@ func TestIsFeatureEnabled(t *testing.T) {
 			if variation, _ := core.GetVariation(vwoInstance, userID, instance.SettingsFile.Campaigns[0], schema.Options{}); variation.Name != "" {
 				if variation.Name == "Variation-2" {
 					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
-					assertOutput.True(actual, "Feature Test Campaign : " + variation.Name + userID)
+					assertOutput.True(actual, "Feature Test Campaign : "+variation.Name+userID)
 				} else {
 					actual := instance.IsFeatureEnabled(instance.SettingsFile.Campaigns[0].Key, userID, nil)
-					assertOutput.False(actual, "Feature Test Campaign : " + variation.Name + userID)
+					assertOutput.False(actual, "Feature Test Campaign : "+variation.Name+userID)
 				}
 			}
 		}

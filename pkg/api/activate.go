@@ -35,7 +35,7 @@ This API method: Gets the variation assigned for the user for the campaign and s
 2. Finds the corresponding Campaign
 3. Checks the Campaign Status
 4. Validates the Campaign Type
-5. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
+5. Assigns the deterministic variation to the user(based on userId), if user becomes part of campaign
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 6. Sends an impression call to VWO server to track user
 */
@@ -49,7 +49,7 @@ func (vwo *VWOInstance) Activate(campaignKey, userID string, option interface{})
 			revenueValue(In option): Value of revenue for the goal if the goal is revenue tracking
 
 		Returns:
-			string: Variation Name for user to corresponding camapign
+			string: Variation Name for user to corresponding campaign
 	*/
 
 	options := utils.ParseOptions(option)

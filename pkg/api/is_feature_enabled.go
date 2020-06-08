@@ -35,7 +35,7 @@ This API method: Whether a feature is enabled or not for the given user
 2. Finds the corresponding Campaign
 3. Checks the Campaign Status
 4. Validates the Campaign Type
-5. Assigns the determinitic variation to the user(based on userId), if user becomes part of campaign
+5. Assigns the deterministic variation to the user(based on userId), if user becomes part of campaign
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 6. If feature enabled, sends a call to VWO server for tracking visitor
 */
