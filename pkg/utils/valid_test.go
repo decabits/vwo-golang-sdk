@@ -96,6 +96,8 @@ func TestParseOptions(t *testing.T) {
 	expected := schema.Options{}
 	expected.CustomVariables = make(map[string]interface{})
 	expected.VariationTargetingVariables = make(map[string]interface{})
+	expected.ShouldTrackReturningUser = nil
+	expected.GoalTypeToTrack = nil
 	actual := ParseOptions(nil)
 	assert.Equal(t, expected, actual)
 
@@ -156,6 +158,12 @@ func TestValidateTrack(t *testing.T) {
 	actual := ValidateTrack("", "", "")
 	assert.False(t, actual)
 
-	actual = ValidateTrack("campaignKey", "userID", "goalIdentifier")
+	actual = ValidateTrack("userID", "goalIdentifier", nil)
 	assert.True(t, actual)
+
+	actual = ValidateTrack("userID", "goalIdentifier", constants.GoalTypeRevenue)
+	assert.True(t, actual)
+
+	actual = ValidateTrack("userID", "goalIdentifier", "Invalid_Type")
+	assert.False(t, actual)
 }
