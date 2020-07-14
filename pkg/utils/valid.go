@@ -17,6 +17,7 @@
 package utils
 
 import (
+	"github.com/decabits/vwo-golang-sdk/pkg/constants"
 	"github.com/decabits/vwo-golang-sdk/pkg/logger"
 	"github.com/decabits/vwo-golang-sdk/pkg/schema"
 )
@@ -26,6 +27,8 @@ func ParseOptions(option interface{}) (options schema.Options) {
 	if option == nil {
 		options.CustomVariables = make(map[string]interface{})
 		options.VariationTargetingVariables = make(map[string]interface{})
+		options.GoalTypeToTrack = nil
+		options.ShouldTrackReturningUser = nil
 		return
 	}
 	optionMap, okMap := option.(map[string]interface{})
@@ -34,13 +37,25 @@ func ParseOptions(option interface{}) (options schema.Options) {
 		if okCustomVariables {
 			options.CustomVariables = customVariables.(map[string]interface{})
 		}
+
 		variationTargetingVariables, okVariationTargetingVariables := optionMap["variationTargetingVariables"]
 		if okVariationTargetingVariables {
 			options.VariationTargetingVariables = variationTargetingVariables.(map[string]interface{})
 		}
+
 		revenueValue, okRevenueValue := optionMap["revenueValue"]
 		if okRevenueValue {
 			options.RevenueValue = revenueValue
+		}
+
+		goalTypeToTrack, okGoalTypeToTrack := optionMap["goalTypeToTrack"]
+		if okGoalTypeToTrack {
+			options.GoalTypeToTrack = goalTypeToTrack
+		}
+
+		shouldTrackReturningUser, okShouldTrackReturningUser := optionMap["shouldTrackReturningUser"]
+		if okShouldTrackReturningUser {
+			options.ShouldTrackReturningUser = shouldTrackReturningUser
 		}
 	}
 	return
@@ -113,9 +128,18 @@ func ValidatePush(tagKey, tagValue, userID string) bool {
 }
 
 // ValidateTrack - validates Track API parameters
-func ValidateTrack(campaignKey, userID, goalIdentifier string) bool {
-	if campaignKey == "" || userID == "" || goalIdentifier == "" {
+func ValidateTrack(userID, goalIdentifier string, goalTypeToTrack interface{}) bool {
+	if userID == "" || goalIdentifier == "" {
 		return false
+	}
+
+	if goalTypeToTrack != nil {
+		goalTypeToTrackValue, ok := goalTypeToTrack.(string)
+		if ok {
+			if !(goalTypeToTrackValue == constants.GoalTypeRevenue || goalTypeToTrackValue == constants.GoalTypeCustom || goalTypeToTrackValue == constants.GoalTypeAll) {
+				return false
+			}
+		}
 	}
 	return true
 }
