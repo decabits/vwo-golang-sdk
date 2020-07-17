@@ -31,8 +31,6 @@ const (
 	DummySDKKey         = "SDKKey"
 	InvalidAccountID    = ""
 	InvalidSDKKey       = ""
-	ValidAccountID      = "60781"
-	ValidSDKKey         = "ea87170ad94079aa190bc7c9b85d26fb"
 	ValidSettingsFile   = "../testdata/dummy_settings_file.json"
 	InvalidSettingsFile = "../testdata/invalid_settings_file.json"
 	EmptySettingsFile   = "../testdata/settings_file.json"
