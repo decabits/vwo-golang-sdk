@@ -42,10 +42,10 @@ This API method: Marks the conversion of the campaign for a particular goal
    If userStorageService is used, it will look into it for the variation and if found, no further processing is done
 8. If feature enabled, sends a call to VWO server for tracking visitor
 */
-func (vwo *VWOInstance) Track(campaignKey interface{}, userID, goalIdentifier string, option interface{}) []schema.TrackResult {
+func (vwo *VWOInstance) Track(campaignKeys interface{}, userID, goalIdentifier string, option interface{}) []schema.TrackResult {
 	/*
 		Args:
-			campaignKey: Key of the running campaign
+			campaignKeys: Key of the running campaign
 			userID: Unique identification of user
 			goalIdentifier: Unique identification of corresponding goal
 			customVariables(In option): variables for pre-segmentation
@@ -98,7 +98,7 @@ func (vwo *VWOInstance) Track(campaignKey interface{}, userID, goalIdentifier st
 		shouldTrackReturningUser = options.ShouldTrackReturningUser.(bool)
 	}
 
-	if campaignKey == nil {
+	if campaignKeys == nil {
 		CampaignList, err := utils.GetCampaignForGoals(vwoInstance, goalIdentifier, goalTypeToTrack)
 		if err != nil {
 			utils.LogMessage(vwo.Logger, constants.Error, track, err.Error())
@@ -106,7 +106,7 @@ func (vwo *VWOInstance) Track(campaignKey interface{}, userID, goalIdentifier st
 			Campaigns = CampaignList
 		}
 	} else {
-		switch Keys := campaignKey.(type) {
+		switch Keys := campaignKeys.(type) {
 		case []string:
 			CampaignList, err := utils.GetCampaignForKeys(vwoInstance, Keys)
 			if err != nil {
@@ -139,6 +139,8 @@ func (vwo *VWOInstance) Track(campaignKey interface{}, userID, goalIdentifier st
 	}
 
 	if len(result) == 0 {
+		message := fmt.Sprintf(constants.ErrorMessageNoCampaignFoundForGoal, vwoInstance.API, goalIdentifier, goalTypeToTrack)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return []schema.TrackResult{}
 	}
 
@@ -208,7 +210,6 @@ func trackCampaignGoal(vwoInstance schema.VwoInstance, campaign schema.Campaign,
 				}
 			}
 
-			fmt.Println(flag)
 			if flag == false {
 				storedGoalIdentifier += constants.GoalIdentifierSeperator + goalIdentifier
 
