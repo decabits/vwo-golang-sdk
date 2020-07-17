@@ -111,13 +111,11 @@ func GetCampaignForKeys(vwoInstance schema.VwoInstance, campaignKeys []string) (
 			LogMessage(vwoInstance.Logger, constants.Error, campaign, err.Error())
 		} else {
 			Campaigns = append(Campaigns, Campaign)
-			message := fmt.Sprintf("Found campaign with Key : [%v]", campaignKey)
-			LogMessage(vwoInstance.Logger, constants.Info, campaign, message)
 		}
 	}
 
 	if len(Campaigns) == 0 {
-		return Campaigns, fmt.Errorf(constants.ErrorMessageNoCampaignFoundForKeys, vwoInstance.API, campaignKeys)
+		return Campaigns, fmt.Errorf(constants.ErrorMessageNoCampaignInCampaignList, vwoInstance.API, campaignKeys, "")
 	}
 	return Campaigns, nil
 }
@@ -142,14 +140,12 @@ func GetCampaignForGoals(vwoInstance schema.VwoInstance, goalIdentifier, goalTyp
 		} else {
 			if goal.Type == goalTypeToTrack || goalTypeToTrack == constants.GoalTypeAll {
 				Campaigns = append(Campaigns, Campaign)
-				message := fmt.Sprintf("Found campaign with goal identifier : [%v] with type : [%v] where goal type to track is : [%v]", goalIdentifier, goal.Type, goalTypeToTrack)
-				LogMessage(vwoInstance.Logger, constants.Info, campaign, message)
 			}
 		}
 	}
 	
 	if len(Campaigns) == 0 {
-		return Campaigns, fmt.Errorf(constants.ErrorMessageNoCampaignFoundForGoal, vwoInstance.API, goalIdentifier, goalTypeToTrack)
+		return Campaigns, fmt.Errorf(constants.ErrorMessageNoCampaignInCampaignList, vwoInstance.API, goalIdentifier, goalTypeToTrack)
 	}
 	return Campaigns, nil
 }
