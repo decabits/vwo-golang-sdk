@@ -143,11 +143,11 @@ func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
     /*
     // UserData  struct
     type UserData struct {
-        UserID        	string
-        CampaignKey   	string
-				VariationName 	string
-				GoalIdentifier 	string
-    }
+			UserID         string
+			CampaignKey    string
+			VariationName  string
+			GoalIdentifier string
+		}
     */
 	return schema.UserData{}
 }
