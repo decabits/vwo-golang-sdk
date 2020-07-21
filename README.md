@@ -85,7 +85,7 @@ options["ShouldTrackreturningUser"] = false
 isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
 
 // For Goal Conversion in Multiple Campaign
-// campaignKeys = ["campaignKey1", "campaignKey2", "campaignKey3"]
+// campaignKeys = []string{"campaignKey1", "campaignKey2", "campaignKey3"}
 // For Goal Conversion in All Possible Campaigns
 // campaignKeys = nil
 isSuccessful = vwoInstance.Track(campaignKeys, userID, goalIdentifier, options)
