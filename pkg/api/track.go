@@ -68,7 +68,13 @@ func (vwo *VWOInstance) Track(campaignKeys interface{}, userID, goalIdentifier s
 
 	options := utils.ParseOptions(option)
 
-	if !utils.ValidateTrack(userID, goalIdentifier, options.GoalTypeToTrack) {
+	if !utils.ValidateTrack(userID, goalIdentifier, options.GoalTypeToTrack, options.ShouldTrackReturningUser) {
+		message := fmt.Sprintf(constants.ErrorMessageTrackAPIMissingParams, vwoInstance.API)
+		utils.LogMessage(vwo.Logger, constants.Error, track, message)
+		return []schema.TrackResult{}
+	}
+
+	if !utils.ValidateTrack(userID, goalIdentifier, vwo.GoalTypeToTrack, vwo.ShouldTrackReturningUser) {
 		message := fmt.Sprintf(constants.ErrorMessageTrackAPIMissingParams, vwoInstance.API)
 		utils.LogMessage(vwo.Logger, constants.Error, track, message)
 		return []schema.TrackResult{}

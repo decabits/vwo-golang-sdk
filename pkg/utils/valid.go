@@ -128,18 +128,32 @@ func ValidatePush(tagKey, tagValue, userID string) bool {
 }
 
 // ValidateTrack - validates Track API parameters
-func ValidateTrack(userID, goalIdentifier string, goalTypeToTrack interface{}) bool {
+func ValidateTrack(userID, goalIdentifier string, goalTypeToTrack interface{}, shouldTrackReturningUser interface{}) bool {
 	if userID == "" || goalIdentifier == "" {
 		return false
 	}
 
 	if goalTypeToTrack != nil {
-		goalTypeToTrackValue, ok := goalTypeToTrack.(string)
-		if ok {
-			if !(goalTypeToTrackValue == constants.GoalTypeRevenue || goalTypeToTrackValue == constants.GoalTypeCustom || goalTypeToTrackValue == constants.GoalTypeAll) {
+		switch Val := goalTypeToTrack.(type) {
+		case string:
+			if !(Val == constants.GoalTypeRevenue || Val == constants.GoalTypeCustom || Val == constants.GoalTypeAll) {
 				return false
 			}
+		default:
+			return false
 		}
 	}
+
+	if shouldTrackReturningUser != nil {
+		switch Val := shouldTrackReturningUser.(type) {
+		case bool:
+			if !(Val == true || Val == false) {
+					return false
+				}
+		default:
+			return false
+		}
+	}
+
 	return true
 }
