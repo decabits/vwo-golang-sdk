@@ -204,11 +204,14 @@ func trackCampaignGoal(vwoInstance schema.VwoInstance, campaign schema.Campaign,
 		utils.LogMessage(vwoInstance.Logger, constants.Info, track, message)
 		return false
 	}
-	
+
 	if variation.Name != "" {
 		if storedGoalIdentifier != "" {
-			identifiers := strings.Split(storedGoalIdentifier, constants.GoalIdentifierSeperator)
 			flag := false
+			identifiers := strings.Split(storedGoalIdentifier, constants.GoalIdentifierSeperator)
+
+			message1 := fmt.Sprintf("============================================= : %v", storedGoalIdentifier+constants.GoalIdentifierSeperator)
+			utils.LogMessage(vwoInstance.Logger, constants.Info, track, message1)
 
 			for _, identifier := range identifiers {
 				if identifier == goalIdentifier {
@@ -217,7 +220,7 @@ func trackCampaignGoal(vwoInstance schema.VwoInstance, campaign schema.Campaign,
 			}
 
 			if flag == false {
-				storedGoalIdentifier += constants.GoalIdentifierSeperator + goalIdentifier
+				storedGoalIdentifier = storedGoalIdentifier + constants.GoalIdentifierSeperator + goalIdentifier
 
 				if storage, ok := vwoInstance.UserStorage.(interface{ Set(a, b, c, d string) }); ok {
 					storage.Set(userID, campaign.Key, variation.Name, storedGoalIdentifier)
@@ -232,24 +235,24 @@ func trackCampaignGoal(vwoInstance schema.VwoInstance, campaign schema.Campaign,
 				utils.LogMessage(vwoInstance.Logger, constants.Info, track, message)
 				return false
 			}
+		} else {
+			if vwoInstance.UserStorage == nil {
+				message := fmt.Sprintf(constants.DebugMessageNoUserStorageServiceSet, vwoInstance.API)
+				utils.LogMessage(vwoInstance.Logger, constants.Debug, track, message)
+			} else {
+				if storage, ok := vwoInstance.UserStorage.(interface{ Set(a, b, c, d string) }); ok {
+					storage.Set(userID, campaign.Key, variation.Name, goalIdentifier)
+					message := fmt.Sprintf(constants.InfoMessageSettingDataUserStorageService, vwoInstance.API, userID)
+					utils.LogMessage(vwoInstance.Logger, constants.Info, track, message)
+				} else {
+					message := fmt.Sprintf(constants.ErrorMessageSetUserStorageServiceFailed, vwoInstance.API, userID)
+					utils.LogMessage(vwoInstance.Logger, constants.Debug, track, message)
+				}
+			}
 		}
 
 		impression := utils.CreateImpressionTrackingGoal(vwoInstance, variation.ID, userID, goal.Type, campaign.ID, goal.ID, options.RevenueValue)
 		go event.DispatchTrackingGoal(vwoInstance, goal.Type, impression)
-
-		if vwoInstance.UserStorage == nil {
-			message := fmt.Sprintf(constants.DebugMessageNoUserStorageServiceSet, vwoInstance.API)
-			utils.LogMessage(vwoInstance.Logger, constants.Debug, track, message)
-		} else {
-			if storage, ok := vwoInstance.UserStorage.(interface{ Set(a, b, c, d string) }); ok {
-				storage.Set(userID, campaign.Key, variation.Name, goalIdentifier)
-				message := fmt.Sprintf(constants.InfoMessageSettingDataUserStorageService, vwoInstance.API, userID)
-				utils.LogMessage(vwoInstance.Logger, constants.Info, track, message)
-			} else {
-				message := fmt.Sprintf(constants.ErrorMessageSetUserStorageServiceFailed, vwoInstance.API, userID)
-				utils.LogMessage(vwoInstance.Logger, constants.Debug, track, message)
-			}
-		}
 
 		message := fmt.Sprintf(constants.InfoMessageMainKeysForImpression, vwoInstance.API, vwoInstance.SettingsFile.AccountID, vwoInstance.UserID, campaign.ID, variation.ID)
 		utils.LogMessage(vwoInstance.Logger, constants.Info, activate, message)
