@@ -207,11 +207,8 @@ func trackCampaignGoal(vwoInstance schema.VwoInstance, campaign schema.Campaign,
 
 	if variation.Name != "" {
 		if storedGoalIdentifier != "" {
-			flag := false
 			identifiers := strings.Split(storedGoalIdentifier, constants.GoalIdentifierSeperator)
-
-			message1 := fmt.Sprintf("============================================= : %v", storedGoalIdentifier+constants.GoalIdentifierSeperator)
-			utils.LogMessage(vwoInstance.Logger, constants.Info, track, message1)
+			flag := false
 
 			for _, identifier := range identifiers {
 				if identifier == goalIdentifier {
