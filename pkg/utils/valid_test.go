@@ -111,8 +111,8 @@ func TestParseOptions(t *testing.T) {
 		CustomVariables:             map[string]interface{}{"a": "x"},
 		VariationTargetingVariables: map[string]interface{}{"a": "x"},
 		RevenueValue:                12,
-		GoalTypeToTrack: 						"ALL",
-		ShouldTrackReturningUser: false,
+		GoalTypeToTrack:             "ALL",
+		ShouldTrackReturningUser:    false,
 	}
 	actual = ParseOptions(data)
 	assert.Equal(t, expected, actual)
@@ -159,21 +159,21 @@ func TestValidatePush(t *testing.T) {
 }
 
 func TestValidateTrack(t *testing.T) {
-	actual := ValidateTrack("", "", "", "")
+	actual, _ := ValidateTrack("", "", "", "")
 	assert.False(t, actual)
 
-	actual = ValidateTrack("userID", "goalIdentifier", nil, nil)
+	actual, _ = ValidateTrack("userID", "goalIdentifier", nil, nil)
 	assert.True(t, actual)
 
-	actual = ValidateTrack("userID", "goalIdentifier", constants.GoalTypeRevenue, true)
+	actual, _ = ValidateTrack("userID", "goalIdentifier", constants.GoalTypeRevenue, true)
 	assert.True(t, actual)
 
-	actual = ValidateTrack("userID", "goalIdentifier", "Invalid_Type", true)
+	actual, _ = ValidateTrack("userID", "goalIdentifier", "Invalid_Type", true)
 	assert.False(t, actual)
 
-	actual = ValidateTrack("userID", "goalIdentifier", "CUSTOM_GOAL", 123)
+	actual, _ = ValidateTrack("userID", "goalIdentifier", "CUSTOM_GOAL", 123)
 	assert.False(t, actual)
 
-	actual = ValidateTrack("userID", "goalIdentifier", 123, true)
+	actual, _ = ValidateTrack("userID", "goalIdentifier", 123, true)
 	assert.False(t, actual)
 }
