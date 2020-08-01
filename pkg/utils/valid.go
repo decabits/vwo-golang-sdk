@@ -17,6 +17,8 @@
 package utils
 
 import (
+	"fmt"
+
 	"github.com/wingify/vwo-go-sdk/pkg/constants"
 	"github.com/wingify/vwo-go-sdk/pkg/logger"
 	"github.com/wingify/vwo-go-sdk/pkg/schema"
@@ -128,19 +130,27 @@ func ValidatePush(tagKey, tagValue, userID string) bool {
 }
 
 // ValidateTrack - validates Track API parameters
-func ValidateTrack(userID, goalIdentifier string, goalTypeToTrack interface{}, shouldTrackReturningUser interface{}) bool {
-	if userID == "" || goalIdentifier == "" {
-		return false
+func ValidateTrack(userID, goalIdentifier string, goalTypeToTrack interface{}, shouldTrackReturningUser interface{}) (bool, string) {
+	if userID == "" {
+		message := fmt.Sprintf(constants.ErrorMessageTrackAPIEmptyParam, "User ID")
+		return false, message
+	}
+
+	if goalIdentifier == "" {
+		message := fmt.Sprintf(constants.ErrorMessageTrackAPIEmptyParam, "Goal Identifier")
+		return false, message
 	}
 
 	if goalTypeToTrack != nil {
 		switch Val := goalTypeToTrack.(type) {
 		case string:
 			if !(Val == constants.GoalTypeRevenue || Val == constants.GoalTypeCustom || Val == constants.GoalTypeAll) {
-				return false
+				message := fmt.Sprintf(constants.ErrorMessageTrackAPIIncorrectGoalTypeToTrack, Val)
+				return false, message
 			}
 		default:
-			return false
+			message := fmt.Sprintf(constants.ErrorMessageTrackAPIIncorrectParamType, "GoalTypeTotrack")
+			return false, message
 		}
 	}
 
@@ -148,12 +158,14 @@ func ValidateTrack(userID, goalIdentifier string, goalTypeToTrack interface{}, s
 		switch Val := shouldTrackReturningUser.(type) {
 		case bool:
 			if !(Val == true || Val == false) {
-					return false
-				}
+				message := fmt.Sprintf(constants.ErrorMessageTrackAPIIncorrectShouldTrackReturningUser, Val)
+				return false, message
+			}
 		default:
-			return false
+			message := fmt.Sprintf(constants.ErrorMessageTrackAPIIncorrectParamType, "ShouldTrackReturningUser")
+			return false, message
 		}
 	}
 
-	return true
+	return true, ""
 }
