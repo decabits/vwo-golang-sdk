@@ -9,7 +9,7 @@ This open source library allows you to A/B Test your Website at server-side.
 
 ## Requirements
 
-- Works with Go 1.13 +
+- Works with Go 1.11.4+
 
 ## Installation
 
