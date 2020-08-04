@@ -1,9 +1,12 @@
 language: go
+env: GO111MODULE=on
 go:
+  - 1.11.4
+  - 1.12
   - 1.13
-  - 1.14.2
+  - 1.14
 before_install:
-  - go get -t -v ./...
+  - go get -v ./...
 script:
   - ./test.sh
 after_success:
