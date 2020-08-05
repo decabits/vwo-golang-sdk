@@ -3,18 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 ## [1.1.0] - 2020-08-05
-
-### Changes
-- Fix readMe to add the minimum minor version supported by sdk. 1.11 to 1.11.4
-
-## [1.1.0] - 2020-07-20
 
 ### Changes
 - Update track API to handle duplicate and unique conversions and corresponding changes in `launch` API
 - Update track API to track a goal globally across campaigns with the same `goalIdentififer` and corresponding changes in `launch` API
 - Update user storage to store `goalIdentififer`
 - Handled new attributes, `GoalTypeToTrack` and `ShouldUserReturningUser` in `Options` and `VwoInstance` schemas
+- Fix readMe to add the minimum minor version supported by sdk. 1.11 to 1.11.4
 
 ```go 
 // It will track goal having `goalIdentifier` of campaign having `CampaignKey` for the user having `userId` as id. 
