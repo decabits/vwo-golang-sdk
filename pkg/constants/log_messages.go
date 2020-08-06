@@ -99,7 +99,7 @@ const (
 	InfoMessageGotStoredVariation               = "[%v] Got stored variation: %v of CampaignKey: %v for User ID: %v from UserStorage"
 	InfoMessageGotVariationForUser              = "[%v] User ID: %v for CampaignKey: %v type: %v got variation_name: %v "
 	InfoMessageImpressionSuccess                = "[%v] Impression event - %v was successfully received by VWO having keys: %v "
-	InfoMessageIncorrectCampaignKeyType         = "[%v] Incorrect CampaignKey type passed : %T is incorrect, should be of type string, array of string of nil"
+	InfoMessageIncorrectCampaignKeyType         = "[%v] Incorrect CampaignKey type passed : %T is incorrect, should be of type string, array of string or nil"
 	InfoMessageInvalidVariationKey              = "[%v] Variation was not assigned to User ID: %v for Campaign: %v : %v "
 	InfoMessageMainKeysForFeatureTestImpression = "[%v] Having main keys AccountID: %v, UserID: %v, CampaignID: %v, VariationID: %v"
 	InfoMessageMainKeysForPushAPI               = "[%v] Having main keys: AccountID: %v User ID: %v U: %v and tags: %v "
