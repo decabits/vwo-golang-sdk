@@ -79,7 +79,7 @@ options["customVariables"] = map[string]interface{}{"a": "x"}
 options["revenueValue"] = 12
 //  Set specific goalType to Track
 //  Available GoalTypes - constants.GoalTypeRevenue, constants.GoalTypeCustom, constants.GoalTypeAll (Default)
-options["goalTypeToTrack"] = "ALL"
+options["goalTypeToTrack"] = constants.GoalTypeAll
 //  Set if a return user should be tracked, default false
 options["ShouldTrackreturningUser"] = false
 isSuccessful = vwoInstance.Track(campaignKey, userID, goalIdentifier, options)
@@ -143,11 +143,11 @@ func (us *UserStorageData) Get(userID, campaignKey string) schema.UserData {
     /*
     // UserData  struct
     type UserData struct {
-		UserID         string
-		CampaignKey    string
-		VariationName  string
-		GoalIdentifier string
-	}
+			UserID         string
+			CampaignKey    string
+			VariationName  string
+			GoalIdentifier string
+		}
     */
 	return schema.UserData{}
 }

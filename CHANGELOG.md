@@ -7,24 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2020-08-05
 
 ### Changes
-- Update track API to handle duplicate and unique conversions and corresponding changes in `launch` API
-- Update track API to track a goal globally across campaigns with the same `goalIdentififer` and corresponding changes in `launch` API
+- Update track API to handle duplicate and unique conversions and corresponding changes in `Launch` API
+- Update track API to track a goal globally across campaigns with the same `goalIdentififer` and corresponding changes in `Launch` API
 - Update user storage to store `goalIdentififer`
-- Handled new attributes, `GoalTypeToTrack` and `ShouldUserReturningUser` in `Options` and `VwoInstance` schemas
-- Fix readMe to add the minimum minor version supported by sdk. 1.11 to 1.11.4
+- Handled new attributes, `GoalTypeToTrack` and `ShouldUserReturningUser` in `Options` and `Launch` API
 
 ```go 
 // It will track goal having `goalIdentifier` of campaign having `CampaignKey` for the user having `userId` as id. 
 campaignKeys = "CampaignKey"
-isSuccessful = vwoInstance.track(campaignKeys, goalIdentifier, userId, options);
+isSuccessful = vwoInstance.Track(campaignKeys, goalIdentifier, userId, options);
 
 // it will track goal having `goalIdentifier` of campaigns having `CampaignKey1` and `CampaignKey2` for the user having `userId` as id. 
 campaignKeys = []string{"CampaignKey1", "CampaignKey2"}
-isSuccessful = vwoInstance.track(campaignKeys, goalIdentifier, userId, options);
+isSuccessful = vwoInstance.Track(campaignKeys, goalIdentifier, userId, options);
 
 // it will track goal having `goalIdentifier` of all the campaigns
 campaignKeys = nil
-isSuccessful = vwoInstance.track(campaignKeys, goalIdentifier, userId, options);
+isSuccessful = vwoInstance.Track(campaignKeys, goalIdentifier, userId, options);
 
 //Read more about configuration and usage - https://developers.vwo.com/reference#server-side-sdk-track
 ```
